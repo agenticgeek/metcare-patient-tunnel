@@ -1,0 +1,5 @@
+{
+  "name": "Metcare Patient Tunnel",
+  "description": "Patient intake funnel for Metcare: landing, transition, and profile steps.",
+  "requestFramePermissions": []
+}

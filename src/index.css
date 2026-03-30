@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-snow: #ECEBE9;
+  --color-beige: #DECDBB;
+  --color-silver-blue: #6A88A4;
+  --color-cherry: #2B1517;
+  --color-silver: #C0C0C0;
+
+  --font-heading: "Poppins", sans-serif;
+  --font-sans: "Raleway", sans-serif;
+}
+
+body {
+  background-color: var(--color-snow);
+  color: var(--color-cherry);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.3;
+}
+
+.bg-mesh {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: radial-gradient(circle at 15% 50%, rgba(222, 205, 187, 0.4), transparent 50%),
+              radial-gradient(circle at 85% 30%, rgba(106, 136, 164, 0.15), transparent 50%);
+  animation: mesh-move 20s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-move {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.1) translate(-2%, 2%); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.section-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.hero-aurora-bg {
+  background: linear-gradient(180deg, var(--color-snow) 0%, rgba(222, 205, 187, 0.25) 50%, var(--color-snow) 100%);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Lenis smooth scroll */
+html.lenis {
+  height: auto;
+}
+
+html.lenis,
+html.lenis body {
+  scroll-behavior: auto !important;
+}

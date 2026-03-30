@@ -1,0 +1,92 @@
+/* Self-contained styles for metcare-patient-tunnel (Tunnel B palette). */
+
+.patient-tunnel-root {
+  position: relative;
+  min-height: 100vh;
+  background: #ecebe9;
+  color: #2b1517;
+  isolation: isolate;
+  font-family: var(--font-sans, "Raleway", sans-serif);
+}
+
+.patient-tunnel-root h1,
+.patient-tunnel-root h2,
+.patient-tunnel-root h3,
+.patient-tunnel-cta {
+  font-family: var(--font-heading, "Poppins", sans-serif);
+}
+
+.patient-tunnel-section-label {
+  font-family: var(--font-heading, "Poppins", sans-serif);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(43, 21, 23, 0.72);
+}
+
+.patient-tunnel-bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 15% 40%, rgba(222, 205, 187, 0.45), transparent 52%),
+    radial-gradient(circle at 88% 22%, rgba(43, 21, 23, 0.06), transparent 48%);
+  pointer-events: none;
+}
+
+.patient-tunnel-grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.patient-tunnel-hero-bg {
+  background: linear-gradient(180deg, #ecebe9 0%, rgba(222, 205, 187, 0.32) 48%, #ecebe9 100%);
+}
+
+.patient-tunnel-glass {
+  background: rgba(236, 235, 233, 0.78);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  box-shadow:
+    0 20px 48px rgba(43, 21, 23, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.patient-tunnel-card {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.patient-tunnel-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(222, 205, 187, 0.9);
+  box-shadow: 0 18px 40px rgba(43, 21, 23, 0.1);
+}
+
+.patient-tunnel-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  transform: translateX(-120%);
+  animation: patient-tunnel-shimmer 2.6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes patient-tunnel-shimmer {
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.patient-tunnel-sticky-cta {
+  box-shadow: 0 -8px 32px rgba(43, 21, 23, 0.08);
+}
