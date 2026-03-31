@@ -50,12 +50,48 @@
 }
 
 .patient-tunnel-glass {
-  background: rgba(236, 235, 233, 0.78);
-  backdrop-filter: blur(16px) saturate(1.1);
-  -webkit-backdrop-filter: blur(16px) saturate(1.1);
-  box-shadow:
-    0 20px 48px rgba(43, 21, 23, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 10px 30px -10px rgba(43, 21, 23, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.text-stroke-cherry {
+  -webkit-text-stroke: 1px rgba(43, 21, 23, 0.2);
+  color: transparent;
+}
+
+.patient-tunnel-card-editorial {
+  aspect-ratio: 4/5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-15px) rotate(1deg); }
+}
+
+.animate-float-subtle {
+  animation: float-subtle 8s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-subtle 10s ease-in-out infinite 1s;
+}
+
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+}
+
+.mask-fade-down {
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 .patient-tunnel-card {
@@ -89,4 +125,169 @@
 
 .patient-tunnel-sticky-cta {
   box-shadow: 0 -8px 32px rgba(43, 21, 23, 0.08);
+}
+
+/* Aurora Hero Background */
+.patient-tunnel-hero-aurora {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    #ecebe9 0%,
+    rgba(222, 205, 187, 0.22) 46%,
+    #ecebe9 100%
+  );
+}
+
+.patient-tunnel-hero-aurora::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(circle at 18% 36%, rgba(222, 205, 187, 0.45), transparent 34%),
+    radial-gradient(circle at 76% 18%, rgba(43, 21, 23, 0.10), transparent 26%),
+    radial-gradient(circle at 54% 55%, rgba(255, 255, 255, 0.52), transparent 28%),
+    radial-gradient(circle at 82% 70%, rgba(222, 205, 187, 0.20), transparent 30%),
+    radial-gradient(circle at 30% 82%, rgba(43, 21, 23, 0.08), transparent 22%);
+  filter: blur(28px);
+  animation: patient-tunnel-meshMove 18s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.patient-tunnel-hero-aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(43, 21, 23, 0.06) 52%,
+      rgba(255, 255, 255, 0.18) 72%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  mix-blend-mode: soft-light;
+  opacity: 0.85;
+  animation: patient-tunnel-veilShift 14s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.patient-tunnel-aurora {
+  position: absolute;
+  inset: -12%;
+  z-index: 0;
+  filter: blur(42px) saturate(112%);
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.patient-tunnel-aurora span {
+  position: absolute;
+  border-radius: 999px;
+  transform-origin: center;
+  mix-blend-mode: screen;
+}
+
+.patient-tunnel-aurora .a1 {
+  width: 58vw;
+  height: 24vw;
+  left: -6vw;
+  top: 8vh;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(222, 205, 187, 0.62) 0%,
+    rgba(222, 205, 187, 0.16) 48%,
+    transparent 74%
+  );
+  animation: patient-tunnel-floatOne 16s ease-in-out infinite alternate;
+}
+
+.patient-tunnel-aurora .a2 {
+  width: 42vw;
+  height: 18vw;
+  right: 4vw;
+  top: 12vh;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(43, 21, 23, 0.18) 0%,
+    rgba(43, 21, 23, 0.07) 42%,
+    transparent 72%
+  );
+  animation: patient-tunnel-floatTwo 20s ease-in-out infinite alternate;
+}
+
+.patient-tunnel-aurora .a3 {
+  width: 48vw;
+  height: 20vw;
+  left: 20vw;
+  top: 34vh;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.54) 0%,
+    rgba(255, 255, 255, 0.12) 48%,
+    transparent 74%
+  );
+  animation: patient-tunnel-floatThree 22s ease-in-out infinite alternate;
+}
+
+.patient-tunnel-aurora .a4 {
+  width: 52vw;
+  height: 22vw;
+  right: -10vw;
+  bottom: 6vh;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(222, 205, 187, 0.28) 0%,
+    rgba(222, 205, 187, 0.10) 45%,
+    transparent 75%
+  );
+  animation: patient-tunnel-floatFour 18s ease-in-out infinite alternate;
+}
+
+.patient-tunnel-hero-depth {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(43, 21, 23, 0.12) 0%, rgba(43, 21, 23, 0.07) 34%, rgba(43, 21, 23, 0.02) 62%, transparent 100%),
+    linear-gradient(180deg, rgba(43, 21, 23, 0.025) 0%, rgba(43, 21, 23, 0.045) 100%);
+  pointer-events: none;
+}
+
+@keyframes patient-tunnel-meshMove {
+  0% { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.08) translate3d(-2%, 2%, 0); }
+}
+
+@keyframes patient-tunnel-veilShift {
+  0% { transform: translateX(-2%) translateY(0); opacity: 0.78; }
+  100% { transform: translateX(2%) translateY(-1.2%); opacity: 0.92; }
+}
+
+@keyframes patient-tunnel-floatOne {
+  0% { transform: translate3d(0, 0, 0) rotate(-8deg) scale(1); }
+  100% { transform: translate3d(4vw, 2vh, 0) rotate(-2deg) scale(1.08); }
+}
+
+@keyframes patient-tunnel-floatTwo {
+  0% { transform: translate3d(0, 0, 0) rotate(10deg) scale(1); }
+  100% { transform: translate3d(-5vw, 4vh, 0) rotate(2deg) scale(1.06); }
+}
+
+@keyframes patient-tunnel-floatThree {
+  0% { transform: translate3d(0, 0, 0) rotate(-4deg) scale(1); }
+  100% { transform: translate3d(2vw, -3vh, 0) rotate(4deg) scale(1.08); }
+}
+
+@keyframes patient-tunnel-floatFour {
+  0% { transform: translate3d(0, 0, 0) rotate(6deg) scale(1); }
+  100% { transform: translate3d(-4vw, -2vh, 0) rotate(-2deg) scale(1.05); }
+}
+
+@media (max-width: 768px) {
+  .patient-tunnel-aurora {
+    inset: -24%;
+    filter: blur(34px) saturate(108%);
+  }
 }

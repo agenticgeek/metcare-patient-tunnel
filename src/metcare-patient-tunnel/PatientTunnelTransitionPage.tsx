@@ -1,63 +1,89 @@
 import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import metcareLogo from '../../assets/Sigle_Fond_BeigeS_HD.svg';
+import { useNavigate } from 'react-router-dom';
+import { CheckCircle2, ArrowRight, ChevronLeft } from 'lucide-react';
 import { patientCopy } from './copy';
 import './patientTunnel.css';
 import { PATIENT_TUNNEL_ROUTES } from './routes';
-import { PATIENT_TUNNEL_STORAGE_KEYS } from './storageKeys';
 import { PatientPrimaryButton, PatientTunnelDecor } from './PatientTunnelShared';
+import { useLanguage } from './i18n';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function PatientTunnelTransitionPage() {
   const navigate = useNavigate();
-  const c = patientCopy.transition;
-  const hasForm1 =
-    typeof window !== 'undefined' && sessionStorage.getItem(PATIENT_TUNNEL_STORAGE_KEYS.form1);
+  const { lang } = useLanguage();
+  const c = patientCopy[lang].transition;
 
   return (
-    <div className="patient-tunnel-root flex min-h-screen items-center justify-center px-5 py-16 md:px-10">
+    <div className="patient-tunnel-root flex min-h-screen flex-col items-center justify-center px-5 py-24 md:px-10">
       <PatientTunnelDecor />
-      <Link
-        to={PATIENT_TUNNEL_ROUTES.home}
-        className="fixed left-3 top-3 z-40 flex items-center gap-2 rounded-full border border-cherry/12 bg-snow/90 px-2 py-1.5 shadow-sm backdrop-blur md:left-5 md:top-5"
-        aria-label={patientCopy.transition.backHome}
-      >
-        <img src={metcareLogo} alt="" className="h-9 w-9 rounded-full object-cover" width={36} height={36} />
-        <span className="hidden pr-2 text-xs font-semibold tracking-[0.14em] text-cherry sm:inline">
-          METCARE®
-        </span>
-      </Link>
-
+      <LanguageSwitcher />
+      
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="patient-tunnel-glass relative z-10 w-full max-w-xl rounded-2xl border border-cherry/10 p-6 text-center shadow-lg md:p-10"
+        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="patient-tunnel-glass max-w-2xl rounded-[3rem] border border-white/20 p-10 text-center shadow-[0_32px_128px_-16px_rgba(43,21,23,0.15)] md:p-16"
       >
-        <img src={metcareLogo} alt="" className="mx-auto mb-5 h-16 w-16 object-cover" width={64} height={64} />
-        <h1 className="mb-4 text-2xl font-semibold leading-tight text-cherry md:text-4xl">{c.title}</h1>
-        <p className="mb-5 text-sm font-light leading-relaxed text-cherry/82 md:text-base">{c.body}</p>
-        <div className="mb-5 rounded-xl border border-cherry/10 bg-snow/85 p-4 text-left text-sm font-light leading-relaxed text-cherry/88 md:text-base">
-          {c.prompt}
+        <motion.div
+          initial={{ scale: 0, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: 0.3, type: 'spring', stiffness: 200, damping: 15 }}
+          className="mx-auto mb-10 flex h-20 w-20 items-center justify-center rounded-full bg-cherry text-snow shadow-xl shadow-cherry/30"
+        >
+          <CheckCircle2 className="h-10 w-10" />
+        </motion.div>
+
+        <h1 className="mb-6 font-heading text-3xl font-semibold leading-tight text-cherry md:text-5xl">
+          {c.title}
+        </h1>
+        
+        <p className="mx-auto mb-10 max-w-md text-lg font-light italic leading-relaxed text-cherry/70 md:text-xl">
+          {c.body}
+        </p>
+
+        <div className="mb-12 h-[1px] w-24 bg-cherry/10 mx-auto" />
+
+        <div className="space-y-8">
+           <p className="text-sm font-light leading-relaxed text-cherry/80 md:text-base">
+             {c.prompt}
+           </p>
+           
+           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+              <PatientPrimaryButton 
+                onClick={() => navigate(PATIENT_TUNNEL_ROUTES.profile)} 
+                className="!px-12 !py-5 !text-lg shadow-2xl shadow-cherry/20"
+              >
+                {c.cta}
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </PatientPrimaryButton>
+              
+              <button
+                onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)}
+                className="group flex items-center justify-center gap-2 px-8 py-5 text-sm font-bold tracking-[0.2em] text-cherry/40 transition-colors hover:text-cherry"
+              >
+                {c.skip}
+                <motion.span 
+                  animate={{ x: [0, 4, 0] }} 
+                  transition={{ repeat: Infinity, duration: 2 }}
+                >
+                  →
+                </motion.span>
+              </button>
+           </div>
+           
+           <p className="text-[0.65rem] font-medium tracking-[0.2em] text-cherry/30 uppercase italic">
+             {c.notice}
+           </p>
         </div>
-        <p className="mb-8 text-xs uppercase tracking-[0.16em] text-cherry/55">{c.notice}</p>
-        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
-          <PatientPrimaryButton onClick={() => navigate(PATIENT_TUNNEL_ROUTES.profile)} className="sm:!w-auto">
-            <span>{c.cta}</span>
-            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
-          </PatientPrimaryButton>
-          <PatientPrimaryButton
-            variant="outline"
-            onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)}
-            className="sm:!w-auto"
-          >
-            {c.skip}
-          </PatientPrimaryButton>
-        </div>
-        {!hasForm1 && (
-          <p className="mt-6 text-sm font-light text-cherry/55">{patientCopy.ui.noSession}</p>
-        )}
       </motion.div>
+      
+      <button
+        onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)}
+        className="mt-12 group flex items-center gap-3 text-sm font-bold tracking-[0.25em] text-cherry/40 transition-colors hover:text-cherry"
+      >
+        <ChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
+        {c.backHome}
+      </button>
     </div>
   );
 }
