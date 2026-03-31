@@ -8,19 +8,50 @@ import { PatientPrimaryButton, PatientTunnelDecor } from './PatientTunnelShared'
 import { useLanguage } from './i18n';
 import LanguageSwitcher from './LanguageSwitcher';
 
+function FloatingBubbles() {
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ 
+            x: Math.random() * 100 + '%', 
+            y: Math.random() * 100 + '%', 
+            scale: Math.random() * 0.5 + 0.5,
+            opacity: 0 
+          }}
+          animate={{ 
+            y: [null, '-20%', '120%'],
+            x: [null, (Math.random() - 0.5) * 50 + '%'],
+            opacity: [0, 0.1, 0.1, 0]
+          }}
+          transition={{ 
+            duration: Math.random() * 10 + 10, 
+            repeat: Infinity, 
+            ease: 'linear',
+            delay: Math.random() * 10
+          }}
+          className="absolute h-64 w-64 rounded-full bg-cherry/5 blur-[80px]"
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function PatientTunnelTransitionPage() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
   const c = patientCopy[lang].transition;
 
   return (
-    <div className="patient-tunnel-root flex min-h-screen flex-col items-center justify-center px-5 py-24 md:px-10">
+    <div className="patient-tunnel-root relative flex min-h-screen flex-col items-center justify-center px-5 py-24 md:px-10 overflow-hidden">
       <PatientTunnelDecor />
       <LanguageSwitcher />
+      <FloatingBubbles />
       
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 30 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.9, y: 30, filter: 'blur(10px)' }}
+        animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         className="patient-tunnel-glass max-w-2xl rounded-[3rem] border border-white/20 p-10 text-center shadow-[0_32px_128px_-16px_rgba(43,21,23,0.15)] md:p-16"
       >

@@ -11,6 +11,7 @@ import {
 import { submitPatientForm1ToWebhook } from './patientForm1Webhook';
 import { PatientPrimaryButton } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
+import { trackCustom, trackLead } from '../utils/metaPixel';
 
 type Props = {
   isOpen: boolean;
@@ -32,6 +33,19 @@ const initialForm: PatientForm1Data = {
   aideAujourdhui: [],
 };
 
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 15, filter: 'blur(4px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.4 } }
+};
+
 export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sourceCta }: Props) {
   const { lang } = useLanguage();
   const copy = patientCopy[lang].form1;
@@ -46,12 +60,19 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
       setSubmitted(false);
       return;
     }
+
+    // Meta Pixel: Track AssessmentStarted when modal opens
+    trackCustom('AssessmentStarted', {
+      name: lang === 'fr' ? 'Patient Tunnel Form 1 (FR)' : 'Patient Tunnel Form 1 (EN)',
+      sourceCta,
+    });
+
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [isOpen]);
+  }, [isOpen, lang, sourceCta]);
 
   const steps = [
     { title: lang === 'fr' ? 'Votre situation' : 'Your situation', fields: ['interventionRealisee', 'typesIntervention'] },
@@ -74,6 +95,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     }
     setSubmitted(true);
     if (!canGoNext) return;
+
+    // Meta Pixel: Track Lead on form submission
+    trackLead(
+      lang === 'fr'
+        ? 'Patient Tunnel – Form 1 (FR)'
+        : 'Patient Tunnel – Form 1 (EN)'
+    );
+
     submitPatientForm1ToWebhook(form, { sourceCta });
     onSubmit(form);
     onClose();
@@ -104,9 +133,10 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
             onClick={onClose}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 32 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 24 }}
+            initial={{ opacity: 0, scale: 0.95, y: 32, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, scale: 0.95, y: 24, filter: 'blur(10px)' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed inset-0 z-[1001] flex items-center justify-center p-4 sm:p-6"
           >
             <div className="patient-tunnel-glass relative flex h-full max-h-[750px] w-full max-w-2xl flex-col overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-cherry/30">
@@ -122,31 +152,44 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                 <div className="flex items-center gap-4 mb-3">
                    <div className="flex gap-1.5">
                       {[1, 2, 3].map(s => (
-                        <div 
+                        <motion.div 
                           key={s} 
-                          className={`h-1 w-8 rounded-full transition-all duration-500 ${s <= step ? 'bg-cherry' : 'bg-cherry/10'}`} 
+                          initial={false}
+                          animate={{ 
+                            width: s === step ? 32 : 8,
+                            backgroundColor: s <= step ? 'rgba(43, 21, 23, 1)' : 'rgba(43, 21, 23, 0.1)'
+                          }}
+                          className="h-1 rounded-full transition-all duration-500" 
                         />
                       ))}
                    </div>
                    <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/40 uppercase">{lang === 'fr' ? 'ÉTAPE' : 'STEP'} {step}/3</span>
                 </div>
-                <h2 className="text-2xl font-semibold text-cherry md:text-3xl">{steps[step - 1].title}</h2>
+                <motion.h2 
+                  key={step}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-2xl font-semibold text-cherry md:text-3xl"
+                >
+                  {steps[step - 1].title}
+                </motion.h2>
               </div>
 
               {/* Form Content */}
-              <form onSubmit={handleSubmit} className="flex flex-1 flex-col overflow-y-auto px-6 py-8 md:px-10">
+              <form onSubmit={handleSubmit} className="flex flex-1 flex-col overflow-y-auto px-6 py-8 md:px-10 no-scrollbar">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
+                    variants={staggerContainer}
+                    initial="hidden"
+                    animate="show"
+                    exit={{ opacity: 0, x: -20, filter: 'blur(4px)' }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
                     className="flex-1 space-y-8"
                   >
                     {step === 1 && (
                       <>
-                        <div className="space-y-4">
+                        <motion.div variants={staggerItem} className="space-y-4">
                            <p className="patient-tunnel-section-label text-cherry/60">{copy.fields.intervention}</p>
                            <div className="flex flex-wrap gap-3">
                               {interventionOptions.map(opt => (
@@ -158,8 +201,8 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                 />
                               ))}
                            </div>
-                        </div>
-                        <div className="space-y-4">
+                        </motion.div>
+                        <motion.div variants={staggerItem} className="space-y-4">
                            <p className="patient-tunnel-section-label text-cherry/60">{copy.fields.typeIntervention}</p>
                            <div className="grid gap-3 sm:grid-cols-2">
                               {typeOptions.map(opt => (
@@ -172,14 +215,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                 />
                               ))}
                            </div>
-                        </div>
+                        </motion.div>
                       </>
                     )}
 
                     {step === 2 && (
-                      <div className="space-y-6">
-                         <p className="text-lg font-light italic text-cherry/80 md:text-xl">{copy.fields.aide}</p>
-                         <div className="grid gap-4 sm:grid-cols-2">
+                      <motion.div variants={staggerContainer} className="space-y-6">
+                         <motion.p variants={staggerItem} className="text-lg font-light italic text-cherry/80 md:text-xl">{copy.fields.aide}</motion.p>
+                         <motion.div variants={staggerItem} className="grid gap-4 sm:grid-cols-2">
                             {aideOptions.map(opt => (
                               <SelectButton
                                 key={opt}
@@ -190,41 +233,50 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                 large
                               />
                             ))}
-                         </div>
-                      </div>
+                         </motion.div>
+                      </motion.div>
                     )}
 
                     {step === 3 && (
-                      <div className="grid gap-6 sm:grid-cols-2">
-                        <ModernInput
-                          label={copy.fields.prenom}
-                          value={form.prenom}
-                          onChange={(v) => setForm(c => ({ ...c, prenom: v }))}
-                        />
-                        <ModernInput
-                          label={copy.fields.nom}
-                          value={form.nom}
-                          onChange={(v) => setForm(c => ({ ...c, nom: v }))}
-                        />
-                        <ModernInput
-                          label={copy.fields.email}
-                          type="email"
-                          value={form.email}
-                          onChange={(v) => setForm(c => ({ ...c, email: v }))}
-                        />
-                        <ModernInput
-                          label={copy.fields.telephone}
-                          type="tel"
-                          value={form.telephone}
-                          onChange={(v) => setForm(c => ({ ...c, telephone: v }))}
-                        />
-                        <ModernInput
-                          label={copy.fields.pays}
-                          value={form.pays}
-                          className="sm:col-span-2"
-                          onChange={(v) => setForm(c => ({ ...c, pays: v }))}
-                        />
-                      </div>
+                      <motion.div variants={staggerContainer} className="grid gap-6 sm:grid-cols-2">
+                        <motion.div variants={staggerItem}>
+                          <ModernInput
+                            label={copy.fields.prenom}
+                            value={form.prenom}
+                            onChange={(v) => setForm(c => ({ ...c, prenom: v }))}
+                          />
+                        </motion.div>
+                        <motion.div variants={staggerItem}>
+                          <ModernInput
+                            label={copy.fields.nom}
+                            value={form.nom}
+                            onChange={(v) => setForm(c => ({ ...c, nom: v }))}
+                          />
+                        </motion.div>
+                        <motion.div variants={staggerItem}>
+                          <ModernInput
+                            label={copy.fields.email}
+                            type="email"
+                            value={form.email}
+                            onChange={(v) => setForm(c => ({ ...c, email: v }))}
+                          />
+                        </motion.div>
+                        <motion.div variants={staggerItem}>
+                          <ModernInput
+                            label={copy.fields.telephone}
+                            type="tel"
+                            value={form.telephone}
+                            onChange={(v) => setForm(c => ({ ...c, telephone: v }))}
+                          />
+                        </motion.div>
+                        <motion.div variants={staggerItem} className="sm:col-span-2">
+                          <ModernInput
+                            label={copy.fields.pays}
+                            value={form.pays}
+                            onChange={(v) => setForm(c => ({ ...c, pays: v }))}
+                          />
+                        </motion.div>
+                      </motion.div>
                     )}
                   </motion.div>
                 </AnimatePresence>
@@ -234,15 +286,15 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                    <button
                      type="button"
                      onClick={() => step > 1 ? setStep(s => s - 1) : onClose()}
-                     className="flex items-center justify-center gap-2 text-sm font-semibold tracking-widest text-cherry/40 transition-colors hover:text-cherry"
+                     className="group flex items-center justify-center gap-2 text-sm font-semibold tracking-widest text-cherry/40 transition-colors hover:text-cherry"
                    >
-                     {step > 1 ? <ChevronLeft className="h-4 w-4" /> : null}
+                     {step > 1 ? <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> : null}
                      {step > 1 ? (lang === 'fr' ? 'RETOUR' : 'BACK') : (lang === 'fr' ? 'ANNULER' : 'CANCEL')}
                    </button>
                    <PatientPrimaryButton 
                     type="submit" 
                     disabled={!canGoNext}
-                    className="!w-full sm:!w-auto !px-12 !py-4 transition-all"
+                    className="!w-full sm:!w-auto !px-12 !py-4 transition-all !rounded-full shadow-xl shadow-cherry/20"
                    >
                      {step === 3 ? copy.submit : (lang === 'fr' ? 'CONTINUER' : 'CONTINUE')}
                      {step < 3 && <ChevronRight className="h-4 w-4 ml-2" />}
@@ -259,7 +311,9 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
 
 function SelectButton({ label, selected, onClick, multi = false, large = false }: { label: string, selected: boolean, onClick: () => void, multi?: boolean, large?: boolean, key?: any }) {
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       type="button"
       onClick={onClick}
       className={`relative flex items-center justify-between gap-4 rounded-2xl border px-5 transition-all duration-300 ${large ? 'py-5' : 'py-4'} ${
@@ -276,7 +330,12 @@ function SelectButton({ label, selected, onClick, multi = false, large = false }
           {selected && <CheckCircle2 className="h-4 w-4" />}
         </div>
       )}
-    </button>
+      <motion.div 
+        initial={false}
+        animate={{ scale: selected ? 1 : 0 }}
+        className="absolute -right-4 -top-4 h-12 w-12 rounded-full bg-white/10"
+      />
+    </motion.button>
   );
 }
 

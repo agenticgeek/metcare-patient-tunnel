@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import metcareLogo from '../../assets/Sigle_Fond_BeigeS_HD.svg';
@@ -21,6 +21,7 @@ import { PATIENT_TUNNEL_STORAGE_KEYS } from './storageKeys';
 import { PatientPrimaryButton, PatientTunnelDecor } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
 import LanguageSwitcher from './LanguageSwitcher';
+import { trackCustom, trackViewContent } from '../utils/metaPixel';
 
 const initialForm: PatientForm2Data = {
   quandIntervention: '',
@@ -43,6 +44,48 @@ function readForm1(): PatientForm1Data | null {
   }
 }
 
+const staggerStep = {
+  hidden: { opacity: 0, y: 20 },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { staggerChildren: 0.1 } 
+  },
+  exit: { 
+    opacity: 0, 
+    x: -30,
+    transition: { duration: 0.3 }
+  }
+};
+
+const itemReveal = {
+  hidden: { opacity: 0, y: 20, filter: 'blur(4px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.5 } }
+};
+
+function MouseSpotlight() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMove);
+    return () => window.removeEventListener('mousemove', handleMove);
+  }, []);
+
+  return (
+    <motion.div 
+      className="glow-spotlight hidden lg:block"
+      animate={{ 
+        x: mousePos.x - 300, 
+        y: mousePos.y - 300 
+      }}
+      transition={{ type: 'spring', damping: 30, stiffness: 150, mass: 0.5 }}
+    />
+  );
+}
+
 export default function PatientTunnelProfilePage() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
@@ -54,6 +97,15 @@ export default function PatientTunnelProfilePage() {
   const [form, setForm] = useState<PatientForm2Data>(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [done, setDone] = useState(false);
+
+  // Meta Pixel: Track ViewContent on page load
+  useMemo(() => {
+    trackViewContent(
+      lang === 'fr'
+        ? 'Patient Tunnel – Profile (FR)'
+        : 'Patient Tunnel – Profile (EN)'
+    );
+  }, [lang]);
 
   const canGoNext = useMemo(() => {
     if (step === 1) return projetSeulement ? form.siPasEncore : form.quandIntervention;
@@ -72,6 +124,12 @@ export default function PatientTunnelProfilePage() {
     if (!canGoNext) return;
     sessionStorage.setItem(PATIENT_TUNNEL_STORAGE_KEYS.form2, JSON.stringify(form));
     submitPatientForm2ToWebhook(form);
+    // Meta Pixel: Track custom event on form completion
+    trackCustom('AssessmentStep', {
+      step: 2,
+      total: 2,
+      funnel: 'patient_tunnel',
+    });
     setDone(true);
   };
 
@@ -86,22 +144,47 @@ export default function PatientTunnelProfilePage() {
 
   if (done) {
     return (
-      <div className="patient-tunnel-root flex min-h-screen items-center justify-center p-6 text-center">
+      <div className="patient-tunnel-root flex min-h-screen items-center justify-center p-6 text-center overflow-hidden">
         <PatientTunnelDecor />
         <LanguageSwitcher />
+        <MouseSpotlight />
+        
+        <div className="absolute inset-0 pointer-events-none">
+           {[...Array(12)].map((_, i) => (
+             <motion.div
+               key={i}
+               initial={{ opacity: 0, scale: 0 }}
+               animate={{ 
+                 opacity: [0, 0.2, 0], 
+                 scale: [0, 1, 0],
+                 x: (Math.random() - 0.5) * 500,
+                 y: (Math.random() - 0.5) * 500
+               }}
+               transition={{ duration: 3, repeat: Infinity, delay: i * 0.2 }}
+               className="absolute left-1/2 top-1/2 h-4 w-4 rounded-full bg-cherry/20 blur-sm"
+             />
+           ))}
+        </div>
+
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="patient-tunnel-glass max-w-xl rounded-[3rem] p-12 shadow-2xl"
+          initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="patient-tunnel-glass max-w-xl rounded-[3rem] p-12 shadow-2xl relative z-10"
         >
-          <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-cherry text-snow shadow-xl shadow-cherry/20">
+          <motion.div 
+            initial={{ scale: 0, rotate: -45 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ delay: 0.4, type: 'spring', stiffness: 150 }}
+            className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-cherry text-snow shadow-xl shadow-cherry/20"
+          >
              <CheckCircle2 className="h-12 w-12" />
-          </div>
+          </motion.div>
           <h1 className="mb-6 font-heading text-3xl font-semibold text-cherry md:text-5xl">{lang === 'fr' ? 'Profil complété.' : 'Profile completed.'}</h1>
           <p className="mb-10 text-lg font-light italic leading-relaxed text-cherry/70 md:text-xl">
              {copy.thankYou}
           </p>
-          <PatientPrimaryButton onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)} className="!px-12 !py-5 !text-lg">
+          <PatientPrimaryButton onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)} className="!px-12 !py-5 !text-lg !rounded-full">
              {patientCopy[lang].transition.backHome}
           </PatientPrimaryButton>
         </motion.div>
@@ -117,31 +200,45 @@ export default function PatientTunnelProfilePage() {
   const accompagnementOptions = getPatientForm2AccompagnementOptions(lang);
 
   return (
-    <div className="patient-tunnel-root min-h-screen px-5 py-12 pb-24 md:px-10 md:py-20">
+    <div className="patient-tunnel-root min-h-screen px-5 py-12 pb-24 md:px-10 md:py-20 overflow-x-hidden">
       <PatientTunnelDecor />
       <LanguageSwitcher />
+      <MouseSpotlight />
       
-      <Link
-        to={PATIENT_TUNNEL_ROUTES.home}
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         className="fixed left-5 top-5 z-40 flex items-center gap-3 rounded-full border border-white/20 bg-white/40 px-3 py-2 shadow-xl backdrop-blur-xl md:left-10 md:top-10"
       >
-        <img src={metcareLogo} alt="Logo" className="h-10 w-10 rounded-full object-cover" width={40} height={40} />
-        <span className="pr-2 text-[0.65rem] font-bold tracking-[0.25em] text-cherry uppercase">METCARE®</span>
-      </Link>
+        <Link to={PATIENT_TUNNEL_ROUTES.home} className="flex items-center gap-3">
+          <img src={metcareLogo} alt="Logo" className="h-10 w-10 rounded-full object-cover" width={40} height={40} />
+          <span className="pr-2 text-[0.65rem] font-bold tracking-[0.25em] text-cherry uppercase">METCARE®</span>
+        </Link>
+      </motion.div>
 
       <div className="mx-auto max-w-3xl">
         <div className="mb-12 text-center">
            <div className="mb-6 flex justify-center gap-2">
               {[1, 2, 3].map(s => (
-                <div 
+                <motion.div 
                   key={s} 
-                  className={`h-1.5 w-12 rounded-full transition-all duration-700 ${s <= step ? 'bg-cherry' : 'bg-cherry/10'}`} 
+                  initial={false}
+                  animate={{ 
+                    width: s === step ? 48 : 12,
+                    backgroundColor: s <= step ? 'rgba(43, 21, 23, 1)' : 'rgba(43, 21, 23, 0.1)'
+                  }}
+                  className="h-1.5 rounded-full transition-all duration-700" 
                 />
               ))}
            </div>
-           <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-cherry/5 px-4 py-1 text-[0.6rem] font-bold tracking-[0.2em] text-cherry/60 uppercase">
+           <motion.span 
+             key={step}
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             className="mb-4 inline-flex items-center gap-2 rounded-full bg-cherry/5 px-4 py-1 text-[0.6rem] font-bold tracking-[0.2em] text-cherry/60 uppercase"
+           >
              {lang === 'fr' ? 'ÉTAPE' : 'STEP'} {step}/3 • {lang === 'fr' ? 'CONCIERGERIE PRIVÉE' : 'PRIVATE CONCIERGE'}
-           </span>
+           </motion.span>
            <h1 className="mt-4 font-heading text-3xl font-semibold text-cherry md:text-5xl">{copy.title}</h1>
            <p className="mt-4 text-sm font-light leading-relaxed text-cherry/70 md:text-base">{copy.intro}</p>
         </div>
@@ -150,18 +247,18 @@ export default function PatientTunnelProfilePage() {
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              variants={staggerStep}
+              initial="hidden"
+              animate="show"
+              exit="exit"
               className="patient-tunnel-glass space-y-12 rounded-[2.5rem] border border-white/20 p-8 shadow-2xl shadow-cherry/10 md:p-12"
             >
               {step === 1 && (
                  <div className="space-y-8 text-center">
-                    <h2 className="text-xl font-medium text-cherry/80 md:text-2xl">
+                    <motion.h2 variants={itemReveal} className="text-xl font-medium text-cherry/80 md:text-2xl">
                        {projetSeulement ? copy.fields.siPasEncore : copy.fields.quand}
-                    </h2>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    </motion.h2>
+                    <motion.div variants={itemReveal} className="grid gap-4 sm:grid-cols-2">
                        {(projetSeulement ? siPasEncoreOptions : quandOptions).map(opt => (
                          <ProfileSelectCard
                             key={opt}
@@ -173,16 +270,16 @@ export default function PatientTunnelProfilePage() {
                             }))}
                          />
                        ))}
-                    </div>
+                    </motion.div>
                  </div>
               )}
 
               {step === 2 && (
                  <div className="space-y-10 text-center">
-                    <h2 className="text-xl font-medium text-cherry/80 md:text-2xl">
+                    <motion.h2 variants={itemReveal} className="text-xl font-medium text-cherry/80 md:text-2xl">
                        {copy.fields.technologie}
-                    </h2>
-                    <div className="flex flex-wrap justify-center gap-4">
+                    </motion.h2>
+                    <motion.div variants={itemReveal} className="flex flex-wrap justify-center gap-4">
                        {technologieOptions.map(opt => (
                          <ProfileSelectCard
                             key={opt}
@@ -192,7 +289,7 @@ export default function PatientTunnelProfilePage() {
                             onClick={() => setForm(c => ({ ...c, technologieConnue: opt }))}
                          />
                        ))}
-                    </div>
+                    </motion.div>
                     
                     {form.technologieConnue === (lang === 'fr' ? 'Oui' : 'Yes') && (
                        <motion.div 
@@ -218,10 +315,10 @@ export default function PatientTunnelProfilePage() {
               {step === 3 && (
                  <div className="space-y-12">
                     <div className="space-y-6">
-                       <h2 className="text-center text-xl font-medium text-cherry/80 md:text-2xl">
+                       <motion.h2 variants={itemReveal} className="text-center text-xl font-medium text-cherry/80 md:text-2xl">
                           {copy.fields.sentiment}
-                       </h2>
-                       <div className="grid gap-3 sm:grid-cols-2">
+                       </motion.h2>
+                       <motion.div variants={itemReveal} className="grid gap-3 sm:grid-cols-2">
                           {sentimentOptions.map(opt => (
                             <ProfileSelectCard
                                key={opt}
@@ -231,14 +328,14 @@ export default function PatientTunnelProfilePage() {
                                onClick={() => toggleArr('commentVousSentez', opt)}
                             />
                           ))}
-                       </div>
+                       </motion.div>
                     </div>
 
                     <div className="space-y-6">
-                       <h2 className="text-center text-xl font-medium text-cherry/80 md:text-2xl">
+                       <motion.h2 variants={itemReveal} className="text-center text-xl font-medium text-cherry/80 md:text-2xl">
                           {copy.fields.aideMaintenant}
-                       </h2>
-                       <div className="grid gap-3 sm:grid-cols-2">
+                       </motion.h2>
+                       <motion.div variants={itemReveal} className="grid gap-3 sm:grid-cols-2">
                           {aideMaintenantOptions.map(opt => (
                             <ProfileSelectCard
                                key={opt}
@@ -248,14 +345,14 @@ export default function PatientTunnelProfilePage() {
                                onClick={() => toggleArr('aideMaintenant', opt)}
                             />
                           ))}
-                       </div>
+                       </motion.div>
                     </div>
 
                     <div className="space-y-6">
-                       <h2 className="text-center text-xl font-medium text-cherry/80 md:text-2xl">
+                       <motion.h2 variants={itemReveal} className="text-center text-xl font-medium text-cherry/80 md:text-2xl">
                           {copy.fields.accompagnement}
-                       </h2>
-                       <div className="flex flex-wrap justify-center gap-4">
+                       </motion.h2>
+                       <motion.div variants={itemReveal} className="flex flex-wrap justify-center gap-4">
                           {accompagnementOptions.map(opt => (
                             <ProfileSelectCard
                                key={opt}
@@ -264,7 +361,7 @@ export default function PatientTunnelProfilePage() {
                                onClick={() => setForm(c => ({ ...c, accompagnementSouhaite: opt }))}
                             />
                           ))}
-                       </div>
+                       </motion.div>
                     </div>
                  </div>
               )}

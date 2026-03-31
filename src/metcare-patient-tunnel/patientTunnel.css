@@ -57,6 +57,56 @@
   box-shadow: 
     0 10px 30px -10px rgba(43, 21, 23, 0.1),
     inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.patient-tunnel-glass:hover {
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 
+    0 30px 60px -15px rgba(43, 21, 23, 0.15),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.text-reveal-mask {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.glow-spotlight {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(222, 205, 187, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  mix-blend-mode: soft-light;
+  filter: blur(60px);
+}
+
+@keyframes pan-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-pan-bg {
+  background-size: 200% 200%;
+  animation: pan-bg 12s linear infinite;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.rotate-3d-hover {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+}
+
+.rotate-3d-hover:hover {
+  transform: rotateX(4deg) rotateY(-4deg);
 }
 
 .text-stroke-cherry {
