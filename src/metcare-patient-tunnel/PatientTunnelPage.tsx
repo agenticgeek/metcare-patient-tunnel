@@ -187,7 +187,7 @@ export default function PatientTunnelPage() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="patient-tunnel-hero-aurora relative flex min-h-screen flex-col items-center justify-center px-6 text-center md:px-12 lg:px-24">
+      <section className="patient-tunnel-hero-aurora relative flex min-h-screen flex-col items-center justify-center px-6 pt-28 text-center md:px-12 md:pt-32 lg:px-24 lg:pt-36">
         <motion.div
           className="relative z-10 w-full max-w-[1400px]"
           style={{ scale: heroScale, opacity: heroOpacity }}
