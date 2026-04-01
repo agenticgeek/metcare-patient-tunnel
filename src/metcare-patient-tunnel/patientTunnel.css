@@ -33,6 +33,7 @@
     radial-gradient(circle at 15% 40%, rgba(222, 205, 187, 0.45), transparent 52%),
     radial-gradient(circle at 88% 22%, rgba(43, 21, 23, 0.06), transparent 48%);
   pointer-events: none;
+  contain: strict;
 }
 
 .patient-tunnel-grain {
@@ -41,8 +42,9 @@
   z-index: -1;
   width: 100vw;
   height: 100vh;
-  opacity: 0.22;
+  opacity: 0.18;
   pointer-events: none;
+  contain: strict;
 }
 
 .patient-tunnel-hero-bg {
@@ -184,9 +186,10 @@
   background: linear-gradient(
     180deg,
     #ecebe9 0%,
-    rgba(222, 205, 187, 0.22) 46%,
+    rgba(222, 205, 187, 0.35) 46%,
     #ecebe9 100%
   );
+  will-change: transform;
 }
 
 .patient-tunnel-hero-aurora::before {
@@ -194,14 +197,15 @@
   position: absolute;
   inset: -10%;
   background:
-    radial-gradient(circle at 18% 36%, rgba(222, 205, 187, 0.45), transparent 34%),
-    radial-gradient(circle at 76% 18%, rgba(43, 21, 23, 0.10), transparent 26%),
-    radial-gradient(circle at 54% 55%, rgba(255, 255, 255, 0.52), transparent 28%),
-    radial-gradient(circle at 82% 70%, rgba(222, 205, 187, 0.20), transparent 30%),
-    radial-gradient(circle at 30% 82%, rgba(43, 21, 23, 0.08), transparent 22%);
-  filter: blur(28px);
-  animation: patient-tunnel-meshMove 18s ease-in-out infinite alternate;
+    radial-gradient(circle at 18% 36%, rgba(222, 205, 187, 0.65), transparent 45%),
+    radial-gradient(circle at 76% 18%, rgba(43, 21, 23, 0.15), transparent 35%),
+    radial-gradient(circle at 54% 55%, rgba(255, 255, 255, 0.65), transparent 40%),
+    radial-gradient(circle at 82% 70%, rgba(222, 205, 187, 0.35), transparent 40%),
+    radial-gradient(circle at 30% 82%, rgba(43, 21, 23, 0.12), transparent 30%);
+  filter: blur(20px);
+  animation: patient-tunnel-meshMove 20s ease-in-out infinite alternate;
   z-index: 0;
+  will-change: transform;
 }
 
 .patient-tunnel-hero-aurora::after {
@@ -211,25 +215,27 @@
   background:
     linear-gradient(
       120deg,
-      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.35) 0%,
       rgba(255, 255, 255, 0) 32%,
-      rgba(43, 21, 23, 0.06) 52%,
-      rgba(255, 255, 255, 0.18) 72%,
+      rgba(43, 21, 23, 0.12) 52%,
+      rgba(255, 255, 255, 0.25) 72%,
       rgba(255, 255, 255, 0) 100%
     );
   mix-blend-mode: soft-light;
-  opacity: 0.85;
-  animation: patient-tunnel-veilShift 14s ease-in-out infinite alternate;
+  opacity: 0.95;
+  animation: patient-tunnel-veilShift 16s ease-in-out infinite alternate;
   z-index: 0;
+  will-change: transform;
 }
 
 .patient-tunnel-aurora {
   position: absolute;
   inset: -12%;
   z-index: 0;
-  filter: blur(42px) saturate(112%);
-  opacity: 0.95;
+  filter: blur(30px) saturate(120%);
+  opacity: 1;
   pointer-events: none;
+  will-change: transform;
 }
 
 .patient-tunnel-aurora span {
@@ -246,8 +252,8 @@
   top: 8vh;
   background: radial-gradient(
     ellipse at center,
-    rgba(222, 205, 187, 0.62) 0%,
-    rgba(222, 205, 187, 0.16) 48%,
+    rgba(222, 205, 187, 0.75) 0%,
+    rgba(222, 205, 187, 0.25) 48%,
     transparent 74%
   );
   animation: patient-tunnel-floatOne 16s ease-in-out infinite alternate;
@@ -260,8 +266,8 @@
   top: 12vh;
   background: radial-gradient(
     ellipse at center,
-    rgba(43, 21, 23, 0.18) 0%,
-    rgba(43, 21, 23, 0.07) 42%,
+    rgba(43, 21, 23, 0.25) 0%,
+    rgba(43, 21, 23, 0.12) 42%,
     transparent 72%
   );
   animation: patient-tunnel-floatTwo 20s ease-in-out infinite alternate;
@@ -274,8 +280,8 @@
   top: 34vh;
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 255, 255, 0.54) 0%,
-    rgba(255, 255, 255, 0.12) 48%,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.22) 48%,
     transparent 74%
   );
   animation: patient-tunnel-floatThree 22s ease-in-out infinite alternate;
@@ -288,8 +294,8 @@
   bottom: 6vh;
   background: radial-gradient(
     ellipse at center,
-    rgba(222, 205, 187, 0.28) 0%,
-    rgba(222, 205, 187, 0.10) 45%,
+    rgba(222, 205, 187, 0.45) 0%,
+    rgba(222, 205, 187, 0.18) 45%,
     transparent 75%
   );
   animation: patient-tunnel-floatFour 18s ease-in-out infinite alternate;
@@ -300,8 +306,8 @@
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(circle at 50% 38%, rgba(43, 21, 23, 0.12) 0%, rgba(43, 21, 23, 0.07) 34%, rgba(43, 21, 23, 0.02) 62%, transparent 100%),
-    linear-gradient(180deg, rgba(43, 21, 23, 0.025) 0%, rgba(43, 21, 23, 0.045) 100%);
+    radial-gradient(circle at 50% 38%, rgba(43, 21, 23, 0.18) 0%, rgba(43, 21, 23, 0.12) 34%, rgba(43, 21, 23, 0.05) 62%, transparent 100%),
+    linear-gradient(180deg, rgba(43, 21, 23, 0.04) 0%, rgba(43, 21, 23, 0.08) 100%);
   pointer-events: none;
 }
 

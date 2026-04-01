@@ -31,17 +31,17 @@ export const getPatientForm1TypeOptions = (lang: 'fr' | 'en') =>
 
 export const getPatientForm1AideOptions = (lang: 'fr' | 'en') => 
   lang === 'fr'
-    ? ['Etre rassuree', 'Comprendre ma recuperation', 'Etre accompagnee', 'Trouver un expert'] as const
+    ? ['Être rassurée', 'Comprendre ma récupération', 'Être accompagnée', 'Trouver un expert'] as const
     : ['Be reassured', 'Understand my recovery', 'Be accompanied', 'Find an expert'] as const;
 
 export const getPatientForm2QuandOptions = (lang: 'fr' | 'en') => 
   lang === 'fr'
-    ? ['Moins de 7 jours', '1 a 3 semaines', '1 a 3 mois', 'Plus de 3 mois'] as const
+    ? ['Moins de 7 jours', '1 à 3 semaines', '1 à 3 mois', 'Plus de 3 mois'] as const
     : ['Less than 7 days', '1 to 3 weeks', '1 to 3 months', 'More than 3 months'] as const;
 
 export const getPatientForm2SiPasEncoreOptions = (lang: 'fr' | 'en') => 
   lang === 'fr'
-    ? ["Moins d'1 mois", '1 a 3 mois', 'Plus tard', 'En reflexion'] as const
+    ? ["Moins d'1 mois", '1 à 3 mois', 'Plus tard', 'En réflexion'] as const
     : ['Less than 1 month', '1 to 3 months', 'Later', 'In reflection'] as const;
 
 export const getPatientForm2TechnologieOptions = (lang: 'fr' | 'en') => 
@@ -49,17 +49,17 @@ export const getPatientForm2TechnologieOptions = (lang: 'fr' | 'en') =>
 
 export const getPatientForm2SentimentOptions = (lang: 'fr' | 'en') => 
   lang === 'fr'
-    ? ['Stressee', 'Perdue', 'En manque d\'informations', 'J\'ai des questions', 'Je veux etre rassuree'] as const
+    ? ['Stressée', 'Perdue', 'En manque d\'informations', 'J\'ai des questions', 'Je veux être rassurée'] as const
     : ['Stressed', 'Lost', 'Lack of information', 'I have questions', 'I want to be reassured'] as const;
 
 export const getPatientForm2AideMaintenantOptions = (lang: 'fr' | 'en') => 
   lang === 'fr'
-    ? ['Comprendre mon evolution', 'Etre accompagnee', 'Trouver un professionnel', 'Preparer mon intervention'] as const
+    ? ['Comprendre mon évolution', 'Être accompagnée', 'Trouver un professionnel', 'Préparer mon intervention'] as const
     : ['Understand my progress', 'Be accompanied', 'Find a professional', 'Prepare my surgery'] as const;
 
 export const getPatientForm2AccompagnementOptions = (lang: 'fr' | 'en') => 
   lang === 'fr'
-    ? ['Pres de chez moi', 'A l\'etranger', 'Les deux'] as const
+    ? ['Près de chez moi', 'À l\'étranger', 'Les deux'] as const
     : ['Near me', 'Abroad', 'Both'] as const;
 
 export const patientCopy = {
@@ -68,133 +68,146 @@ export const patientCopy = {
       title: 'METCARE® — Accompagnement patient',
     },
     hero: {
-      headline: "Vous n'etes pas seule apres votre intervention.",
+      headline: "Vous n’êtes pas seule après votre intervention.",
       body:
-        "Chaque jour des femmes prennent une decision importante. Changer. Se transformer. Se retrouver. Mais une fois l'intervention passee... c'est souvent la que tout commence. Le corps change. Les sensations evoluent. Les emotions aussi. Et beaucoup de patientes se retrouvent seules face a cette etape. Chez METCARE®, nous avons fait de cette phase une priorite.",
-      ctaEchange: 'Je beneficie de mon echange offert',
-      ctaGuide: 'Je recois mon guide patient',
+        "Chaque jour, des femmes prennent une décision importante. Changer. Se transformer. Se retrouver. Mais une fois l’intervention passée… c’est souvent là que tout commence. Le corps change. Les sensations évoluent. Les émotions aussi. Et beaucoup de patientes se retrouvent seules face à cette étape. Chez METCARE®, nous avons fait de cette phase une priorité.",
+      ctaEchange: 'Je bénéficie de mon échange offert',
+      ctaGuide: 'Je reçois mon guide patient',
     },
     sections: {
       repere: {
-        label: 'UN PREMIER REPERE POUR VOUS',
+        label: 'UN PREMIER REPÈRE POUR VOUS',
         title: '',
         body:
-          "Suite a votre demande, vous recevrez un guide patient offert. Un guide simple pour vous aider a: comprendre ce qui se passe apres votre intervention / savoir quoi observer / vous reperer dans les differentes etapes. Parce que comprendre... c'est deja se rassurer.",
+          "Suite à votre demande, vous recevrez un guide patient offert. Un guide simple pour vous aider à : comprendre ce qui se passe après votre intervention / savoir quoi observer / vous repérer dans les différentes étapes. Parce que comprendre… c’est déjà se rassurer.",
       },
       normal: {
         label: 'CE QUE VOUS VIVEZ EST NORMAL',
         title: '',
         body:
-          "Que vous ayez realise: une liposuccion / un BBL / un lifting cervico-facial / une augmentation mammaire / ou toute autre intervention. Vous pouvez ressentir: des doutes / de l'inconfort / un manque de reperes / des questions sans reponse. Et c'est normal. Mais cela ne devrait pas etre vecu seule.",
+          "Que vous ayez réalisé : une liposuccion / un BBL / un lifting cervico-facial / une augmentation mammaire / ou toute autre intervention. Vous pouvez ressentir : des doutes / de l’inconfort / un manque de repères / des questions sans réponse. Et c’est normal. Mais cela ne devrait pas être vécu seule.",
       },
       safety: {
-        label: 'LA SECURITE AVANT TOUT — SAFETY PATIENT®',
+        label: 'LA SÉCURITÉ AVANT TOUT — SAFETY PATIENT®',
         title: '',
         body:
-          "Chez METCARE®, la securite du patient est au coeur de tout. Nous sommes a l'origine du label Safety Patient®, pense pour accompagner les patients avant et apres leur intervention. Vous n'etes pas seule. Vous etes entouree.",
+          "Chez METCARE®, la sécurité du patient est au cœur de tout. Nous sommes à l’origine du label Safety Patient®, pensé pour accompagner les patients avant et après leur intervention. Vous n’êtes pas seule. Vous êtes entourée.",
       },
       expertise: {
         label: 'UNE EXPERTISE RECONNUE',
         title: '',
         body:
-          'Depuis plus de 17 ans, METCARE® accompagne: plus de 8000 patients chaque annee / plus de 2500 chirurgiens partenaires / plus de 1300 experts specialises. Une approche structuree, dediee a la chirurgie esthetique et a l\'accompagnement perioperatoire en chirurgie esthetique.',
+          'Depuis plus de 17 ans, METCARE® accompagne : plus de 8000 patients chaque année / plus de 2500 chirurgiens partenaires / plus de 1300 experts spécialisés. Une approche structurée, dédiée à la chirurgie esthétique et à l’accompagnement périopératoire en chirurgie esthétique.',
       },
       conciergerie: {
-        label: 'UNE CONCIERGERIE ESTHETIQUE INTERNATIONALE',
+        label: 'UNE CONCIERGERIE ESTHÉTIQUE INTERNATIONALE',
         title: '',
         body:
-          "Ou que vous soyez. Ou que vous ayez realise votre intervention. Nous vous permettons d'acceder a un reseau de professionnels qualifies, adaptes a votre situation et a votre parcours. Dans un cadre structure, securise et personalise.",
-        cta: 'Je trouve un expert adapte a ma situation',
+          "Où que vous soyez. Où que vous ayez réalisé votre intervention. Nous vous permettons d’accéder à un réseau de professionnels qualifiés, adaptés à votre situation et à votre parcours. Dans un cadre structuré, sécurisé et personnalisé.",
+        cta: 'Je trouve un expert adapté à ma situation',
       },
       echange: {
-        label: 'UN PREMIER ECHANGE SIMPLE ET OFFERT',
+        label: 'UN PREMIER ÉCHANGE SIMPLE ET OFFERT',
         title: '',
-        body:
-          "Vous pouvez beneficier d'un rendez-vous de mise en relation, entierement offert. Un echange d'environ 15 minutes pour faire le point sur votre situation et comprendre precisement vos besoins. Ce rendez-vous vous permet: d'etre ecoutee / d'etre orientee / de ne plus rester seule. Le patient est notre priorite. C'est pour cela que cet echange est propose sans engagement.",
-        cta: 'Je beneficie de mon echange offert',
+        intro:
+          "Vous pouvez bénéficier d’un rendez-vous de mise en relation, entièrement offert.",
+        bullets: [
+          'Un échange d’environ 15 minutes',
+          'Pour faire le point sur votre situation',
+          'Et comprendre précisément vos besoins',
+        ],
+        followup:
+          "Ce rendez-vous vous permet : d’être écoutée / d’être orientée / de ne plus rester seule. Le patient est notre priorité. C’est pour cela que cet échange est proposé sans engagement.",
+        cta: 'Je bénéficie de mon échange offert',
       },
       parcours: {
         label: 'VOTRE PARCOURS',
         title: '',
-        intro: "Vous n'avez pas besoin de tout gerer seule.",
+        intro: "Vous n’avez pas besoin de tout gérer seule.",
         steps: [
           'Vous nous partagez votre situation (intervention, besoin, localisation)',
-          'Nous vous contactons pour un echange personalise',
-          'Nous vous orientons vers les solutions adaptees.',
+          'Nous vous contactons pour un échange personnalisé',
+          'Nous vous orientons vers les solutions adaptées.',
         ],
-        outro: 'Simple, clair, structure.',
+        outro: 'Simple, clair, structuré.',
       },
       solutions: {
         label: 'VOS SOLUTIONS',
         title: '',
         body:
-          'Selon votre situation, vous pouvez beneficier de: Accompagnement personalise / E-book complet 148 pages / Signature Recovery Protocol. Chaque solution est pensee pour vous.',
+          'Selon votre situation, vous pouvez bénéficier de : Accompagnement personnalisé / E-book complet 148 pages / Signature Recovery Protocol. Chaque solution est pensée pour vous.',
       },
       opportunite: {
-        label: 'UNE OPPORTUNITE COMPLEMENTAIRE',
+        label: 'UNE OPPORTUNITÉ COMPLÉMENTAIRE',
         title: '',
         body:
-          'Selon votre profil, vous pouvez egalement acceder a: une liste d\'attente pour beneficier de soins encadres dans certaines villes (Paris et regions). Ces soins sont realises dans un cadre specifique, avec des professionnels formes a notre approche. Les places sont limitees.',
+          'Selon votre profil, vous pouvez également accéder à : une liste d’attente pour bénéficier de soins encadrés dans certaines villes (Paris et régions). Ces soins sont réalisés dans un cadre spécifique, avec des professionnels formés à notre approche. Les places sont limitées.',
       },
       bonEndroit: {
-        label: 'VOUS ETES AU BON ENDROIT',
+        label: 'VOUS ÊTES AU BON ENDROIT',
         title: '',
-        body:
-          "Si vous etes ici... ce n'est probablement pas un hasard. Peut-etre que vous ressentez: le besoin d'etre rassuree / le besoin de comprendre / le besoin d'etre accompagnee. Et c'est exactement notre role.",
+        intro:
+          "Si vous êtes ici… ce n’est probablement pas un hasard.",
+        bullets: [
+          'Le besoin d’être rassurée',
+          'Le besoin de comprendre',
+          'Le besoin d’être accompagnée',
+        ],
+        followup: 'Et c’est exactement notre rôle.',
       },
       final: {
         body:
-          'Parlons de votre situation. Prenez quelques instants pour nous expliquer votre parcours. Cela nous permet de vous orienter avec precision et de vous proposer un accompagnement adapte.',
-        cta: 'Je beneficie de mon echange offert',
+          'Parlons de votre situation. Prenez quelques instants pour nous expliquer votre parcours. Cela nous permet de vous orienter avec précision et de vous proposer un accompagnement adapté.',
+        cta: 'Je bénéficie de mon échange offert',
       },
     },
     form1: {
       title: 'Parlons de votre situation',
       intro:
-        'En quelques secondes, expliquez-nous votre situation. Cela nous permet de vous orienter rapidement et de vous proposer un accompagnement adapte.',
-      submit: 'Je beneficie de mon echange offert',
+        'En quelques secondes, expliquez-nous votre situation. Cela nous permet de vous orienter rapidement et de vous proposer un accompagnement adapté.',
+      submit: 'Je bénéficie de mon échange offert',
       fields: {
         nom: 'Nom',
-        prenom: 'Prenom',
+        prenom: 'Prénom',
         email: 'Email',
-        telephone: 'Telephone',
+        telephone: 'Téléphone',
         pays: 'Pays',
         ville: 'Ville',
         codePostal: 'Code postal',
-        intervention: 'Avez-vous deja realise votre intervention ?',
-        typeIntervention: 'Quel type d\'intervention vous concerne ?',
+        intervention: 'Avez-vous déjà réalisé votre intervention ?',
+        typeIntervention: 'Quel type d’intervention vous concerne ?',
         aide: "Qu'est-ce qui vous aiderait le plus aujourd'hui ?",
       },
     },
     transition: {
-      title: 'Votre demande a bien ete prise en compte',
+      title: 'Votre demande a bien été prise en compte',
       body:
-        'Merci pour votre confiance. Vous allez recevoir : votre guide patient / les premieres informations / et notre equipe pourra revenir vers vous rapidement. Avant cela...',
+        'Merci pour votre confiance. Vous allez recevoir : votre guide patient / les premières informations / et notre équipe pourra revenir vers vous rapidement. Avant cela...',
       prompt:
-        'Prenez 1 minute pour nous en dire un peu plus. Cela nous permet de: mieux comprendre votre situation / adapter nos recommandations / vous orienter avec precision.',
-      notice: 'Ce formulaire est facultatif. Mais il nous permet de vous accompagner avec precision.',
-      cta: 'Je complete mon profil',
-      skip: 'Passer cette etape',
+        'Prenez 1 minute pour nous en dire un peu plus. Cela nous permet de : mieux comprendre votre situation / adapter nos recommandations / vous orienter avec précision.',
+      notice: 'Ce formulaire est facultatif. Mais il nous permet de vous accompagner avec précision.',
+      cta: 'Je complète mon profil',
+      skip: 'Passer cette étape',
       backHome: 'Retour',
     },
     form2: {
       title: 'Pour aller plus loin',
-      intro: 'Ces informations nous permettent de vous accompagner avec precision.',
+      intro: 'Ces informations nous permettent de vous accompagner avec précision.',
       submit: 'Je valide mon profil',
       thankYou:
-        'Merci. Ces informations nous permettent de mieux vous accompagner. Notre equipe pourra revenir vers vous pour faire le point avec vous.',
+        'Merci. Ces informations nous permettent de mieux vous accompagner. Notre équipe pourra revenir vers vous pour faire le point avec vous.',
       fields: {
         quand: 'Quand a eu lieu votre intervention ?',
-        siPasEncore: 'Si elle n\'est pas encore realisee :',
-        technologie: 'Connaissez-vous la technologie utilisee ou prevue ?',
-        technologieDetail: 'Precisez la technologie',
+        siPasEncore: 'Si elle n’est pas encore réalisée :',
+        technologie: 'Connaissez-vous la technologie utilisée ou prévue ?',
+        technologieDetail: 'Précisez la technologie',
         sentiment: 'Aujourd\'hui, comment vous sentez-vous ?',
         aideMaintenant: "Qu'est-ce qui vous aiderait le plus maintenant ?",
-        accompagnement: 'Souhaitez-vous etre accompagnee :',
+        accompagnement: 'Souhaitez-vous être accompagnée :',
       },
     },
     ui: {
-      noSession: 'Aucune demande en cours. Utilisez le formulaire sur la page d\'accueil.',
+      noSession: 'Aucune demande en cours. Utilisez le formulaire sur la page d’accueil.',
     },
   },
   en: {
@@ -241,10 +254,17 @@ export const patientCopy = {
         cta: 'I find an expert adapted to my situation',
       },
       echange: {
-        label: 'A SIMPLE AND OFFERED FIRST EXCHANGE',
+        label: 'A FIRST EXCHANGE — SIMPLE AND FREE',
         title: '',
-        body:
-          "You can benefit from a connection appointment, entirely offered. An exchange of about 15 minutes to review your situation and precisely understand your needs. This appointment allows you: to be listened to / to be oriented / to no longer stay alone. The patient is our priority. That is why this exchange is offered without commitment.",
+        intro:
+          'You can benefit from a connecting appointment, entirely free.',
+        bullets: [
+          'An exchange of around 15 minutes',
+          'To take stock of your situation',
+          'And understand your needs precisely',
+        ],
+        followup:
+          'This appointment allows you to: be heard / be guided / no longer be alone. The patient is our priority. That is why this exchange is offered with no commitment.',
         cta: 'I benefit from my offered exchange',
       },
       parcours: {
@@ -273,8 +293,14 @@ export const patientCopy = {
       bonEndroit: {
         label: 'YOU ARE IN THE RIGHT PLACE',
         title: '',
-        body:
-          "If you are here... it is probably not by chance. Perhaps you feel: the need to be reassured / the need to understand / the need to be accompanied. And that is exactly our role.",
+        intro:
+          'If you are here… it’s probably not a coincidence.',
+        bullets: [
+          'The need to be reassured',
+          'The need to understand',
+          'The need to be accompanied',
+        ],
+        followup: 'And that is exactly our role.',
       },
       final: {
         body:

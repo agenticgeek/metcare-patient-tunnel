@@ -75,7 +75,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
   }, [isOpen, lang, sourceCta]);
 
   const steps = [
-    { title: lang === 'fr' ? 'Votre situation' : 'Your situation', fields: ['interventionRealisee', 'typesIntervention'] },
+    { title: copy.title, fields: ['interventionRealisee', 'typesIntervention'] },
     { title: lang === 'fr' ? 'Vos besoins' : 'Your needs', fields: ['aideAujourdhui'] },
     { title: lang === 'fr' ? 'Vos coordonnées' : 'Your contact info', fields: ['nom', 'prenom', 'email', 'telephone', 'pays'] },
   ];

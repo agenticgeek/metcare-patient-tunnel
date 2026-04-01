@@ -8,12 +8,15 @@ export function PatientTunnelDecor() {
   return (
     <>
       <div className="patient-tunnel-bg-mesh" aria-hidden />
-      <svg className="patient-tunnel-grain" aria-hidden>
-        <filter id="patientTunnelNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#patientTunnelNoise)" />
-      </svg>
+      <div className="patient-tunnel-grain" aria-hidden>
+        <svg width="100%" height="100%" style={{ filter: 'contrast(150%) brightness(1000%)' }}>
+          <filter id="patientTunnelNoise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#patientTunnelNoise)" opacity="0.05" />
+        </svg>
+      </div>
       <motion.div
         className="fixed left-0 right-0 top-0 z-50 h-[2px] origin-left bg-cherry"
         style={{ scaleX }}
@@ -100,7 +103,7 @@ export function PatientSection({
   };
 
   return (
-    <section id={id} aria-label={ariaLabel} className={`px-5 py-14 md:px-10 md:py-20 ${tones[tone]} ${className}`}>
+    <section id={id} aria-label={ariaLabel} className={`px-5 py-14 md:px-10 md:py-20 ${tones[tone]} ${className}`} style={{ contentVisibility: 'auto', containIntrinsicSize: '0 500px' }}>
       <div className={`mx-auto ${maxWidths[maxWidth]}`}>
         {label ? (
           <h2

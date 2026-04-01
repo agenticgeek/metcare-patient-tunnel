@@ -187,7 +187,7 @@ export default function PatientTunnelPage() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center md:px-12 lg:px-24">
+      <section className="patient-tunnel-hero-aurora relative flex min-h-screen flex-col items-center justify-center px-6 text-center md:px-12 lg:px-24">
         <motion.div
           className="relative z-10 w-full max-w-[1400px]"
           style={{ scale: heroScale, opacity: heroOpacity }}
@@ -236,18 +236,13 @@ export default function PatientTunnelPage() {
           </motion.div>
         </motion.div>
         
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <motion.div 
-            animate={{ scale: [1, 1.1, 1], x: [0, 20, 0], y: [0, -30, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute left-[5%] top-[10%] h-[60vh] w-[60vh] rounded-full bg-beige/10 blur-[120px]" 
-          />
-          <motion.div 
-            animate={{ scale: [1.1, 1, 1.1], x: [0, -40, 0], y: [0, 50, 0] }}
-            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute right-[5%] bottom-[10%] h-[70vh] w-[70vh] rounded-full bg-cherry/5 blur-[150px]" 
-          />
+        <div className="patient-tunnel-aurora" aria-hidden="true">
+          <span className="a1"></span>
+          <span className="a2"></span>
+          <span className="a3"></span>
+          <span className="a4"></span>
         </div>
+        <div className="patient-tunnel-hero-depth" aria-hidden="true"></div>
       </section>
 
       {/* Editorial Split-Screen Section */}
@@ -378,13 +373,85 @@ export default function PatientTunnelPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            className="md:col-span-4 md:row-span-2 patient-tunnel-glass rounded-[3rem] p-10 flex items-center justify-between"
+            className="md:col-span-4 md:row-span-2 patient-tunnel-glass rounded-[3rem] p-10 flex items-center"
           >
              <TextWithTags 
                text={c.sections.expertise.body} 
-               className="text-sm font-light leading-relaxed text-cherry/70 italic max-w-[85%]" 
+               className="text-sm font-light leading-relaxed text-cherry/70 italic" 
              />
-             <div className="h-10 w-10 flex-shrink-0 rounded-full border border-cherry/10 flex items-center justify-center text-cherry/20">→</div >
+          </motion.div>
+        </div>
+      </PatientSection>
+
+      <PatientSection label={c.sections.echange.label} tone="beige" maxWidth="none" className="py-24! overflow-hidden">
+        <div className="relative mx-auto max-w-6xl">
+          {/* Decorative 15min background element */}
+          <div className="pointer-events-none absolute -right-12 -top-20 select-none opacity-[0.04]">
+            <span className="text-[12rem] font-bold tracking-tighter text-cherry md:text-[18rem]">15min</span>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="patient-tunnel-glass relative overflow-hidden rounded-[4rem] border-none bg-white/40 p-8 md:p-16"
+          >
+            <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <span className="inline-block rounded-full bg-cherry/5 px-4 py-1.5 text-[0.6rem] font-bold tracking-[0.2em] text-cherry/60 uppercase">
+                    {lang === 'fr' ? 'Échange Gratuit' : 'Free Exchange'}
+                  </span>
+                  <h3 className="text-3xl font-semibold leading-tight text-cherry md:text-4xl lg:text-5xl">
+                    {c.sections.echange.intro}
+                  </h3>
+                </div>
+
+                <div className="space-y-4">
+                  {c.sections.echange.bullets.map((bullet, i) => (
+                    <motion.div
+                      key={bullet}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + i * 0.1 }}
+                      className="flex items-center gap-4 text-cherry/80"
+                    >
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cherry text-snow shadow-lg shadow-cherry/10">
+                        <span className="text-xs">✓</span>
+                      </div>
+                      <span className="text-base font-light md:text-lg">{bullet}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="relative space-y-10 lg:pl-12">
+                <div className="absolute left-0 top-0 hidden h-full w-px bg-gradient-to-b from-cherry/20 via-cherry/5 to-transparent lg:block" />
+                
+                <div className="space-y-6">
+                  <TextWithTags
+                    text={c.sections.echange.followup}
+                    className="text-base font-light leading-relaxed text-cherry/70 md:text-xl italic"
+                  />
+                  <div className="rounded-2xl bg-beige/20 p-6 border border-beige/30">
+                    <p className="text-xs font-bold tracking-widest text-cherry/40 uppercase mb-2">
+                      {lang === 'fr' ? 'Priorité Patient' : 'Patient Priority'}
+                    </p>
+                    <p className="text-sm font-medium text-cherry/80">
+                      {lang === 'fr' ? 'Un moment d\'écoute privilégié, sans aucune pression commerciale.' : 'A privileged moment of listening, without any commercial pressure.'}
+                    </p>
+                  </div>
+                </div>
+
+                <PatientPrimaryButton
+                  onClick={() => openForm(c.sections.echange.cta)}
+                  className="!w-full !px-12 !py-6 !text-lg !rounded-full shadow-2xl shadow-cherry/20 hover:scale-105 transition-transform"
+                >
+                  {c.sections.echange.cta}
+                </PatientPrimaryButton>
+              </div>
+            </div>
           </motion.div>
         </div>
       </PatientSection>
@@ -457,6 +524,59 @@ export default function PatientTunnelPage() {
               accent
            />
         </div>
+      </PatientSection>
+
+      <PatientSection label={c.sections.bonEndroit.label} tone="snow" maxWidth="none" className="py-32! md:py-48! relative overflow-hidden bg-white">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] bg-beige/10 blur-[120px] rounded-full" />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="relative z-10 mx-auto max-w-4xl text-center"
+        >
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-12"
+          >
+            <div className="space-y-6">
+              <h3 className="text-2xl font-light italic leading-relaxed text-cherry/80 md:text-4xl lg:text-5xl">
+                « {c.sections.bonEndroit.intro} »
+              </h3>
+              <div className="h-px w-24 bg-cherry/20 mx-auto" />
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-3">
+              {c.sections.bonEndroit.bullets.map((bullet, i) => (
+                <motion.div
+                  key={bullet}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + i * 0.1 }}
+                  className="space-y-4"
+                >
+                  <span className="text-[0.65rem] font-bold tracking-[0.3em] text-cherry/30 uppercase italic">
+                    {lang === 'fr' ? 'Ressenti' : 'Feeling'} 0{i + 1}
+                  </span>
+                  <p className="text-lg font-medium text-cherry leading-tight">{bullet}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.p 
+              initial={{ scale: 0.95, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="text-xl md:text-2xl font-semibold tracking-tight text-cherry pt-8"
+            >
+              {c.sections.bonEndroit.followup}
+            </motion.p>
+          </motion.div>
+        </motion.div>
       </PatientSection>
 
       {/* Final Portal */}
