@@ -7,10 +7,10 @@ import PatientTunnelFormModal from './PatientTunnelFormModal';
 import './patientTunnel.css';
 import { PATIENT_TUNNEL_ROUTES } from './routes';
 import { PATIENT_TUNNEL_STORAGE_KEYS } from './storageKeys';
-import { 
-  PatientPrimaryButton, 
-  PatientSection, 
-  PatientTunnelDecor, 
+import {
+  PatientPrimaryButton,
+  PatientSection,
+  PatientTunnelDecor,
 } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -90,7 +90,7 @@ function MouseSpotlight() {
 
 export default function PatientTunnelPage() {
   const navigate = useNavigate();
-  const { lang } = useLanguage();
+  const { lang, setLang } = useLanguage();
   const [showForm, setShowForm] = useState(false);
   const [activeCta, setActiveCta] = useState<string>();
   
@@ -120,6 +120,7 @@ export default function PatientTunnelPage() {
   return (
     <div className="patient-tunnel-root selection:bg-cherry/10 selection:text-cherry overflow-x-hidden">
       <PatientTunnelDecor />
+      {/* Desktop / tablet: separate language switcher in top-right */}
       <LanguageSwitcher />
       <MouseSpotlight />
 
@@ -130,18 +131,59 @@ export default function PatientTunnelPage() {
         sourceCta={activeCta}
       />
 
-      <motion.nav 
+      <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed left-5 top-5 z-[100] flex items-center gap-4 rounded-full border border-white/20 bg-white/40 px-4 py-2.5 shadow-xl backdrop-blur-2xl md:left-12 md:top-12"
+        className="fixed left-4 right-4 top-4 z-[100] flex items-center rounded-full border border-white/20 bg-white/60 px-4 py-2.5 shadow-xl backdrop-blur-2xl md:left-12 md:right-auto md:top-12"
       >
-        <Link to={PATIENT_TUNNEL_ROUTES.home} className="group flex items-center gap-4">
-          <img src={metcareLogo} alt="METCARE" className="h-11 w-11 scale-95 rounded-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-[360deg]" width={44} height={44} />
-          <div className="flex flex-col border-l border-cherry/10 pl-4">
-            <span className="text-[0.55rem] font-bold tracking-[0.4em] text-cherry/40 uppercase">{lang === 'fr' ? 'ÉTABLI EN 2009' : 'ESTABLISHED 2009'}</span>
-            <span className="text-[0.85rem] font-bold tracking-[0.2em] text-cherry">METCARE®</span>
+        <div className="flex w-full items-center justify-between gap-4">
+          <Link
+            to={PATIENT_TUNNEL_ROUTES.home}
+            className="group flex items-center gap-4"
+          >
+            <img
+              src={metcareLogo}
+              alt="METCARE"
+              className="h-11 w-11 scale-95 rounded-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-[360deg]"
+              width={44}
+              height={44}
+            />
+            <div className="flex flex-col border-l border-cherry/10 pl-4">
+              <span className="text-[0.55rem] font-bold tracking-[0.4em] text-cherry/40 uppercase">
+                {lang === 'fr' ? 'ÉTABLI EN 2009' : 'ESTABLISHED 2009'}
+              </span>
+              <span className="text-[0.85rem] font-bold tracking-[0.2em] text-cherry">
+                METCARE®
+              </span>
+            </div>
+          </Link>
+
+          {/* Mobile-only inline language switcher inside pill */}
+          <div className="flex items-center gap-1 rounded-full border border-white/40 bg-white/70 p-1 shadow-md md:hidden">
+            <button
+              type="button"
+              onClick={() => setLang('fr')}
+              className={`px-3 py-1 text-[0.6rem] font-bold tracking-[0.25em] rounded-full transition-all ${
+                lang === 'fr'
+                  ? 'bg-cherry text-snow shadow-sm shadow-cherry/30'
+                  : 'text-cherry/40 hover:text-cherry hover:bg-white'
+              }`}
+            >
+              FR
+            </button>
+            <button
+              type="button"
+              onClick={() => setLang('en')}
+              className={`px-3 py-1 text-[0.6rem] font-bold tracking-[0.25em] rounded-full transition-all ${
+                lang === 'en'
+                  ? 'bg-cherry text-snow shadow-sm shadow-cherry/30'
+                  : 'text-cherry/40 hover:text-cherry hover:bg-white'
+              }`}
+            >
+              EN
+            </button>
           </div>
-        </Link>
+        </div>
       </motion.nav>
 
       {/* Hero Section */}
@@ -229,7 +271,7 @@ export default function PatientTunnelPage() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8, ease: 'easeOut' }}
-               className="patient-tunnel-glass perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl md:mt-24"
+               className="patient-tunnel-glass animate-float-subtle perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl md:mt-24"
              >
                 <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry text-snow shadow-lg shadow-cherry/20">
                    <span className="text-xs font-bold tracking-widest">01</span>
@@ -242,7 +284,7 @@ export default function PatientTunnelPage() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-               className="patient-tunnel-glass perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl border-cherry/5 bg-white/60"
+               className="patient-tunnel-glass animate-float-delayed perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl border-cherry/5 bg-white/60"
              >
                 <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry/10 text-cherry shadow-lg">
                    <span className="text-xs font-bold tracking-widest">02</span>
@@ -348,29 +390,29 @@ export default function PatientTunnelPage() {
       </PatientSection>
 
       {/* Visual Journey */}
-      <PatientSection label={c.sections.parcours.label} tone="beige" maxWidth="none" className="relative !py-40 overflow-hidden">
+      <PatientSection label={c.sections.parcours.label} tone="beige" maxWidth="none" className="relative py-24! md:py-40! overflow-hidden">
         {/* Background Decorative Element with Scroll Parallax */}
         <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.03]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.015] md:opacity-[0.03]"
           style={{ x: parcoursX }}
         >
-           <span className="text-[20rem] font-bold tracking-tighter whitespace-nowrap text-cherry uppercase">{lang === 'fr' ? 'PARCOURS' : 'JOURNEY'}</span>
+           <span className="text-[10rem] md:text-[20rem] font-bold tracking-tighter whitespace-nowrap text-cherry uppercase">{lang === 'fr' ? 'PARCOURS' : 'JOURNEY'}</span>
         </motion.div>
 
         <div className="max-w-[1200px] mx-auto relative z-10">
-          <div className="text-center mb-32">
+          <div className="text-center mb-20 md:mb-32">
              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <h2 className="text-4xl font-semibold text-cherry md:text-6xl mb-8 tracking-tight">{c.sections.parcours.intro}</h2>
+                <h2 className="text-3xl md:text-6xl font-semibold text-cherry mb-6 md:mb-8 tracking-tight">{c.sections.parcours.intro}</h2>
                 <div className="flex items-center justify-center gap-4">
-                   <div className="h-[1px] w-12 bg-cherry/20" />
-                   <p className="text-[0.7rem] font-bold tracking-[0.5em] text-cherry/40 uppercase italic">{lang === 'fr' ? 'LE PROTOCOLE D\'EXCELLENCE' : 'THE EXCELLENCE PROTOCOL'}</p>
-                   <div className="h-[1px] w-12 bg-cherry/20" />
+                   <div className="h-px w-8 md:w-12 bg-cherry/20" />
+                   <p className="text-[0.6rem] md:text-[0.7rem] font-bold tracking-[0.3em] md:tracking-[0.5em] text-cherry/40 uppercase italic">{lang === 'fr' ? 'LE PROTOCOLE D\'EXCELLENCE' : 'THE EXCELLENCE PROTOCOL'}</p>
+                   <div className="h-px w-8 md:w-12 bg-cherry/20" />
                 </div>
              </motion.div>
           </div>
           
-          <div className="relative space-y-32">
-             <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-[1px] bg-gradient-to-b from-cherry/20 via-cherry/10 to-transparent hidden md:block" />
+          <div className="relative space-y-20 md:space-y-32">
+             <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-px bg-linear-to-b from-cherry/20 via-cherry/10 to-transparent hidden md:block" />
              
              <EditorialStep 
                number="01" 
@@ -467,21 +509,21 @@ export default function PatientTunnelPage() {
 
 function EditorialStep({ number, title, side, body }: { number: string, title: string, side: 'left' | 'right', body: string, isLast?: boolean }) {
   return (
-    <div className={`relative flex flex-col md:flex-row items-center gap-16 ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
-       <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
+    <div className={`relative flex flex-col md:flex-row items-center gap-10 md:gap-16 ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
+       <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left px-4 md:px-0">
           <motion.div 
-            initial={{ opacity: 0, x: side === 'left' ? -50 : 50 }}
+            initial={{ opacity: 0, x: side === 'left' ? -30 : 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="space-y-6 max-w-sm group"
+            className="space-y-4 md:space-y-6 max-w-sm group"
           >
              <div className="relative inline-block">
-                <span className="text-[6rem] font-bold text-cherry/12 select-none leading-none transition-colors group-hover:text-cherry/20">{number}</span>
+                <span className="text-[4.5rem] md:text-[6rem] font-bold text-cherry/12 select-none leading-none transition-colors group-hover:text-cherry/20">{number}</span>
              </div>
              <div>
-                <h4 className="text-2xl font-semibold text-cherry leading-tight mb-3 uppercase tracking-tight group-hover:translate-x-2 transition-transform">{title}</h4>
-                <TextWithTags text={body} className="text-base font-light leading-relaxed text-cherry/60" />
+                <h4 className="text-xl md:text-2xl font-semibold text-cherry leading-tight mb-3 uppercase tracking-tight group-hover:translate-x-2 transition-transform">{title}</h4>
+                <TextWithTags text={body} className="text-sm md:text-base font-light leading-relaxed text-cherry/60" />
              </div>
           </motion.div>
        </div>

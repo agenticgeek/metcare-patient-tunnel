@@ -13,7 +13,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
     const saved = localStorage.getItem('metcare_lang');
     if (saved === 'en' || saved === 'fr') return saved;
-    return navigator.language.startsWith('fr') ? 'fr' : 'en';
+    return 'fr';
   });
 
   useEffect(() => {
