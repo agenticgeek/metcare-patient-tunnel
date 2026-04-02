@@ -26,8 +26,6 @@ const initialForm: PatientForm1Data = {
   email: '',
   telephone: '',
   pays: '',
-  ville: '',
-  codePostal: '',
   interventionRealisee: '',
   typesIntervention: [],
   aideAujourdhui: [],

@@ -1,12 +1,28 @@
 import type { PatientForm2Data } from './copy';
 
-const WEBHOOK_URL = import.meta.env.VITE_PATIENT_TUNNEL_FORM2_WEBHOOK_URL as string | undefined;
+/** LeadConnector / HighLevel webhook — override with VITE_PATIENT_TUNNEL_FORM2_WEBHOOK_URL if needed. */
+const DEFAULT_FORM2_WEBHOOK_URL =
+  'https://services.leadconnectorhq.com/hooks/wyUmeJ4hWFpaeLK0H0Xe/webhook-trigger/c2b7c4ff-b050-4caa-a35f-cb32f063165f';
 
-export function submitPatientForm2ToWebhook(data: PatientForm2Data): void {
-  if (!WEBHOOK_URL?.trim()) return;
+const WEBHOOK_URL =
+  (import.meta.env.VITE_PATIENT_TUNNEL_FORM2_WEBHOOK_URL as string | undefined)?.trim() ||
+  DEFAULT_FORM2_WEBHOOK_URL;
+
+export type PatientForm2WebhookMeta = {
+  /** Email collected on Form 1 (modal), passed through for LeadConnector matching. */
+  emailFromForm1?: string;
+};
+
+export function submitPatientForm2ToWebhook(
+  data: PatientForm2Data,
+  meta: PatientForm2WebhookMeta = {}
+): void {
+  const email = (meta.emailFromForm1 ?? '').trim();
 
   const payload = {
-    formId: 'patient_tunnel_form_2',
+    formId: 'questionare',
+    email,
+    emailFromForm1: email,
     ...data,
     commentVousSentezText: data.commentVousSentez.join(', '),
     aideMaintenantText: data.aideMaintenant.join(', '),
@@ -14,7 +30,7 @@ export function submitPatientForm2ToWebhook(data: PatientForm2Data): void {
     submittedAt: new Date().toISOString(),
   };
 
-  void fetch(WEBHOOK_URL.trim(), {
+  void fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload),

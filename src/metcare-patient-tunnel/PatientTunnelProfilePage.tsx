@@ -123,7 +123,8 @@ export default function PatientTunnelProfilePage() {
     setSubmitted(true);
     if (!canGoNext) return;
     sessionStorage.setItem(PATIENT_TUNNEL_STORAGE_KEYS.form2, JSON.stringify(form));
-    submitPatientForm2ToWebhook(form);
+    const form1AtSubmit = readForm1();
+    submitPatientForm2ToWebhook(form, { emailFromForm1: form1AtSubmit?.email?.trim() ?? '' });
     // Meta Pixel: Track custom event on form completion
     trackCustom('AssessmentStep', {
       step: 2,

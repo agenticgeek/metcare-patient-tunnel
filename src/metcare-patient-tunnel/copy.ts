@@ -4,8 +4,6 @@ export type PatientForm1Data = {
   email: string;
   telephone: string;
   pays: string;
-  ville: string;
-  codePostal: string;
   interventionRealisee: string;
   typesIntervention: string[];
   aideAujourdhui: string[];
@@ -172,8 +170,6 @@ export const patientCopy = {
         email: 'Email',
         telephone: 'Téléphone',
         pays: 'Pays',
-        ville: 'Ville',
-        codePostal: 'Code postal',
         intervention: 'Avez-vous déjà réalisé votre intervention ?',
         typeIntervention: 'Quel type d’intervention vous concerne ?',
         aide: "Qu'est-ce qui vous aiderait le plus aujourd'hui ?",
@@ -319,8 +315,6 @@ export const patientCopy = {
         email: 'Email',
         telephone: 'Phone',
         pays: 'Country',
-        ville: 'City',
-        codePostal: 'Zip code',
         intervention: 'Have you already had your intervention?',
         typeIntervention: 'What type of intervention concerns you?',
         aide: "What would help you the most today?",
