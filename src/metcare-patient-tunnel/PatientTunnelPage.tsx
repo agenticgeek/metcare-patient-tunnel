@@ -2,6 +2,13 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import metcareLogo from '../../assets/Sigle_Fond_BeigeS_HD.svg';
+import heroImage from '../../assets/image1.jpg';
+import repereSectionImage from '../../assets/image2.JPG';
+import expertiseSectionImage from '../../assets/image3.png';
+import bonEndroitSectionImage from '../../assets/image4.jpg';
+import solutionCardImage1 from '../../assets/1.jpg';
+import solutionCardImage2 from '../../assets/2.jpg';
+import solutionCardImage3 from '../../assets/3.jpg';
 import { patientCopy, type PatientForm1Data } from './copy';
 import PatientTunnelFormModal from './PatientTunnelFormModal';
 import './patientTunnel.css';
@@ -144,7 +151,7 @@ export default function PatientTunnelPage() {
             <img
               src={metcareLogo}
               alt="METCARE"
-              className="h-11 w-11 scale-95 rounded-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-[360deg]"
+              className="h-11 w-11 scale-95 rounded-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-360"
               width={44}
               height={44}
             />
@@ -187,53 +194,89 @@ export default function PatientTunnelPage() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="patient-tunnel-hero-aurora relative flex min-h-screen flex-col items-center justify-center px-6 pt-28 text-center md:px-12 md:pt-32 lg:px-24 lg:pt-36">
+      <section className="patient-tunnel-hero-aurora relative flex min-h-screen flex-col items-center justify-center px-6 pt-32 md:px-12 md:pt-40 lg:px-24">
         <motion.div
           className="relative z-10 w-full max-w-[1400px]"
-          style={{ scale: heroScale, opacity: heroOpacity }}
           initial="hidden"
           animate="show"
           variants={stagger}
         >
-          <motion.div variants={fadeUp} className="mb-10 flex justify-center">
-             <span className="rounded-full bg-cherry/5 border border-cherry/5 px-6 py-2 text-[0.65rem] font-bold tracking-[0.35em] text-cherry/60 uppercase animate-pulse">
-                {c.meta.title}
-             </span>
-          </motion.div>
-          
-          <motion.div variants={fadeUp} className="relative">
-             <motion.span 
-               initial={{ x: -100, opacity: 0 }}
-               animate={{ x: 0, opacity: 0.05 }}
-               transition={{ duration: 1.5, ease: 'easeOut' }}
-               className="text-stroke-cherry absolute -top-10 -left-4 select-none text-6xl font-bold md:text-8xl lg:text-[10rem]"
-             >
-               METCARE
-             </motion.span>
-             <h1 className="relative mb-10 text-balance text-4xl font-semibold leading-[0.95] tracking-tight text-cherry sm:text-6xl md:mb-12 md:text-7xl lg:text-[5.5rem]">
-               {c.hero.headline}
-             </h1>
-          </motion.div>
-          
-          <motion.p
-            variants={fadeUp}
-            className="mx-auto mb-10 max-w-2xl text-base font-light leading-relaxed text-cherry/70 md:mb-16 md:text-lg lg:text-xl"
-          >
-            {c.hero.body}
-          </motion.p>
-          
-          <motion.div variants={fadeUp} className="flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
-            <PatientPrimaryButton onClick={() => openForm(c.hero.ctaEchange)} className="!px-12 !py-5 !text-lg !rounded-full shadow-2xl shadow-cherry/25 group overflow-hidden">
-               <span className="relative z-10">{c.hero.ctaEchange}</span>
-            </PatientPrimaryButton>
-            <button 
-              onClick={() => openForm(c.hero.ctaGuide)}
-              className="group flex flex-col items-center gap-1 text-[0.7rem] font-bold tracking-[0.3em] text-cherry/40 uppercase transition-all hover:text-cherry"
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+            {/* Left Column: Content */}
+            <div className="order-1 text-left lg:order-first">
+              <motion.div variants={fadeUp} className="mb-8 flex justify-start">
+                <span className="rounded-full border border-cherry/5 bg-cherry/5 px-6 py-2 text-[0.65rem] font-bold tracking-[0.35em] text-cherry/60 uppercase">
+                  {c.meta.title}
+                </span>
+              </motion.div>
+              
+              <motion.div variants={fadeUp} className="relative">
+                <h1 className="relative mb-8 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-cherry sm:text-6xl md:mb-10 md:text-7xl lg:text-[5rem]">
+                  {c.hero.headline}
+                </h1>
+              </motion.div>
+              
+              <motion.p
+                variants={fadeUp}
+                className="mb-10 max-w-xl text-base font-light leading-relaxed text-cherry/70 md:mb-14 md:text-lg lg:text-xl"
+              >
+                {c.hero.body}
+              </motion.p>
+              
+              {/* Image for Mobile (only visible on small/medium screens, hidden on lg) */}
+              <motion.div
+                variants={fadeUp}
+                className="relative mb-12 block lg:hidden"
+              >
+                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2.5rem] border border-white/20 bg-cherry/5 shadow-xl shadow-cherry/10">
+                  <img
+                    src={heroImage}
+                    alt=""
+                    className="h-full w-full object-cover object-[center_20%] scale-105"
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-cherry/10 to-transparent pointer-events-none" />
+                </div>
+              </motion.div>
+              
+              <motion.div variants={fadeUp} className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
+                <PatientPrimaryButton onClick={() => openForm(c.hero.ctaEchange)} className="px-12! py-5! text-lg! rounded-full! shadow-2xl shadow-cherry/25 group overflow-hidden">
+                   <span className="relative z-10">{c.hero.ctaEchange}</span>
+                </PatientPrimaryButton>
+                <button 
+                  onClick={() => openForm(c.hero.ctaGuide)}
+                  className="group flex flex-col items-start gap-1 text-[0.7rem] font-bold tracking-[0.3em] text-cherry/40 uppercase transition-all hover:text-cherry"
+                >
+                  <span>{c.hero.ctaGuide}</span>
+                  <div className="h-[2px] w-8 bg-cherry/20 transition-all group-hover:w-full group-hover:bg-cherry" />
+                </button>
+              </motion.div>
+            </div>
+
+            {/* Right Column: Image (Desktop) / Hidden on Mobile */}
+            <motion.div
+              variants={fadeUp}
+              className="relative hidden lg:block"
             >
-              <span>{c.hero.ctaGuide}</span>
-              <div className="h-[2px] w-8 bg-cherry/20 transition-all group-hover:w-full group-hover:bg-cherry" />
-            </button>
-          </motion.div>
+              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[3rem] border border-white/20 bg-cherry/5 shadow-2xl shadow-cherry/15 md:rounded-[4rem]">
+                <img
+                  src={heroImage}
+                  alt={lang === 'fr' ? 'Accompagnement METCARE après intervention' : 'METCARE post-surgery support'}
+                  className="h-full w-full object-cover object-[center_20%] scale-105"
+                  width={5464}
+                  height={6271}
+                  loading="eager"
+                  decoding="async"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-cherry/10 to-transparent pointer-events-none" />
+              </div>
+              
+              {/* Decorative elements */}
+              <div className="absolute -right-6 -top-6 -z-10 h-32 w-32 rounded-full bg-beige/30 blur-3xl" />
+              <div className="absolute -left-10 -bottom-10 -z-10 h-48 w-48 rounded-full bg-cherry/5 blur-3xl" />
+            </motion.div>
+          </div>
         </motion.div>
         
         <div className="patient-tunnel-aurora" aria-hidden="true">
@@ -246,7 +289,7 @@ export default function PatientTunnelPage() {
       </section>
 
       {/* Editorial Split-Screen Section */}
-      <PatientSection label={c.sections.repere.label} tone="beige" maxWidth="none" className="relative !py-32 overflow-hidden">
+      <PatientSection label={c.sections.repere.label} tone="beige" maxWidth="none" className="relative py-32! overflow-hidden">
         <div className="editorial-grid max-w-[1400px] mx-auto">
           <div className="col-span-12 lg:col-span-5 mb-16 lg:mb-0">
              <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
@@ -292,10 +335,32 @@ export default function PatientTunnelPage() {
              </motion.div>
           </div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 48 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto mt-16 w-full max-w-[1400px] md:mt-24"
+        >
+          <img
+            src={repereSectionImage}
+            alt={
+              lang === 'fr'
+                ? 'Ambiance repos et sérénité METCARE'
+                : 'METCARE rest and serenity'
+            }
+            className="h-auto w-full max-h-[min(68vh,560px)] rounded-[2rem] border border-cherry/10 object-cover shadow-2xl shadow-cherry/10 md:max-h-[min(72vh,620px)] md:rounded-4xl"
+            width={8569}
+            height={5713}
+            loading="lazy"
+            decoding="async"
+          />
+        </motion.div>
       </PatientSection>
 
       {/* Editorial Mosaic for Expertise */}
-      <PatientSection label={c.sections.expertise.label} maxWidth="none" className="!py-32">
+      <PatientSection label={c.sections.expertise.label} maxWidth="none" className="py-32!">
         <div className="grid gap-6 md:grid-cols-12 md:grid-rows-6 md:h-[1000px] max-w-[1400px] mx-auto">
           {/* Main Statement Card */}
           <motion.div 
@@ -381,6 +446,30 @@ export default function PatientTunnelPage() {
              />
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 48 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto mt-12 w-full max-w-[1400px] md:mt-16"
+        >
+          <div className="h-[min(64vh,520px)] w-full overflow-hidden rounded-[2rem] border border-cherry/10 shadow-2xl shadow-cherry/10 md:h-[min(68vh,580px)] md:rounded-4xl">
+            <img
+              src={expertiseSectionImage}
+              alt={
+                lang === 'fr'
+                  ? 'Réseau et expertise METCARE'
+                  : 'METCARE network and expertise'
+              }
+              className="h-full w-full object-cover object-top"
+              width={2816}
+              height={1536}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </motion.div>
       </PatientSection>
 
       <PatientSection label={c.sections.echange.label} tone="beige" maxWidth="none" className="py-24! overflow-hidden">
@@ -427,7 +516,7 @@ export default function PatientTunnelPage() {
               </div>
 
               <div className="relative space-y-10 lg:pl-12">
-                <div className="absolute left-0 top-0 hidden h-full w-px bg-gradient-to-b from-cherry/20 via-cherry/5 to-transparent lg:block" />
+                <div className="absolute left-0 top-0 hidden h-full w-px bg-linear-to-b from-cherry/20 via-cherry/5 to-transparent lg:block" />
                 
                 <div className="space-y-6">
                   <TextWithTags
@@ -446,7 +535,7 @@ export default function PatientTunnelPage() {
 
                 <PatientPrimaryButton
                   onClick={() => openForm(c.sections.echange.cta)}
-                  className="!w-full !px-12 !py-6 !text-lg !rounded-full shadow-2xl shadow-cherry/20 hover:scale-105 transition-transform"
+                  className="w-full! px-12! py-6! text-lg! rounded-full! shadow-2xl shadow-cherry/20 hover:scale-105 transition-transform"
                 >
                   {c.sections.echange.cta}
                 </PatientPrimaryButton>
@@ -505,22 +594,28 @@ export default function PatientTunnelPage() {
       </PatientSection>
 
       {/* Solutions Gallery */}
-      <PatientSection label={c.sections.solutions.label} maxWidth="none" className="!py-32 overflow-hidden">
+      <PatientSection label={c.sections.solutions.label} maxWidth="none" className="py-32! overflow-hidden">
         <div className="flex flex-col md:flex-row gap-8 max-w-[1400px] mx-auto overflow-x-auto pb-12 snap-x px-4 no-scrollbar">
            <SolutionCard 
               label="PROTOCOL" 
               title="Signature Recovery Protocol" 
               body={lang === 'fr' ? 'Une approche structurée pour optimiser votre rétablissement après chaque type d\'intervention.' : 'A structured approach to optimize your recovery after each type of intervention.'}
+              imageSrc={solutionCardImage1}
+              imageAlt={lang === 'fr' ? 'Signature Recovery Protocol' : 'Signature Recovery Protocol'}
            />
            <SolutionCard 
               label={lang === 'fr' ? 'ACCOMPAGNEMENT' : 'ACCOMPANIMENT'} 
               title={lang === 'fr' ? 'Accompagnement Personnalisé & E-book' : 'Personalized Accompaniment & E-book'} 
               body={lang === 'fr' ? 'Un guide complet de 148 pages et une écoute active tout au long de votre parcours de guérison.' : 'A complete 148-page guide and active listening throughout your healing journey.'}
+              imageSrc={solutionCardImage2}
+              imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : 'Personalized accompaniment and e-book'}
            />
            <SolutionCard 
               label={lang === 'fr' ? 'OPPORTUNITÉ' : 'OPPORTUNITY'} 
               title={lang === 'fr' ? 'Soins encadrés (Paris / Régions)' : 'Supervised Care (Paris / Regions)'} 
               body={c.sections.opportunite.body}
+              imageSrc={solutionCardImage3}
+              imageAlt={lang === 'fr' ? 'Soins encadrés Paris et régions' : 'Supervised care Paris and regions'}
               accent
            />
         </div>
@@ -575,6 +670,28 @@ export default function PatientTunnelPage() {
             >
               {c.sections.bonEndroit.followup}
             </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.72, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+              className="mx-auto w-full max-w-4xl pt-6 md:pt-8"
+            >
+              <img
+                src={bonEndroitSectionImage}
+                alt={
+                  lang === 'fr'
+                    ? 'Accompagnement et écoute METCARE'
+                    : 'METCARE listening and support'
+                }
+                className="h-auto w-full max-h-[min(62vh,520px)] rounded-[2rem] border border-cherry/10 object-cover shadow-2xl shadow-cherry/10 md:max-h-[min(66vh,580px)] md:rounded-4xl"
+                width={5714}
+                height={3810}
+                loading="lazy"
+                decoding="async"
+              />
+            </motion.div>
           </motion.div>
         </motion.div>
       </PatientSection>
@@ -583,7 +700,7 @@ export default function PatientTunnelPage() {
       <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-6 overflow-hidden bg-cherry rounded-t-[5rem] lg:rounded-t-[8rem]">
         <div className="absolute inset-0 pointer-events-none">
            <motion.div 
-             className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-full bg-[radial-gradient(circle_at_center,_var(--color-beige)_0%,_transparent_70%)] opacity-20"
+             className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-full bg-[radial-gradient(circle_at_center,var(--color-beige)_0%,transparent_70%)] opacity-20"
              animate={{ opacity: [0.1, 0.3, 0.1] }}
              transition={{ duration: 5, repeat: Infinity }}
            />
@@ -605,7 +722,7 @@ export default function PatientTunnelPage() {
           </p>
           <PatientPrimaryButton 
             variant="outline" 
-            className="!border-snow !text-snow !px-16 !py-6 !text-lg !rounded-full hover:!bg-snow hover:!text-cherry transition-all shadow-2xl"
+            className="border-snow! text-snow! px-16! py-6! text-lg! rounded-full! hover:bg-snow! hover:text-cherry! transition-all shadow-2xl"
             onClick={() => openForm(c.sections.final.cta)}
           >
             {c.sections.final.cta}
@@ -615,33 +732,38 @@ export default function PatientTunnelPage() {
 
       <footer className="bg-cherry px-6 py-16 text-center border-t border-snow/5">
         <div className="flex flex-col items-center gap-10">
-           <img src={metcareLogo} alt="METCARE" className="h-16 w-16" />
-           <div className="h-[1px] w-32 bg-snow/10" />
-           <div className="flex flex-col gap-2">
-              <p className="patient-tunnel-section-label !text-snow/30 !text-[0.6rem] !tracking-[0.5em]">METCARE® ESTHETIQUE • DEPUIS 2009</p>
-              <p className="text-snow/15 text-[0.5rem] tracking-[0.2em] uppercase">PARIS • LONDRES • DUBAI • GENÈVE</p>
-           </div>
+          <Link to={PATIENT_TUNNEL_ROUTES.home} className="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
+            <img src={metcareLogo} alt="METCARE" className="h-8 w-8 rounded-full" />
+            <span className="text-xs font-bold tracking-[0.3em] text-snow uppercase">METCARE®</span>
+          </Link>
+          
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[0.6rem] font-bold tracking-[0.2em] text-snow/30 uppercase">
+             <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Mentions Légales' : 'Legal Mentions'}</a>
+             <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Confidentialité' : 'Privacy'}</a>
+             <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : 'Contact'}</a>
+          </div>
+          
+          <p className="text-[0.55rem] tracking-[0.1em] text-snow/20 uppercase">
+            © {new Date().getFullYear()} METCARE. {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}
+          </p>
         </div>
       </footer>
     </div>
   );
 }
 
-function EditorialStep({ number, title, side, body }: { number: string, title: string, side: 'left' | 'right', body: string, isLast?: boolean }) {
+function EditorialStep({ number, title, body, side, isLast = false }: { number: string, title: string, body: string, side: 'left' | 'right', isLast?: boolean }) {
   return (
-    <div className={`relative flex flex-col md:flex-row items-center gap-10 md:gap-16 ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
-       <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left px-4 md:px-0">
+    <div className={`flex flex-col md:flex-row items-center gap-8 md:gap-20 ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
+       <div className="flex-1 w-full">
           <motion.div 
             initial={{ opacity: 0, x: side === 'left' ? -30 : 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="space-y-4 md:space-y-6 max-w-sm group"
+            viewport={{ once: true }}
+            className={`patient-tunnel-glass p-8 md:p-12 rounded-[3rem] border-none bg-white/40 group hover:bg-white/60 transition-colors duration-500 ${side === 'right' ? 'text-right' : 'text-left'}`}
           >
-             <div className="relative inline-block">
-                <span className="text-[4.5rem] md:text-[6rem] font-bold text-cherry/12 select-none leading-none transition-colors group-hover:text-cherry/20">{number}</span>
-             </div>
-             <div>
+             <div className={`flex flex-col ${side === 'right' ? 'items-end' : 'items-start'}`}>
+                <span className="text-[4rem] md:text-[6rem] font-bold text-cherry/5 leading-none mb-4 group-hover:text-cherry/10 transition-colors">{number}</span>
                 <h4 className="text-xl md:text-2xl font-semibold text-cherry leading-tight mb-3 uppercase tracking-tight group-hover:translate-x-2 transition-transform">{title}</h4>
                 <TextWithTags text={body} className="text-sm md:text-base font-light leading-relaxed text-cherry/60" />
              </div>
@@ -662,7 +784,21 @@ function EditorialStep({ number, title, side, body }: { number: string, title: s
   );
 }
 
-function SolutionCard({ label, title, body, accent = false }: { label: string, title: string, body: string, accent?: boolean }) {
+function SolutionCard({
+  label,
+  title,
+  body,
+  accent = false,
+  imageSrc,
+  imageAlt = '',
+}: {
+  label: string;
+  title: string;
+  body: string;
+  accent?: boolean;
+  imageSrc: string;
+  imageAlt?: string;
+}) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 50 }}
@@ -670,20 +806,36 @@ function SolutionCard({ label, title, body, accent = false }: { label: string, t
       viewport={{ once: true }}
       whileHover={{ y: -15, scale: 1.02 }}
       transition={{ duration: 0.6 }}
-      className={`relative min-w-[300px] md:min-w-[380px] snap-center aspect-[4/5] rounded-[3rem] p-10 flex flex-col justify-between overflow-hidden transition-all duration-500 shadow-xl ${
+      className={`group relative flex min-h-[520px] min-w-[300px] snap-center flex-col justify-between overflow-hidden rounded-[3rem] p-8 shadow-xl transition-all duration-500 md:min-h-[580px] md:min-w-[380px] md:p-10 ${
         accent ? 'bg-cherry text-snow' : 'patient-tunnel-glass border-none bg-white/40'
       }`}
     >
-      <div className="space-y-4 relative z-10">
+      <div className="relative z-10 shrink-0 space-y-4">
          <span className={`text-[0.55rem] font-bold tracking-[0.4em] uppercase ${accent ? 'text-snow/40' : 'text-cherry/40'}`}>{label}</span>
-         <h4 className="text-2xl font-semibold leading-tight tracking-tight">{title}</h4>
+         <h4 className="text-xl font-semibold leading-tight tracking-tight md:text-2xl">{title}</h4>
       </div>
+
+      <div
+        className={`relative z-10 my-4 w-full shrink-0 overflow-hidden rounded-2xl md:my-5 ${
+          accent ? 'border border-snow/15' : 'border border-cherry/10'
+        } aspect-[3/4] max-h-[min(72vh,440px)] md:max-h-[min(58vh,420px)]`}
+      >
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          className="h-full w-full object-cover object-[center_30%] scale-[1.22] motion-safe:transition-transform motion-safe:duration-500 group-hover:scale-[1.26] md:scale-[1.14] md:object-[center_34%]"
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 768px) 92vw, 400px"
+        />
+      </div>
+
       <TextWithTags 
         text={body} 
-        className={`text-sm font-light leading-relaxed relative z-10 ${accent ? 'text-snow/60' : 'text-cherry/60'}`} 
+        className={`relative z-10 shrink-0 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`} 
       />
       <motion.div 
-        className={`absolute -right-20 -bottom-20 h-64 w-64 rounded-full opacity-10 ${accent ? 'bg-white' : 'bg-cherry'}`}
+        className={`pointer-events-none absolute -right-20 -bottom-20 h-64 w-64 rounded-full opacity-10 ${accent ? 'bg-white' : 'bg-cherry'}`}
         whileHover={{ scale: 1.2, opacity: 0.2 }}
       />
     </motion.div>
