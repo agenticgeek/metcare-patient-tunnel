@@ -343,19 +343,21 @@ export default function PatientTunnelPage() {
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto mt-16 w-full max-w-[1400px] md:mt-24"
         >
-          <img
-            src={repereSectionImage}
-            alt={
-              lang === 'fr'
-                ? 'Ambiance repos et sérénité METCARE'
-                : 'METCARE rest and serenity'
-            }
-            className="h-auto w-full max-h-[min(68vh,560px)] rounded-[2rem] border border-cherry/10 object-cover shadow-2xl shadow-cherry/10 md:max-h-[min(72vh,620px)] md:rounded-4xl"
-            width={8569}
-            height={5713}
-            loading="lazy"
-            decoding="async"
-          />
+          <div className="w-full overflow-hidden rounded-[2rem] border border-cherry/10 shadow-2xl shadow-cherry/10 md:rounded-4xl">
+            <img
+              src={repereSectionImage}
+              alt={
+                lang === 'fr'
+                  ? 'Ambiance repos et sérénité METCARE'
+                  : 'METCARE rest and serenity'
+              }
+              className="block h-auto w-full"
+              width={8569}
+              height={5713}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </motion.div>
       </PatientSection>
 
@@ -454,7 +456,7 @@ export default function PatientTunnelPage() {
           transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto mt-12 w-full max-w-[1400px] md:mt-16"
         >
-          <div className="h-[min(64vh,520px)] w-full overflow-hidden rounded-[2rem] border border-cherry/10 shadow-2xl shadow-cherry/10 md:h-[min(68vh,580px)] md:rounded-4xl">
+          <div className="w-full overflow-hidden rounded-[2rem] border border-cherry/10 shadow-2xl shadow-cherry/10 md:rounded-4xl">
             <img
               src={expertiseSectionImage}
               alt={
@@ -462,7 +464,7 @@ export default function PatientTunnelPage() {
                   ? 'Réseau et expertise METCARE'
                   : 'METCARE network and expertise'
               }
-              className="h-full w-full object-cover object-top"
+              className="block h-auto w-full"
               width={2816}
               height={1536}
               loading="lazy"
