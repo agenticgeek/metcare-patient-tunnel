@@ -3,6 +3,8 @@ export type PatientForm1Data = {
   prenom: string;
   email: string;
   telephone: string;
+  ville: string;
+  dateIntervention: string;
   pays: string;
   interventionRealisee: string;
   typesIntervention: string[];
@@ -169,6 +171,8 @@ export const patientCopy = {
         prenom: 'Prénom',
         email: 'Email',
         telephone: 'Téléphone',
+        ville: 'Ville',
+        dateIntervention: "Date d'intervention",
         pays: 'Pays',
         intervention: 'Avez-vous déjà réalisé votre intervention ?',
         typeIntervention: 'Quel type d’intervention vous concerne ?',
@@ -177,10 +181,11 @@ export const patientCopy = {
     },
     transition: {
       title: 'Votre demande a bien été prise en compte',
-      body:
-        'Merci pour votre confiance. Vous allez recevoir : votre guide patient / les premières informations / et notre équipe pourra revenir vers vous rapidement. Avant cela...',
-      prompt:
-        'Prenez 1 minute pour nous en dire un peu plus. Cela nous permet de : mieux comprendre votre situation / adapter nos recommandations / vous orienter avec précision.',
+      bodyIntro: 'Merci pour votre confiance. Vous allez recevoir :',
+      bodyItems: ['Votre guide patient', 'Les premières informations', 'Un retour rapide de notre équipe'],
+      bodyOutro: 'Avant cela...',
+      promptIntro: 'Prenez 1 minute pour nous en dire un peu plus. Cela nous permet de :',
+      promptItems: ['Mieux comprendre votre situation', 'Adapter nos recommandations', 'Vous orienter avec précision'],
       notice: 'Ce formulaire est facultatif. Mais il nous permet de vous accompagner avec précision.',
       cta: 'Je complète mon profil',
       skip: 'Passer cette étape',
@@ -190,11 +195,11 @@ export const patientCopy = {
       title: 'Pour aller plus loin',
       intro: 'Ces informations nous permettent de vous accompagner avec précision.',
       submit: 'Je valide mon profil',
-      thankYou:
-        'Merci. Ces informations nous permettent de mieux vous accompagner. Notre équipe pourra revenir vers vous pour faire le point avec vous.',
+      thankYou: 'Merci. Ces informations nous permettent de mieux vous accompagner.',
+      bookCta: 'Prendre rendez-vous',
       fields: {
         quand: 'Quand a eu lieu votre intervention ?',
-        siPasEncore: 'Si elle n’est pas encore réalisée :',
+        siPasEncore: "Si elle n’est pas encore réalisée, votre chirurgie aura lieu dans :",
         technologie: 'Connaissez-vous la technologie utilisée ou prévue ?',
         technologieDetail: 'Précisez la technologie',
         sentiment: 'Aujourd\'hui, comment vous sentez-vous ?',
@@ -314,6 +319,8 @@ export const patientCopy = {
         prenom: 'First Name',
         email: 'Email',
         telephone: 'Phone',
+        ville: 'City',
+        dateIntervention: 'Date of Intervention',
         pays: 'Country',
         intervention: 'Have you already had your intervention?',
         typeIntervention: 'What type of intervention concerns you?',
@@ -322,10 +329,11 @@ export const patientCopy = {
     },
     transition: {
       title: 'Your request has been successfully taken into account',
-      body:
-        'Thank you for your trust. You will receive: your patient guide / the first information / and our team will be able to get back to you quickly. Before that...',
-      prompt:
-        'Take 1 minute to tell us a bit more. This allows us to: better understand your situation / adapt our recommendations / orient you with precision.',
+      bodyIntro: 'Thank you for your trust. You will receive:',
+      bodyItems: ['Your patient guide', 'The first information', 'A quick follow-up from our team'],
+      bodyOutro: 'Before that...',
+      promptIntro: 'Take 1 minute to tell us a bit more. This allows us to:',
+      promptItems: ['Better understand your situation', 'Adapt our recommendations', 'Orient you with precision'],
       notice: 'This form is optional. But it allows us to accompany you with precision.',
       cta: 'I complete my profile',
       skip: 'Skip this step',
@@ -335,11 +343,11 @@ export const patientCopy = {
       title: 'To go further',
       intro: 'This information allows us to accompany you with precision.',
       submit: 'I validate my profile',
-      thankYou:
-        'Thank you. This information allows us to better accompany you. Our team will be able to get back to you to review with you.',
+      thankYou: 'Thank you. This information allows us to better accompany you.',
+      bookCta: 'Book an Appointment',
       fields: {
         quand: 'When did your intervention take place?',
-        siPasEncore: 'If it is not yet performed:',
+        siPasEncore: 'If it has not yet been performed, your surgery will take place in:',
         technologie: 'Do you know the technology used or planned?',
         technologieDetail: 'Specify the technology',
         sentiment: 'How do you feel today?',

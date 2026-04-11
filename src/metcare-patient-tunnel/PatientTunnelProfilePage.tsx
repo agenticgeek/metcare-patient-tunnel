@@ -186,7 +186,7 @@ export default function PatientTunnelProfilePage() {
              {copy.thankYou}
           </p>
           <PatientPrimaryButton onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)} className="!px-12 !py-5 !text-lg !rounded-full">
-             {patientCopy[lang].transition.backHome}
+             {copy.bookCta}
           </PatientPrimaryButton>
         </motion.div>
       </div>
@@ -232,14 +232,23 @@ export default function PatientTunnelProfilePage() {
                 />
               ))}
            </div>
-           <motion.span 
+           <motion.div
              key={step}
              initial={{ opacity: 0, y: 10 }}
              animate={{ opacity: 1, y: 0 }}
-             className="mb-4 inline-flex items-center gap-2 rounded-full bg-cherry/5 px-4 py-1 text-[0.6rem] font-bold tracking-[0.2em] text-cherry/60 uppercase"
+             className="mb-4 inline-flex items-center gap-2 rounded-full border border-cherry/10 bg-cherry/5 px-4 py-1.5"
            >
-             {lang === 'fr' ? 'ÉTAPE' : 'STEP'} {step}/3 • {lang === 'fr' ? 'CONCIERGERIE PRIVÉE' : 'PRIVATE CONCIERGE'}
-           </motion.span>
+             <span className="flex h-4 w-4 items-center justify-center rounded-full bg-cherry text-[0.5rem] font-bold text-snow">
+               {step}
+             </span>
+             <span className="text-[0.55rem] font-bold tracking-[0.2em] text-cherry/40 uppercase">
+               /3
+             </span>
+             <span className="h-3 w-px bg-cherry/20" />
+             <span className="text-[0.55rem] font-bold tracking-[0.18em] text-cherry/60 uppercase">
+               {lang === 'fr' ? 'CONCIERGERIE ESTHÉTIQUE INTERNATIONALE' : 'INTERNATIONAL AESTHETIC CONCIERGE'}
+             </span>
+           </motion.div>
            <h1 className="mt-4 font-heading text-3xl font-semibold text-cherry md:text-5xl">{copy.title}</h1>
            <p className="mt-4 text-sm font-light leading-relaxed text-cherry/70 md:text-base">{copy.intro}</p>
         </div>
