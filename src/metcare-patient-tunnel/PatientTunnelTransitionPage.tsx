@@ -67,17 +67,56 @@ export default function PatientTunnelTransitionPage() {
         <h1 className="mb-6 font-heading text-3xl font-semibold leading-tight text-cherry md:text-5xl">
           {c.title}
         </h1>
-        
-        <p className="mx-auto mb-10 max-w-md text-lg font-light italic leading-relaxed text-cherry/70 md:text-xl">
-          {c.body}
+
+        <p className="mx-auto mb-6 max-w-md text-base font-light italic leading-relaxed text-cherry/60 md:text-lg">
+          {c.bodyIntro}
         </p>
 
-        <div className="mb-12 h-[1px] w-24 bg-cherry/10 mx-auto" />
+        <div className="mb-6 space-y-3 text-left">
+          {c.bodyItems.map((item, i) => (
+            <motion.div
+              key={item}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 + i * 0.12, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="flex items-center gap-4 rounded-2xl border border-cherry/8 bg-cherry/5 px-5 py-3.5"
+            >
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cherry text-[0.65rem] font-bold text-snow shadow-md shadow-cherry/20">
+                {i + 1}
+              </span>
+              <span className="text-sm font-medium text-cherry/80 md:text-base">{item}</span>
+            </motion.div>
+          ))}
+        </div>
+
+        <p className="mb-10 text-base font-semibold italic text-cherry/50">
+          {c.bodyOutro}
+        </p>
+
+        <div className="mb-8 h-[1px] w-24 bg-cherry/10 mx-auto" />
 
         <div className="space-y-8">
-           <p className="text-sm font-light leading-relaxed text-cherry/80 md:text-base">
-             {c.prompt}
-           </p>
+          <div className="space-y-3">
+            <p className="mb-4 text-sm font-light leading-relaxed text-cherry/70 md:text-base">
+              {c.promptIntro}
+            </p>
+            <div className="space-y-2.5 text-left">
+              {c.promptItems.map((item, i) => (
+                <motion.div
+                  key={item}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 + i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center gap-4 rounded-2xl border border-cherry/8 bg-beige/30 px-5 py-3"
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cherry/15 text-[0.6rem] font-bold text-cherry">
+                    {i + 1}
+                  </span>
+                  <span className="text-sm font-medium text-cherry/75">{item}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
            
            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <PatientPrimaryButton 

@@ -25,6 +25,8 @@ const initialForm: PatientForm1Data = {
   prenom: '',
   email: '',
   telephone: '',
+  ville: '',
+  dateIntervention: '',
   pays: '',
   interventionRealisee: '',
   typesIntervention: [],
@@ -75,13 +77,13 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
   const steps = [
     { title: copy.title, fields: ['interventionRealisee', 'typesIntervention'] },
     { title: lang === 'fr' ? 'Vos besoins' : 'Your needs', fields: ['aideAujourdhui'] },
-    { title: lang === 'fr' ? 'Vos coordonnées' : 'Your contact info', fields: ['nom', 'prenom', 'email', 'telephone', 'pays'] },
+    { title: lang === 'fr' ? 'Vos coordonnées' : 'Your contact info', fields: ['nom', 'prenom', 'email', 'telephone', 'ville', 'dateIntervention', 'pays'] },
   ];
 
   const canGoNext = useMemo(() => {
     if (step === 1) return form.interventionRealisee && form.typesIntervention.length > 0;
     if (step === 2) return form.aideAujourdhui.length > 0;
-    if (step === 3) return form.nom.trim() && form.prenom.trim() && /\S+@\S+\.\S+/.test(form.email) && form.telephone.trim() && form.pays.trim();
+    if (step === 3) return form.nom.trim() && form.prenom.trim() && /\S+@\S+\.\S+/.test(form.email) && form.telephone.trim() && form.ville.trim() && form.dateIntervention.trim() && form.pays.trim();
     return false;
   }, [step, form]);
 
@@ -265,6 +267,21 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             type="tel"
                             value={form.telephone}
                             onChange={(v) => setForm(c => ({ ...c, telephone: v }))}
+                          />
+                        </motion.div>
+                        <motion.div variants={staggerItem}>
+                          <ModernInput
+                            label={copy.fields.ville}
+                            value={form.ville}
+                            onChange={(v) => setForm(c => ({ ...c, ville: v }))}
+                          />
+                        </motion.div>
+                        <motion.div variants={staggerItem}>
+                          <ModernInput
+                            label={copy.fields.dateIntervention}
+                            type="date"
+                            value={form.dateIntervention}
+                            onChange={(v) => setForm(c => ({ ...c, dateIntervention: v }))}
                           />
                         </motion.div>
                         <motion.div variants={staggerItem} className="sm:col-span-2">
