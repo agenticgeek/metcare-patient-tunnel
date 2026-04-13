@@ -10,6 +10,7 @@ function AppRoutes() {
   return (
     <LanguageProvider>
       <Routes>
+        
         <Route path="/" element={<PatientTunnelPage />} />
         <Route path="/demande" element={<PatientTunnelTransitionPage />} />
         <Route path="/profil" element={<PatientTunnelProfilePage />} />

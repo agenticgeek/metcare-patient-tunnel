@@ -90,7 +90,10 @@ export default function PatientTunnelProfilePage() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
   const form1 = useMemo(() => readForm1(), []);
-  const projetSeulement = form1?.interventionRealisee === (lang === 'fr' ? "Non, c'est en projet" : "No, it's a project");
+  /** Form 1 stores the label in the language active at submit; compare both locales so switching language here does not show the wrong question. */
+  const projetSeulement =
+    form1?.interventionRealisee === "Non, c'est en projet" ||
+    form1?.interventionRealisee === "No, it's a project";
 
   const copy = patientCopy[lang].form2;
   const [step, setStep] = useState(1);
@@ -124,7 +127,10 @@ export default function PatientTunnelProfilePage() {
     if (!canGoNext) return;
     sessionStorage.setItem(PATIENT_TUNNEL_STORAGE_KEYS.form2, JSON.stringify(form));
     const form1AtSubmit = readForm1();
-    submitPatientForm2ToWebhook(form, { emailFromForm1: form1AtSubmit?.email?.trim() ?? '' });
+    submitPatientForm2ToWebhook(form, {
+      emailFromForm1: form1AtSubmit?.email?.trim() ?? '',
+      interventionRealiseeFromForm1: form1AtSubmit?.interventionRealisee ?? '',
+    });
     // Meta Pixel: Track custom event on form completion
     trackCustom('AssessmentStep', {
       step: 2,
