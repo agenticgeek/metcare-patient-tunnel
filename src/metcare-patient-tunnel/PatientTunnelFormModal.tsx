@@ -1,6 +1,22 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { X, ChevronRight, ChevronLeft, CheckCircle2 } from 'lucide-react';
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { X, ChevronRight, ChevronLeft, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import {
+  PhoneInput,
+  defaultCountries,
+  parseCountry,
+  FlagImage,
+} from 'react-international-phone';
+import 'react-international-phone/style.css';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type RefObject,
+} from 'react';
 import {
   patientCopy,
   getPatientForm1AideOptions,
@@ -81,7 +97,16 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
   const canGoNext = useMemo(() => {
     if (step === 1) return form.interventionRealisee && form.typesIntervention.length > 0;
     if (step === 2) return form.aideAujourdhui.length > 0;
-    if (step === 3) return form.nom.trim() && form.prenom.trim() && /\S+@\S+\.\S+/.test(form.email) && form.telephone.trim() && form.pays.trim();
+    if (step === 3) {
+      const phoneDigits = form.telephone.replace(/\D/g, '');
+      return (
+        form.nom.trim() &&
+        form.prenom.trim() &&
+        /\S+@\S+\.\S+/.test(form.email) &&
+        phoneDigits.length >= 8 &&
+        form.pays.trim()
+      );
+    }
     return false;
   }, [step, form]);
 
@@ -135,9 +160,9 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
             animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
             exit={{ opacity: 0, scale: 0.95, y: 24, filter: 'blur(10px)' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[1001] flex items-center justify-center p-4 sm:p-6"
+            className="fixed inset-0 z-[1001] flex items-center justify-center overflow-x-hidden p-4 sm:p-6"
           >
-            <div className="patient-tunnel-glass relative flex h-full max-h-[750px] w-full max-w-2xl flex-col overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-cherry/30">
+            <div className="patient-tunnel-glass relative flex h-full max-h-[750px] w-full min-w-0 max-w-4xl flex-col overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-cherry/30">
               {/* Header */}
               <div className="relative border-b border-cherry/10 bg-white/30 px-6 py-8 md:px-10">
                 <button
@@ -174,7 +199,17 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
               </div>
 
               {/* Form Content */}
-              <form onSubmit={handleSubmit} className="flex flex-1 flex-col overflow-y-auto px-6 py-8 md:px-10 no-scrollbar">
+              <form
+                onSubmit={handleSubmit}
+                className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6 py-8 md:px-10 no-scrollbar"
+              >
+                <div
+                  className={
+                    step === 3
+                      ? 'min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-visible'
+                      : 'min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto'
+                  }
+                >
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step}
@@ -183,7 +218,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                     animate="show"
                     exit={{ opacity: 0, x: -20, filter: 'blur(4px)' }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className="flex-1 space-y-8"
+                    className="min-w-0 flex-1 space-y-8"
                   >
                     {step === 1 && (
                       <>
@@ -259,25 +294,41 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             onChange={(v) => setForm(c => ({ ...c, email: v }))}
                           />
                         </motion.div>
-                        <motion.div variants={staggerItem}>
-                          <ModernInput
-                            label={copy.fields.telephone}
-                            type="tel"
-                            value={form.telephone}
-                            onChange={(v) => setForm(c => ({ ...c, telephone: v }))}
-                          />
+                        <motion.div variants={staggerItem} className="min-w-0">
+                          <label className="block space-y-2">
+                            <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/50 uppercase ml-1">
+                              {copy.fields.telephone}
+                            </span>
+                            <div className="patient-tunnel-phone-wrap">
+                              <PhoneInput
+                                defaultCountry={lang === 'fr' ? 'fr' : 'gb'}
+                                value={form.telephone}
+                                onChange={(phone) =>
+                                  setForm((c) => ({ ...c, telephone: phone }))
+                                }
+                                preferredCountries={['fr', 'be', 'ch', 'ca', 'us', 'gb']}
+                                inputClassName="!font-medium !text-cherry placeholder:text-cherry/30"
+                                countrySelectorStyleProps={{
+                                  buttonClassName:
+                                    '!border-cherry/10 !bg-white/40 hover:!bg-white/60',
+                                }}
+                              />
+                            </div>
+                          </label>
                         </motion.div>
                         <motion.div variants={staggerItem} className="sm:col-span-2">
-                          <ModernInput
+                          <SearchableCountryField
                             label={copy.fields.pays}
                             value={form.pays}
-                            onChange={(v) => setForm(c => ({ ...c, pays: v }))}
+                            onChange={(v) => setForm((c) => ({ ...c, pays: v }))}
+                            lang={lang}
                           />
                         </motion.div>
                       </motion.div>
                     )}
                   </motion.div>
                 </AnimatePresence>
+                </div>
 
                 {/* Footer Actions */}
                 <div className="mt-10 flex flex-col gap-4 border-t border-cherry/10 pt-8 sm:flex-row sm:justify-between">
@@ -307,6 +358,176 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
   );
 }
 
+function stripDiacritics(s: string) {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function useFixedDropdownPosition(
+  anchorRef: RefObject<HTMLDivElement | null>,
+  open: boolean
+) {
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
+  const update = useCallback(() => {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPos({ top: r.bottom + 4, left: r.left, width: r.width });
+  }, [anchorRef]);
+  useEffect(() => {
+    if (!open) return;
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, true);
+    return () => {
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update, true);
+    };
+  }, [open, update]);
+  return pos;
+}
+
+function buildCountryOptions(lang: 'fr' | 'en') {
+  const regionNames = new Intl.DisplayNames([lang === 'fr' ? 'fr' : 'en'], { type: 'region' });
+  return defaultCountries
+    .map((row) => {
+      const c = parseCountry(row);
+      let label: string;
+      try {
+        label = regionNames.of(c.iso2.toUpperCase()) ?? c.name;
+      } catch {
+        label = c.name;
+      }
+      return { iso2: c.iso2, label };
+    })
+    .sort((a, b) =>
+      a.label.localeCompare(b.label, lang === 'fr' ? 'fr' : 'en', { sensitivity: 'base' })
+    );
+}
+
+function SearchableCountryField({
+  label,
+  value,
+  onChange,
+  lang,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  lang: 'fr' | 'en';
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const options = useMemo(() => buildCountryOptions(lang), [lang]);
+  const filtered = useMemo(() => {
+    const q = stripDiacritics(query.trim().toLowerCase());
+    if (!q) return options;
+    return options.filter((o) =>
+      stripDiacritics(o.label.toLowerCase()).includes(q)
+    );
+  }, [options, query]);
+  const pos = useFixedDropdownPosition(anchorRef, open);
+
+  useEffect(() => {
+    if (!open) return;
+    setQuery('');
+    const t = window.setTimeout(() => searchInputRef.current?.focus(), 0);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  const placeholder = lang === 'fr' ? 'Sélectionnez un pays' : 'Select a country';
+  const searchPlaceholder =
+    lang === 'fr' ? 'Rechercher un pays…' : 'Search country…';
+
+  return (
+    <label className="block space-y-2">
+      <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/50 uppercase ml-1">
+        {label}
+      </span>
+      <div ref={anchorRef} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className="flex w-full items-center justify-between gap-3 rounded-2xl border border-cherry/10 bg-white/40 px-5 py-3.5 text-left text-base font-medium text-cherry outline-none transition-all focus:border-cherry focus:bg-white/80 focus:shadow-inner"
+        >
+          <span className={value ? 'text-cherry' : 'text-cherry/30'}>
+            {value || placeholder}
+          </span>
+          <ChevronDown
+            className={`h-5 w-5 shrink-0 text-cherry/40 transition-transform ${open ? 'rotate-180' : ''}`}
+          />
+        </button>
+        {open &&
+          createPortal(
+            <>
+              <button
+                type="button"
+                aria-label={lang === 'fr' ? 'Fermer' : 'Close'}
+                className="fixed inset-0 z-[1098] cursor-default bg-transparent"
+                onClick={() => setOpen(false)}
+              />
+              <div
+                role="listbox"
+                className="fixed z-[1099] flex max-h-[min(280px,45vh)] flex-col overflow-hidden rounded-2xl border border-cherry/10 bg-white/95 shadow-xl backdrop-blur-md"
+                style={{
+                  top: pos.top,
+                  left: pos.left,
+                  width: pos.width,
+                }}
+              >
+                <div className="border-b border-cherry/10 p-2">
+                  <input
+                    ref={searchInputRef}
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={searchPlaceholder}
+                    className="w-full rounded-xl border border-cherry/10 bg-white/80 px-3 py-2 text-sm text-cherry outline-none placeholder:text-cherry/35 focus:border-cherry/25"
+                  />
+                </div>
+                <ul className="overflow-y-auto p-1">
+                  {filtered.map((opt) => (
+                    <li key={opt.iso2}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={value === opt.label}
+                        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm text-cherry hover:bg-cherry/5"
+                        onClick={() => {
+                          onChange(opt.label);
+                          setOpen(false);
+                        }}
+                      >
+                        <FlagImage iso2={opt.iso2} size={20} />
+                        <span className="min-w-0 flex-1 truncate">{opt.label}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                {filtered.length === 0 && (
+                  <p className="px-3 py-4 text-center text-sm text-cherry/45">
+                    {lang === 'fr' ? 'Aucun pays trouvé.' : 'No country found.'}
+                  </p>
+                )}
+              </div>
+            </>,
+            document.body
+          )}
+      </div>
+    </label>
+  );
+}
+
 function SelectButton({ label, selected, onClick, multi = false, large = false }: { label: string, selected: boolean, onClick: () => void, multi?: boolean, large?: boolean, key?: any }) {
   return (
     <motion.button
@@ -314,7 +535,7 @@ function SelectButton({ label, selected, onClick, multi = false, large = false }
       whileTap={{ scale: 0.98 }}
       type="button"
       onClick={onClick}
-      className={`relative flex items-center justify-between gap-4 rounded-2xl border px-5 transition-all duration-300 ${large ? 'py-5' : 'py-4'} ${
+      className={`relative overflow-hidden flex items-center justify-between gap-4 rounded-2xl border px-5 transition-all duration-300 ${large ? 'py-5' : 'py-4'} ${
         selected 
           ? 'border-cherry bg-cherry text-snow shadow-lg shadow-cherry/20' 
           : 'border-cherry/10 bg-white/40 text-cherry hover:border-cherry/30 hover:bg-white/60'
