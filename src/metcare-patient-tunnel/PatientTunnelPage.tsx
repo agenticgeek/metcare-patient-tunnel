@@ -739,7 +739,7 @@ export default function PatientTunnelPage() {
       </PatientSection>
 
       {/* Final Portal */}
-      <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-6 overflow-hidden bg-cherry rounded-t-[5rem] lg:rounded-t-[8rem]">
+      <section className="relative min-h-[80vh] flex flex-col items-center justify-start px-6 pt-20 pb-24 md:pt-28 md:pb-40 overflow-hidden bg-cherry rounded-t-[5rem] lg:rounded-t-[8rem]">
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
             className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-full bg-[radial-gradient(circle_at_center,var(--color-beige)_0%,transparent_70%)] opacity-20"
@@ -755,7 +755,7 @@ export default function PatientTunnelPage() {
           transition={{ duration: 1 }}
           className="relative z-10 text-center max-w-4xl"
         >
-          <span className="inline-block text-[0.6rem] font-bold tracking-[0.5em] text-snow/40 uppercase mb-8">{c.sections.final.label}</span>
+          <span className="inline-block text-[0.85rem] font-bold tracking-[0.4em] text-snow/40 uppercase mb-10">{c.sections.final.label}</span>
           <h2 className="mb-10 text-2xl font-semibold text-snow md:text-4xl lg:text-5xl leading-tight tracking-tight">
             {c.sections.final.intro}
           </h2>
