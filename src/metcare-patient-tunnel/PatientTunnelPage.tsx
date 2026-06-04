@@ -438,8 +438,8 @@ export default function PatientTunnelPage() {
               whileHover={{ scale: 2 }}
               transition={{ duration: 1 }}
             />
-            <div className="mt-16 pt-8 border-t border-snow/10 relative z-10 flex justify-center">
-              <img src={safetyPatientLogo} alt="Safety Patient®" className="h-28 w-auto object-contain" />
+            <div className="mt-auto pt-6 pb-18 relative z-10 flex justify-center items-end">
+              <img src={safetyPatientLogo} alt="Safety Patient®" className="h-40 w-auto object-contain" />
             </div>
           </motion.div>
 
