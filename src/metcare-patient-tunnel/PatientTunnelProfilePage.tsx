@@ -7,9 +7,7 @@ import {
   patientCopy,
   getPatientForm2AccompagnementOptions,
   getPatientForm2AideMaintenantOptions,
-  getPatientForm2QuandOptions,
   getPatientForm2SentimentOptions,
-  getPatientForm2SiPasEncoreOptions,
   getPatientForm2TechnologieOptions,
   type PatientForm1Data,
   type PatientForm2Data,
@@ -24,8 +22,9 @@ import LanguageSwitcher from './LanguageSwitcher';
 import { trackCustom, trackViewContent } from '../utils/metaPixel';
 
 const initialForm: PatientForm2Data = {
-  quandIntervention: '',
-  siPasEncore: '',
+  ville1: '',
+  ville2: '',
+  ville3: '',
   technologieConnue: '',
   technologieDetail: '',
   commentVousSentez: [],
@@ -111,7 +110,7 @@ export default function PatientTunnelProfilePage() {
   }, [lang]);
 
   const canGoNext = useMemo(() => {
-    if (step === 1) return projetSeulement ? form.siPasEncore : form.quandIntervention;
+    if (step === 1) return form.ville1.trim();
     if (step === 2) return form.technologieConnue && (form.technologieConnue !== (lang === 'fr' ? 'Oui' : 'Yes') || form.technologieDetail.trim());
     if (step === 3) return form.commentVousSentez.length > 0 && form.aideMaintenant.length > 0 && form.accompagnementSouhaite;
     return false;
@@ -199,8 +198,6 @@ export default function PatientTunnelProfilePage() {
     );
   }
 
-  const quandOptions = getPatientForm2QuandOptions(lang);
-  const siPasEncoreOptions = getPatientForm2SiPasEncoreOptions(lang);
   const technologieOptions = getPatientForm2TechnologieOptions(lang);
   const sentimentOptions = getPatientForm2SentimentOptions(lang);
   const aideMaintenantOptions = getPatientForm2AideMaintenantOptions(lang);
@@ -270,24 +267,36 @@ export default function PatientTunnelProfilePage() {
               className="patient-tunnel-glass space-y-12 rounded-[2.5rem] border border-white/20 p-8 shadow-2xl shadow-cherry/10 md:p-12"
             >
               {step === 1 && (
-                 <div className="space-y-8 text-center">
-                    <motion.h2 variants={itemReveal} className="text-xl font-medium text-cherry/80 md:text-2xl">
-                       {projetSeulement ? copy.fields.siPasEncore : copy.fields.quand}
-                    </motion.h2>
-                    <motion.div variants={itemReveal} className="grid gap-4 sm:grid-cols-2">
-                       {(projetSeulement ? siPasEncoreOptions : quandOptions).map(opt => (
-                         <ProfileSelectCard
-                            key={opt}
-                            label={opt}
-                            selected={(projetSeulement ? form.siPasEncore : form.quandIntervention) === opt}
-                            onClick={() => setForm(c => ({ 
-                               ...c, 
-                               [projetSeulement ? 'siPasEncore' : 'quandIntervention']: opt 
-                            }))}
-                         />
-                       ))}
-                    </motion.div>
-                 </div>
+                <div className="space-y-8">
+                  <motion.h2 variants={itemReveal} className="text-xl font-medium text-cherry/80 md:text-2xl text-center">
+                    {copy.fields.villesQuestion}
+                  </motion.h2>
+                  <motion.div variants={itemReveal} className="space-y-4">
+                    {(
+                      [
+                        { key: 'ville1', label: copy.fields.ville1Label, required: true },
+                        { key: 'ville2', label: copy.fields.ville2Label, required: false },
+                        { key: 'ville3', label: copy.fields.ville3Label, required: false },
+                      ] as const
+                    ).map(({ key, label }) => (
+                      <div key={key} className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold uppercase tracking-widest text-cherry/50">
+                          {label}
+                        </label>
+                        <input
+                          type="text"
+                          value={form[key]}
+                          onChange={e => setForm(c => ({ ...c, [key]: e.target.value }))}
+                          className="w-full rounded-2xl border border-cherry/10 bg-white/60 px-5 py-3.5 text-cherry placeholder:text-cherry/30 outline-none focus:border-cherry/30 focus:ring-2 focus:ring-cherry/10 transition"
+                          placeholder={label}
+                        />
+                      </div>
+                    ))}
+                  </motion.div>
+                  <motion.p variants={itemReveal} className="text-sm text-cherry/50 text-center">
+                    {copy.fields.villesHelper}
+                  </motion.p>
+                </div>
               )}
 
               {step === 2 && (

@@ -9,6 +9,7 @@ import bonEndroitSectionImage from '../../assets/image4.jpg';
 import solutionCardImage1 from '../../assets/1.jpg';
 import solutionCardImage2 from '../../assets/2.jpg';
 import solutionCardImage3 from '../../assets/3.jpg';
+import safetyPatientLogo from '../../assets/Safety patient Blanc .png';
 import { patientCopy, type PatientForm1Data } from './copy';
 import PatientTunnelFormModal from './PatientTunnelFormModal';
 import './patientTunnel.css';
@@ -56,8 +57,8 @@ function TextWithTags({ text, className = "", tagClassName = "" }: { text: strin
       {intro && <p className="mb-4">{intro}</p>}
       <div className="flex flex-wrap gap-2">
         {tags.map((tag, i) => (
-          <motion.span 
-            key={i} 
+          <motion.span
+            key={i}
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -74,7 +75,7 @@ function TextWithTags({ text, className = "", tagClassName = "" }: { text: strin
 
 function MouseSpotlight() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  
+
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
@@ -84,23 +85,58 @@ function MouseSpotlight() {
   }, []);
 
   return (
-    <motion.div 
+    <motion.div
       className="glow-spotlight hidden lg:block"
-      animate={{ 
-        x: mousePos.x - 300, 
-        y: mousePos.y - 300 
+      animate={{
+        x: mousePos.x - 300,
+        y: mousePos.y - 300
       }}
       transition={{ type: 'spring', damping: 30, stiffness: 150, mass: 0.5 }}
     />
   );
 }
 
+const HERO_HIGHLIGHT_PHRASES: Record<string, string[]> = {
+  fr: ['Changer.', 'Se transformer.', 'Se retrouver.'],
+  en: ['To change.', 'To transform.', 'To find themselves.'],
+};
+
+function HeroBodyText({ body }: { body: string }) {
+  const langKey = Object.keys(HERO_HIGHLIGHT_PHRASES).find(k =>
+    HERO_HIGHLIGHT_PHRASES[k].every(p => body.includes(p))
+  );
+  if (!langKey) return <>{body}</>;
+
+  const phrases = HERO_HIGHLIGHT_PHRASES[langKey];
+  const fullPhrase = phrases.join(' ');
+  const [before, after] = body.split(fullPhrase);
+
+  return (
+    <>
+      {before.trim()}
+      <ul className="my-3 space-y-1.5">
+        {phrases.map(phrase => (
+          <li key={phrase} className="flex items-center gap-2.5">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cherry">
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <span>{phrase}</span>
+          </li>
+        ))}
+      </ul>
+      {after.trim()}
+    </>
+  );
+}
+
 export default function PatientTunnelPage() {
   const navigate = useNavigate();
-  const { lang, setLang } = useLanguage();
+  const { lang } = useLanguage();
   const [showForm, setShowForm] = useState(false);
   const [activeCta, setActiveCta] = useState<string>();
-  
+
   const { scrollYProgress } = useScroll();
   const parcoursX = useTransform(scrollYProgress, [0.4, 0.8], [100, -100]);
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
@@ -141,60 +177,42 @@ export default function PatientTunnelPage() {
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed left-4 right-4 top-4 z-[100] flex items-center rounded-full border border-white/20 bg-white/60 px-4 py-2.5 shadow-xl backdrop-blur-2xl md:left-12 md:right-auto md:top-12"
+        className="fixed left-4 top-4 z-[100] w-fit rounded-2xl border border-white/20 bg-white/60 px-2.5 py-2 shadow-xl backdrop-blur-2xl md:left-12 md:top-12 md:rounded-full md:px-4 md:py-2.5"
       >
-        <div className="flex w-full items-center justify-between gap-4">
+        <div className="flex flex-col gap-1.5 md:flex-row md:items-center md:gap-3">
           <Link
             to={PATIENT_TUNNEL_ROUTES.home}
-            className="group flex items-center gap-4"
+            className="group flex items-center gap-2"
           >
             <img
               src={metcareLogo}
               alt="METCARE"
-              className="h-11 w-11 scale-95 rounded-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-360"
+              className="h-7 w-7 scale-95 rounded-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-360 md:h-11 md:w-11"
               width={44}
               height={44}
             />
-            <div className="flex flex-col border-l border-cherry/10 pl-4">
-              <span className="text-[0.55rem] font-bold tracking-[0.4em] text-cherry/40 uppercase">
+            <div className="flex flex-col border-l border-cherry/10 pl-2 md:pl-4">
+              <span className="hidden text-[0.5rem] font-bold tracking-[0.4em] text-cherry/40 uppercase md:block">
                 {lang === 'fr' ? 'ÉTABLI EN 2009' : 'ESTABLISHED 2009'}
               </span>
-              <span className="text-[0.85rem] font-bold tracking-[0.2em] text-cherry">
+              <span className="text-[0.7rem] font-bold tracking-[0.2em] text-cherry md:text-[0.85rem]">
                 METCARE®
               </span>
             </div>
           </Link>
-
-          {/* Mobile-only inline language switcher inside pill */}
-          <div className="flex items-center gap-1 rounded-full border border-white/40 bg-white/70 p-1 shadow-md md:hidden">
-            <button
-              type="button"
-              onClick={() => setLang('fr')}
-              className={`px-3 py-1 text-[0.6rem] font-bold tracking-[0.25em] rounded-full transition-all ${
-                lang === 'fr'
-                  ? 'bg-cherry text-snow shadow-sm shadow-cherry/30'
-                  : 'text-cherry/40 hover:text-cherry hover:bg-white'
-              }`}
-            >
-              FR
-            </button>
-            <button
-              type="button"
-              onClick={() => setLang('en')}
-              className={`px-3 py-1 text-[0.6rem] font-bold tracking-[0.25em] rounded-full transition-all ${
-                lang === 'en'
-                  ? 'bg-cherry text-snow shadow-sm shadow-cherry/30'
-                  : 'text-cherry/40 hover:text-cherry hover:bg-white'
-              }`}
-            >
-              EN
-            </button>
-          </div>
+          <a
+            href="https://masterclass.metcare.fr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border border-cherry/20 bg-white/50 px-3 py-1 text-[0.55rem] font-bold tracking-[0.12em] text-cherry uppercase shadow-sm transition-all hover:bg-cherry hover:text-snow hover:border-cherry text-center"
+          >
+            Metcare MasterClass
+          </a>
         </div>
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="patient-tunnel-hero-aurora relative flex min-h-screen flex-col items-center justify-center px-6 pt-32 md:px-12 md:pt-40 lg:px-24">
+      <section className="patient-tunnel-hero-aurora relative flex flex-col items-center justify-center px-6 pt-28 pb-16 md:min-h-screen md:px-12 md:pt-40 md:pb-0 lg:px-24">
         <motion.div
           className="relative z-10 w-full max-w-[1400px]"
           initial="hidden"
@@ -209,20 +227,20 @@ export default function PatientTunnelPage() {
                   {c.meta.title}
                 </span>
               </motion.div>
-              
+
               <motion.div variants={fadeUp} className="relative">
                 <h1 className="relative mb-8 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-cherry sm:text-6xl md:mb-10 md:text-7xl lg:text-[5rem]">
                   {c.hero.headline}
                 </h1>
               </motion.div>
-              
-              <motion.p
+
+              <motion.div
                 variants={fadeUp}
                 className="mb-10 max-w-xl text-base font-light leading-relaxed text-cherry/70 md:mb-14 md:text-lg lg:text-xl"
               >
-                {c.hero.body}
-              </motion.p>
-              
+                <HeroBodyText body={c.hero.body} />
+              </motion.div>
+
               {/* Image for Mobile (only visible on small/medium screens, hidden on lg) */}
               <motion.div
                 variants={fadeUp}
@@ -239,18 +257,11 @@ export default function PatientTunnelPage() {
                   <div className="absolute inset-0 bg-linear-to-t from-cherry/10 to-transparent pointer-events-none" />
                 </div>
               </motion.div>
-              
+
               <motion.div variants={fadeUp} className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
-                <PatientPrimaryButton onClick={() => openForm(c.hero.ctaEchange)} className="px-12! py-5! text-lg! rounded-full! shadow-2xl shadow-cherry/25 group overflow-hidden">
-                   <span className="relative z-10">{c.hero.ctaEchange}</span>
+                <PatientPrimaryButton onClick={() => openForm(c.hero.ctaGuide)} className="px-12! py-5! text-lg! rounded-full! shadow-2xl shadow-cherry/25 group overflow-hidden">
+                  <span className="relative z-10">{c.hero.ctaGuide}</span>
                 </PatientPrimaryButton>
-                <button 
-                  onClick={() => openForm(c.hero.ctaGuide)}
-                  className="group flex flex-col items-start gap-1 text-[0.7rem] font-bold tracking-[0.3em] text-cherry/40 uppercase transition-all hover:text-cherry"
-                >
-                  <span>{c.hero.ctaGuide}</span>
-                  <div className="h-[2px] w-8 bg-cherry/20 transition-all group-hover:w-full group-hover:bg-cherry" />
-                </button>
               </motion.div>
             </div>
 
@@ -271,14 +282,14 @@ export default function PatientTunnelPage() {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-cherry/10 to-transparent pointer-events-none" />
               </div>
-              
+
               {/* Decorative elements */}
               <div className="absolute -right-6 -top-6 -z-10 h-32 w-32 rounded-full bg-beige/30 blur-3xl" />
               <div className="absolute -left-10 -bottom-10 -z-10 h-48 w-48 rounded-full bg-cherry/5 blur-3xl" />
             </motion.div>
           </div>
         </motion.div>
-        
+
         <div className="patient-tunnel-aurora" aria-hidden="true">
           <span className="a1"></span>
           <span className="a2"></span>
@@ -289,50 +300,79 @@ export default function PatientTunnelPage() {
       </section>
 
       {/* Editorial Split-Screen Section */}
-      <PatientSection label={c.sections.repere.label} tone="beige" maxWidth="none" className="relative py-32! overflow-hidden">
+      <PatientSection label={c.sections.repere.label} tone="beige" maxWidth="none" className="relative py-14! md:py-32! overflow-hidden">
         <div className="editorial-grid max-w-[1400px] mx-auto">
           <div className="col-span-12 lg:col-span-5 mb-16 lg:mb-0">
-             <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
-                <span className="mb-6 inline-block text-[0.6rem] font-bold tracking-[0.4em] text-cherry/30 uppercase italic">{lang === 'fr' ? 'REPOS & SÉRÉNITÉ' : 'REST & SERENITY'}</span>
-                <h2 className="mb-8 text-4xl font-semibold leading-[1.1] text-cherry md:text-6xl lg:text-[4.5rem]">
-                  {lang === 'fr' ? 'Votre sérénité' : 'Your serenity'}<br/><span className="italic font-light">{lang === 'fr' ? 'commence' : 'begins'}</span> {lang === 'fr' ? 'ici.' : 'here.'}
-                </h2>
-                <TextWithTags 
-                  text={c.sections.repere.body} 
-                  className="text-lg font-light leading-relaxed text-cherry/70 md:text-xl lg:max-w-md"
-                />
-             </motion.div>
+            <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
+              <span className="mb-6 inline-block text-[0.6rem] font-bold tracking-[0.4em] text-cherry/30 uppercase italic">{lang === 'fr' ? 'REPOS & SÉRÉNITÉ' : 'REST & SERENITY'}</span>
+              <h2 className="mb-8 text-4xl font-semibold leading-[1.1] text-cherry md:text-6xl lg:text-[4.5rem]">
+                {lang === 'fr' ? 'Votre sérénité' : 'Your serenity'}<br /><span className="italic font-light">{lang === 'fr' ? 'commence' : 'begins'}</span> {lang === 'fr' ? 'ici.' : 'here.'}
+              </h2>
+              <TextWithTags
+                text={c.sections.repere.body}
+                className="text-lg font-light leading-relaxed text-cherry/70 md:text-xl lg:max-w-md"
+              />
+            </motion.div>
           </div>
           <div className="col-span-12 lg:col-span-7 flex flex-col gap-8 md:flex-row md:items-start lg:pl-12">
-             <motion.div 
-               initial={{ opacity: 0, y: 100 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ duration: 0.8, ease: 'easeOut' }}
-               className="patient-tunnel-glass animate-float-subtle perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl md:mt-24"
-             >
-                <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry text-snow shadow-lg shadow-cherry/20">
-                   <span className="text-xs font-bold tracking-widest">01</span>
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              className="patient-tunnel-glass animate-float-subtle perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl md:mt-24"
+            >
+              <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry text-snow shadow-lg shadow-cherry/20">
+                <span className="text-xs font-bold tracking-widest">01</span>
+              </div>
+              <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Savoir quoi observer' : 'Know what to observe'}</h3>
+              <p className="text-base font-light leading-relaxed text-cherry/70">{lang === 'fr' ? 'Comprendre les signaux de votre corps pour vous repérer avec confiance dans chaque étape de votre évolution.' : 'Understand your body\'s signals to navigate with confidence through every stage of your progress.'}</p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+              className="patient-tunnel-glass animate-float-delayed perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl border-cherry/5 bg-white/60"
+            >
+              <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry/10 text-cherry shadow-lg">
+                <span className="text-xs font-bold tracking-widest">02</span>
+              </div>
+              <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Ne plus rester seule' : 'No longer stay alone'}</h3>
+              <div className="space-y-3 text-base font-light leading-relaxed text-cherry/70">
+                <p className="text-sm">{c.sections.normal.intro}</p>
+                <div className="flex flex-wrap gap-2">
+                  {c.sections.normal.tags1.map((tag: string, i: number) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.05 }}
+                      className="inline-block px-3 py-1.5 rounded-lg bg-cherry/5 border border-cherry/10 text-[0.65rem] font-bold tracking-wider text-cherry/80 uppercase"
+                    >
+                      {tag}
+                    </motion.span>
+                  ))}
                 </div>
-                <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Savoir quoi observer' : 'Know what to observe'}</h3>
-                <p className="text-base font-light leading-relaxed text-cherry/70">{lang === 'fr' ? 'Comprendre les signaux de votre corps pour vous repérer avec confiance dans chaque étape de votre évolution.' : 'Understand your body\'s signals to navigate with confidence through every stage of your progress.'}</p>
-             </motion.div>
-             <motion.div 
-               initial={{ opacity: 0, y: 100 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-               className="patient-tunnel-glass animate-float-delayed perspective-1000 rotate-3d-hover flex-1 rounded-[3rem] p-10 shadow-2xl border-cherry/5 bg-white/60"
-             >
-                <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry/10 text-cherry shadow-lg">
-                   <span className="text-xs font-bold tracking-widest">02</span>
+                <p className="text-sm">{c.sections.normal.bridge}</p>
+                <div className="flex flex-wrap gap-2">
+                  {c.sections.normal.tags2.map((tag: string, i: number) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.05 }}
+                      className="inline-block px-3 py-1.5 rounded-lg bg-cherry/5 border border-cherry/10 text-[0.65rem] font-bold tracking-wider text-cherry/80 uppercase"
+                    >
+                      {tag}
+                    </motion.span>
+                  ))}
                 </div>
-                <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Ne plus rester seule' : 'No longer stay alone'}</h3>
-                <TextWithTags 
-                  text={c.sections.normal.body} 
-                  className="text-base font-light leading-relaxed text-cherry/70"
-                />
-             </motion.div>
+                <p className="text-sm">{c.sections.normal.outro}</p>
+              </div>
+            </motion.div>
           </div>
         </div>
 
@@ -362,90 +402,90 @@ export default function PatientTunnelPage() {
       </PatientSection>
 
       {/* Editorial Mosaic for Expertise */}
-      <PatientSection label={c.sections.expertise.label} maxWidth="none" className="py-32!">
+      <PatientSection label={c.sections.expertise.label} maxWidth="none" className="py-14! md:py-32!">
         <div className="grid gap-6 md:grid-cols-12 md:grid-rows-6 md:h-[1000px] max-w-[1400px] mx-auto">
           {/* Main Statement Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
             className="md:col-span-8 md:row-span-3 flex flex-col justify-center p-10 lg:p-16 patient-tunnel-glass rounded-[4rem] border-none bg-white/50"
           >
-             <h3 className="mb-6 text-4xl font-semibold leading-tight text-cherry md:text-5xl lg:text-6xl">{lang === 'fr' ? 'La sécurité' : 'Safety'}<br/>{lang === 'fr' ? 'avant tout.' : 'first.'}</h3>
-             <p className="max-w-lg text-base font-light leading-relaxed text-cherry/70 md:text-lg">
-               {lang === 'fr' 
-                 ? 'Un cadre structuré, sécurisé et personnalisé pour chaque patiente, où qu\'elle soit. Notre approche combine expertise médicale et soutien émotionnel.'
-                 : 'A structured, secure, and personalized framework for every patient, wherever they are. Our approach combines medical expertise and emotional support.'}
-             </p>
+            <h3 className="mb-6 text-4xl font-semibold leading-tight text-cherry md:text-5xl lg:text-6xl">{lang === 'fr' ? 'La sécurité' : 'Safety'}<br />{lang === 'fr' ? 'avant tout.' : 'first.'}</h3>
+            <p className="max-w-lg text-base font-light leading-relaxed text-cherry/70 md:text-lg">
+              {lang === 'fr'
+                ? 'Un cadre structuré, sécurisé et personnalisé pour chaque patiente, où qu\'elle soit. Notre approche combine expertise médicale et soutien émotionnel.'
+                : 'A structured, secure, and personalized framework for every patient, wherever they are. Our approach combines medical expertise and emotional support.'}
+            </p>
           </motion.div>
-          
+
           {/* Label Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="md:col-span-4 md:row-span-4 bg-cherry rounded-[3rem] p-10 flex flex-col justify-between group overflow-hidden"
+            className="md:col-span-4 md:row-span-4 bg-cherry rounded-[3rem] p-10 flex flex-col justify-start group overflow-hidden"
           >
-             <div className="space-y-6 relative z-10">
-                <span className="text-[0.65rem] font-bold tracking-[0.4em] text-snow/40 uppercase">{lang === 'fr' ? 'LE LABEL PRIVÉ' : 'THE PRIVATE LABEL'}</span>
-                <h4 className="text-3xl font-semibold text-snow leading-tight tracking-tight">Safety Patient®</h4>
-                <p className="text-sm font-light leading-relaxed text-snow/60">{c.sections.safety.body}</p>
-             </div>
-             <motion.div 
-               className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-white/5"
-               whileHover={{ scale: 2 }}
-               transition={{ duration: 1 }}
-             />
-             <div className="pt-10 border-t border-snow/10 relative z-10">
-                <p className="text-[0.65rem] font-bold tracking-[0.2em] text-snow/80 uppercase mb-4 italic">{lang === 'fr' ? 'PROTECTION GARANTIE' : 'GUARANTEED PROTECTION'}</p>
-             </div>
+            <div className="space-y-6 relative z-10">
+              <span className="text-[0.65rem] font-bold tracking-[0.4em] text-snow/40 uppercase">{lang === 'fr' ? 'LE LABEL PRIVÉ' : 'THE PRIVATE LABEL'}</span>
+              <h4 className="text-3xl font-semibold text-snow leading-tight tracking-tight">Safety Patient®</h4>
+              <p className="text-sm font-light leading-relaxed text-snow/60">{c.sections.safety.body}</p>
+            </div>
+            <motion.div
+              className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-white/5"
+              whileHover={{ scale: 2 }}
+              transition={{ duration: 1 }}
+            />
+            <div className="mt-16 pt-8 border-t border-snow/10 relative z-10 flex justify-center">
+              <img src={safetyPatientLogo} alt="Safety Patient®" className="h-28 w-auto object-contain" />
+            </div>
           </motion.div>
 
           {/* Stat/Network Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.5 }}
             className="md:col-span-5 md:row-span-3 patient-tunnel-glass rounded-[3rem] p-10 flex flex-col justify-center border-beige/40 bg-beige/10 overflow-hidden"
           >
-             <span className="text-[4rem] font-bold text-cherry/5 absolute top-4 right-8 select-none">17y</span>
-             <h4 className="text-2xl font-semibold text-cherry mb-4">{c.sections.conciergerie.label}</h4>
-             <p className="text-sm font-light leading-relaxed text-cherry/70">{c.sections.conciergerie.body}</p>
+            <span className="text-[4rem] font-bold text-cherry/5 absolute top-4 right-8 select-none">17y</span>
+            <h4 className="text-2xl font-semibold text-cherry mb-4">{c.sections.conciergerie.label}</h4>
+            <p className="text-sm font-light leading-relaxed text-cherry/70">{c.sections.conciergerie.body}</p>
           </motion.div>
 
           {/* Partner Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.6 }}
             className="md:col-span-3 md:row-span-3 bg-white/40 rounded-[3rem] p-10 border border-cherry/5 flex flex-col items-center justify-center text-center"
           >
-             <motion.span 
-               className="text-4xl font-bold text-cherry mb-2"
-               whileInView={{ scale: [1, 1.2, 1] }}
-               transition={{ duration: 1, delay: 1 }}
-             >
-               +8000
-             </motion.span>
-             <span className="text-[0.6rem] font-bold tracking-[0.3em] text-cherry/40 uppercase">{lang === 'fr' ? 'Patients par an' : 'Patients per year'}</span>
+            <motion.span
+              className="text-4xl font-bold text-cherry mb-2"
+              whileInView={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1, delay: 1 }}
+            >
+              +8000
+            </motion.span>
+            <span className="text-[0.6rem] font-bold tracking-[0.3em] text-cherry/40 uppercase">{lang === 'fr' ? 'Patients par an' : 'Patients per year'}</span>
           </motion.div>
-          
+
           {/* Expertise List Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.7 }}
             className="md:col-span-4 md:row-span-2 patient-tunnel-glass rounded-[3rem] p-10 flex items-center"
           >
-             <TextWithTags 
-               text={c.sections.expertise.body} 
-               className="text-sm font-light leading-relaxed text-cherry/70 italic" 
-             />
+            <TextWithTags
+              text={c.sections.expertise.body}
+              className="text-sm font-light leading-relaxed text-cherry/70 italic"
+            />
           </motion.div>
         </div>
 
@@ -474,7 +514,7 @@ export default function PatientTunnelPage() {
         </motion.div>
       </PatientSection>
 
-      <PatientSection label={c.sections.echange.label} tone="beige" maxWidth="none" className="py-24! overflow-hidden">
+      <PatientSection label={c.sections.echange.label} tone="beige" maxWidth="none" className="py-14! md:py-24! overflow-hidden">
         <div className="relative mx-auto max-w-6xl">
           {/* Decorative 15min background element */}
           <div className="pointer-events-none absolute -right-12 -top-20 select-none opacity-[0.04]">
@@ -519,7 +559,7 @@ export default function PatientTunnelPage() {
 
               <div className="relative space-y-10 lg:pl-12">
                 <div className="absolute left-0 top-0 hidden h-full w-px bg-linear-to-b from-cherry/20 via-cherry/5 to-transparent lg:block" />
-                
+
                 <div className="space-y-6">
                   <TextWithTags
                     text={c.sections.echange.followup}
@@ -548,78 +588,78 @@ export default function PatientTunnelPage() {
       </PatientSection>
 
       {/* Visual Journey */}
-      <PatientSection label={c.sections.parcours.label} tone="beige" maxWidth="none" className="relative py-24! md:py-40! overflow-hidden">
+      <PatientSection label={c.sections.parcours.label} tone="beige" maxWidth="none" className="relative pt-14! pb-10! md:py-40! overflow-hidden">
         {/* Background Decorative Element with Scroll Parallax */}
-        <motion.div 
+        <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.015] md:opacity-[0.03]"
           style={{ x: parcoursX }}
         >
-           <span className="text-[10rem] md:text-[20rem] font-bold tracking-tighter whitespace-nowrap text-cherry uppercase">{lang === 'fr' ? 'PARCOURS' : 'JOURNEY'}</span>
+          <span className="text-[10rem] md:text-[20rem] font-bold tracking-tighter whitespace-nowrap text-cherry uppercase">{lang === 'fr' ? 'PARCOURS' : 'JOURNEY'}</span>
         </motion.div>
 
         <div className="max-w-[1200px] mx-auto relative z-10">
           <div className="text-center mb-20 md:mb-32">
-             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <h2 className="text-3xl md:text-6xl font-semibold text-cherry mb-6 md:mb-8 tracking-tight">{c.sections.parcours.intro}</h2>
-                <div className="flex items-center justify-center gap-4">
-                   <div className="h-px w-8 md:w-12 bg-cherry/20" />
-                   <p className="text-[0.6rem] md:text-[0.7rem] font-bold tracking-[0.3em] md:tracking-[0.5em] text-cherry/40 uppercase italic">{lang === 'fr' ? 'LE PROTOCOLE D\'EXCELLENCE' : 'THE EXCELLENCE PROTOCOL'}</p>
-                   <div className="h-px w-8 md:w-12 bg-cherry/20" />
-                </div>
-             </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-6xl font-semibold text-cherry mb-6 md:mb-8 tracking-tight">{c.sections.parcours.intro}</h2>
+            </motion.div>
           </div>
-          
+
           <div className="relative space-y-20 md:space-y-32">
-             <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-px bg-linear-to-b from-cherry/20 via-cherry/10 to-transparent hidden md:block" />
-             
-             <EditorialStep 
-               number="01" 
-               title={lang === 'fr' ? 'Partage de situation' : 'Situation Sharing'} 
-               side="left" 
-               body={c.sections.parcours.steps[0]} 
-             />
-             <EditorialStep 
-               number="02" 
-               title={lang === 'fr' ? 'Échange personnalisé' : 'Personalized Exchange'} 
-               side="right" 
-               body={c.sections.parcours.steps[1]} 
-             />
-             <EditorialStep 
-               number="03" 
-               title={lang === 'fr' ? 'Orientation & Solutions' : 'Orientation & Solutions'} 
-               side="left" 
-               body={c.sections.parcours.steps[2]} 
-               isLast
-             />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-px bg-linear-to-b from-cherry/20 via-cherry/10 to-transparent hidden md:block" />
+
+            <EditorialStep
+              number="01"
+              title={lang === 'fr' ? 'Partage de situation' : 'Situation Sharing'}
+              side="left"
+              body={c.sections.parcours.steps[0]}
+            />
+            <EditorialStep
+              number="02"
+              title={lang === 'fr' ? 'Échange personnalisé' : 'Personalized Exchange'}
+              side="right"
+              body={c.sections.parcours.steps[1]}
+            />
+            <EditorialStep
+              number="03"
+              title={lang === 'fr' ? 'Orientation & Solutions' : 'Orientation & Solutions'}
+              side="left"
+              body={c.sections.parcours.steps[2]}
+              isLast
+            />
           </div>
         </div>
       </PatientSection>
 
       {/* Solutions Gallery */}
-      <PatientSection label={c.sections.solutions.label} maxWidth="none" className="py-32! overflow-hidden">
+      <PatientSection maxWidth="none" className="py-32! overflow-hidden">
+        <div className="px-4 mb-10 max-w-[1400px] mx-auto">
+          <h2 className="text-3xl md:text-6xl font-semibold text-cherry tracking-tight">{c.sections.solutions.label}</h2>
+        </div>
         <div className="flex flex-col md:flex-row gap-8 max-w-[1400px] mx-auto overflow-x-auto pb-12 snap-x px-4 no-scrollbar">
-           <SolutionCard 
-              label="PROTOCOL" 
-              title="Signature Recovery Protocol" 
-              body={lang === 'fr' ? 'Une approche structurée pour optimiser votre rétablissement après chaque type d\'intervention.' : 'A structured approach to optimize your recovery after each type of intervention.'}
-              imageSrc={solutionCardImage1}
-              imageAlt={lang === 'fr' ? 'Signature Recovery Protocol' : 'Signature Recovery Protocol'}
-           />
-           <SolutionCard 
-              label={lang === 'fr' ? 'ACCOMPAGNEMENT' : 'ACCOMPANIMENT'} 
-              title={lang === 'fr' ? 'Accompagnement Personnalisé & E-book' : 'Personalized Accompaniment & E-book'} 
-              body={lang === 'fr' ? 'Un guide complet de 148 pages et une écoute active tout au long de votre parcours de guérison.' : 'A complete 148-page guide and active listening throughout your healing journey.'}
-              imageSrc={solutionCardImage2}
-              imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : 'Personalized accompaniment and e-book'}
-           />
-           <SolutionCard 
-              label={lang === 'fr' ? 'OPPORTUNITÉ' : 'OPPORTUNITY'} 
-              title={lang === 'fr' ? 'Soins encadrés (Paris / Régions)' : 'Supervised Care (Paris / Regions)'} 
-              body={c.sections.opportunite.body}
-              imageSrc={solutionCardImage3}
-              imageAlt={lang === 'fr' ? 'Soins encadrés Paris et régions' : 'Supervised care Paris and regions'}
-              accent
-           />
+          <SolutionCard
+            label={c.sections.opportunite.label}
+            title={c.sections.opportunite.title}
+            body={c.sections.opportunite.body}
+            imageSrc={solutionCardImage3}
+            imageAlt={lang === 'fr' ? 'Réseau international d\'experts METCARE' : 'METCARE international expert network'}
+            accent
+          />
+          <SolutionCard
+            label={lang === 'fr' ? "Le protocole d'excellence" : "The excellence protocol"}
+            title="Signature Recovery Protocol"
+            body={lang === 'fr' ? 'Une approche structurée pour optimiser votre rétablissement après chaque type d\'intervention.' : 'A structured approach to optimize your recovery after each type of intervention.'}
+            imageSrc={solutionCardImage1}
+            imageAlt={lang === 'fr' ? 'Signature Recovery Protocol' : 'Signature Recovery Protocol'}
+            href="https://myesthetictravel.com/les-incontournables/#signature-recovery-protocol"
+          />
+          <SolutionCard
+            label={lang === 'fr' ? 'ACCOMPAGNEMENT' : 'ACCOMPANIMENT'}
+            title={lang === 'fr' ? 'Accompagnement Personnalisé & E-book' : 'Personalized Accompaniment & E-book'}
+            body={lang === 'fr' ? 'Un guide complet de 148 pages et une écoute active tout au long de votre parcours de guérison.' : 'A complete 148-page guide and active listening throughout your healing journey.'}
+            imageSrc={solutionCardImage2}
+            imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : 'Personalized accompaniment and e-book'}
+            href="https://myesthetictravel.com/les-incontournables/#e-book"
+          />
         </div>
       </PatientSection>
 
@@ -634,7 +674,7 @@ export default function PatientTunnelPage() {
           viewport={{ once: true }}
           className="relative z-10 mx-auto max-w-4xl text-center"
         >
-          <motion.div 
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
@@ -664,7 +704,7 @@ export default function PatientTunnelPage() {
               ))}
             </div>
 
-            <motion.p 
+            <motion.p
               initial={{ scale: 0.95, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.6 }}
@@ -701,34 +741,39 @@ export default function PatientTunnelPage() {
       {/* Final Portal */}
       <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-6 overflow-hidden bg-cherry rounded-t-[5rem] lg:rounded-t-[8rem]">
         <div className="absolute inset-0 pointer-events-none">
-           <motion.div 
-             className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-full bg-[radial-gradient(circle_at_center,var(--color-beige)_0%,transparent_70%)] opacity-20"
-             animate={{ opacity: [0.1, 0.3, 0.1] }}
-             transition={{ duration: 5, repeat: Infinity }}
-           />
+          <motion.div
+            className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-full bg-[radial-gradient(circle_at_center,var(--color-beige)_0%,transparent_70%)] opacity-20"
+            animate={{ opacity: [0.1, 0.3, 0.1] }}
+            transition={{ duration: 5, repeat: Infinity }}
+          />
         </div>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
           className="relative z-10 text-center max-w-4xl"
         >
-          <span className="inline-block text-[0.6rem] font-bold tracking-[0.5em] text-snow/40 uppercase mb-8">{lang === 'fr' ? 'DISPONIBILITÉ IMMÉDIATE' : 'IMMEDIATE AVAILABILITY'}</span>
-          <h2 className="mb-10 text-4xl font-semibold text-snow md:text-6xl lg:text-7xl leading-[0.95] tracking-tight">
-            {lang === 'fr' ? 'Prête à vous faire' : 'Ready to be'}<br/><span className="italic font-light">{lang === 'fr' ? 'accompagner' : 'accompanied'}</span> ?
+          <span className="inline-block text-[0.6rem] font-bold tracking-[0.5em] text-snow/40 uppercase mb-8">{c.sections.final.label}</span>
+          <h2 className="mb-10 text-2xl font-semibold text-snow md:text-4xl lg:text-5xl leading-tight tracking-tight">
+            {c.sections.final.intro}
           </h2>
-          <p className="mx-auto mb-16 max-w-xl text-base font-light text-snow/50 md:text-lg italic text-balance">
-             {c.sections.final.body}
-          </p>
-          <PatientPrimaryButton 
-            variant="outline" 
-            className="border-snow! text-snow! px-16! py-6! text-lg! rounded-full! hover:bg-snow! hover:text-cherry! transition-all shadow-2xl"
-            onClick={() => openForm(c.sections.final.cta)}
+          <div className="mx-auto mb-16 max-w-2xl space-y-4 text-left">
+            {c.sections.final.body.map((para, i) => (
+              <p key={i} className="text-sm font-light text-snow/60 md:text-base leading-relaxed">
+                {para}
+              </p>
+            ))}
+          </div>
+          <a
+            href="https://myesthetictravel.com/les-incontournables/#accompagnement"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block border border-snow text-snow px-10 py-5 text-base rounded-full hover:bg-snow hover:text-cherry transition-all shadow-2xl font-semibold tracking-wide"
           >
             {c.sections.final.cta}
-          </PatientPrimaryButton>
+          </a>
         </motion.div>
       </section>
 
@@ -738,13 +783,13 @@ export default function PatientTunnelPage() {
             <img src={metcareLogo} alt="METCARE" className="h-8 w-8 rounded-full" />
             <span className="text-xs font-bold tracking-[0.3em] text-snow uppercase">METCARE®</span>
           </Link>
-          
+
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[0.6rem] font-bold tracking-[0.2em] text-snow/30 uppercase">
-             <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Mentions Légales' : 'Legal Mentions'}</a>
-             <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Confidentialité' : 'Privacy'}</a>
-             <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : 'Contact'}</a>
+            <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Mentions Légales' : 'Legal Mentions'}</a>
+            <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Confidentialité' : 'Privacy'}</a>
+            <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : 'Contact'}</a>
           </div>
-          
+
           <p className="text-[0.55rem] tracking-[0.1em] text-snow/20 uppercase">
             © {new Date().getFullYear()} METCARE. {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}
           </p>
@@ -757,31 +802,31 @@ export default function PatientTunnelPage() {
 function EditorialStep({ number, title, body, side, isLast = false }: { number: string, title: string, body: string, side: 'left' | 'right', isLast?: boolean }) {
   return (
     <div className={`flex flex-col md:flex-row items-center gap-8 md:gap-20 ${side === 'right' ? 'md:flex-row-reverse' : ''}`}>
-       <div className="flex-1 w-full">
-          <motion.div 
-            initial={{ opacity: 0, x: side === 'left' ? -30 : 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className={`patient-tunnel-glass p-8 md:p-12 rounded-[3rem] border-none bg-white/40 group hover:bg-white/60 transition-colors duration-500 ${side === 'right' ? 'text-right' : 'text-left'}`}
-          >
-             <div className={`flex flex-col ${side === 'right' ? 'items-end' : 'items-start'}`}>
-                <span className="text-[4rem] md:text-[6rem] font-bold text-cherry/5 leading-none mb-4 group-hover:text-cherry/10 transition-colors">{number}</span>
-                <h4 className="text-xl md:text-2xl font-semibold text-cherry leading-tight mb-3 uppercase tracking-tight group-hover:translate-x-2 transition-transform">{title}</h4>
-                <TextWithTags text={body} className="text-sm md:text-base font-light leading-relaxed text-cherry/60" />
-             </div>
-          </motion.div>
-       </div>
-       
-       <div className="relative z-10 hidden md:flex h-6 w-6 items-center justify-center">
-          <div className="h-2 w-2 rounded-full bg-cherry/20" />
-          <motion.div 
-            animate={{ scale: [1, 2, 1], opacity: [0.2, 0.4, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="absolute inset-0 rounded-full bg-cherry/10" 
-          />
-       </div>
-       
-       <div className="flex-1 hidden md:block" />
+      <div className="flex-1 w-full">
+        <motion.div
+          initial={{ opacity: 0, x: side === 'left' ? -30 : 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className={`patient-tunnel-glass p-8 md:p-12 rounded-[3rem] border-none bg-white/40 group hover:bg-white/60 transition-colors duration-500 ${side === 'right' ? 'text-right' : 'text-left'}`}
+        >
+          <div className={`flex flex-col ${side === 'right' ? 'items-end' : 'items-start'}`}>
+            <span className="text-[4rem] md:text-[6rem] font-bold text-cherry/5 leading-none mb-4 group-hover:text-cherry/10 transition-colors">{number}</span>
+            <h4 className="text-xl md:text-2xl font-semibold text-cherry leading-tight mb-3 uppercase tracking-tight group-hover:translate-x-2 transition-transform">{title}</h4>
+            <TextWithTags text={body} className="text-sm md:text-base font-light leading-relaxed text-cherry/60" />
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="relative z-10 hidden md:flex h-6 w-6 items-center justify-center">
+        <div className="h-2 w-2 rounded-full bg-cherry/20" />
+        <motion.div
+          animate={{ scale: [1, 2, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="absolute inset-0 rounded-full bg-cherry/10"
+        />
+      </div>
+
+      <div className="flex-1 hidden md:block" />
     </div>
   );
 }
@@ -793,6 +838,7 @@ function SolutionCard({
   accent = false,
   imageSrc,
   imageAlt = '',
+  href,
 }: {
   label: string;
   title: string;
@@ -800,28 +846,24 @@ function SolutionCard({
   accent?: boolean;
   imageSrc: string;
   imageAlt?: string;
+  href?: string;
 }) {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -15, scale: 1.02 }}
-      transition={{ duration: 0.6 }}
-      className={`group relative flex min-h-[520px] min-w-[300px] snap-center flex-col justify-between overflow-hidden rounded-[3rem] p-8 shadow-xl transition-all duration-500 md:min-h-[580px] md:min-w-[380px] md:p-10 ${
-        accent ? 'bg-cherry text-snow' : 'patient-tunnel-glass border-none bg-white/40'
-      }`}
-    >
+  const cardClass = `group relative flex min-h-[520px] min-w-[300px] snap-center flex-col justify-between overflow-hidden rounded-[3rem] p-8 shadow-xl transition-all duration-500 md:min-h-[580px] md:min-w-[380px] md:p-10 ${accent ? 'bg-cherry text-snow' : 'patient-tunnel-glass border-none bg-white/40'}`;
+  const motionProps = {
+    initial: { opacity: 0, y: 50 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    whileHover: { y: -15, scale: 1.02 },
+    transition: { duration: 0.6 },
+    className: cardClass,
+  };
+  const inner = (
+    <>
       <div className="relative z-10 shrink-0 space-y-4">
-         <span className={`text-[0.55rem] font-bold tracking-[0.4em] uppercase ${accent ? 'text-snow/40' : 'text-cherry/40'}`}>{label}</span>
-         <h4 className="text-xl font-semibold leading-tight tracking-tight md:text-2xl">{title}</h4>
+        <span className={`text-[0.55rem] font-bold tracking-[0.4em] uppercase ${accent ? 'text-snow/40' : 'text-cherry/40'}`}>{label}</span>
+        <h4 className="text-xl font-semibold leading-tight tracking-tight md:text-2xl">{title}</h4>
       </div>
-
-      <div
-        className={`relative z-10 my-4 w-full shrink-0 overflow-hidden rounded-2xl md:my-5 ${
-          accent ? 'border border-snow/15' : 'border border-cherry/10'
-        } aspect-[3/4] max-h-[min(72vh,440px)] md:max-h-[min(58vh,420px)]`}
-      >
+      <div className={`relative z-10 my-4 w-full shrink-0 overflow-hidden rounded-2xl md:my-5 ${accent ? 'border border-snow/15' : 'border border-cherry/10'} aspect-[3/4] max-h-[min(72vh,440px)] md:max-h-[min(58vh,420px)]`}>
         <img
           src={imageSrc}
           alt={imageAlt}
@@ -831,15 +873,12 @@ function SolutionCard({
           sizes="(max-width: 768px) 92vw, 400px"
         />
       </div>
-
-      <TextWithTags 
-        text={body} 
-        className={`relative z-10 shrink-0 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`} 
-      />
-      <motion.div 
-        className={`pointer-events-none absolute -right-20 -bottom-20 h-64 w-64 rounded-full opacity-10 ${accent ? 'bg-white' : 'bg-cherry'}`}
-        whileHover={{ scale: 1.2, opacity: 0.2 }}
-      />
-    </motion.div>
+      <TextWithTags text={body} className={`relative z-10 shrink-0 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`} />
+      <motion.div className={`pointer-events-none absolute -right-20 -bottom-20 h-64 w-64 rounded-full opacity-10 ${accent ? 'bg-white' : 'bg-cherry'}`} whileHover={{ scale: 1.2, opacity: 0.2 }} />
+    </>
   );
+  if (href) {
+    return <motion.a {...motionProps} href={href} target="_blank" rel="noopener noreferrer">{inner}</motion.a>;
+  }
+  return <motion.div {...motionProps}>{inner}</motion.div>;
 }

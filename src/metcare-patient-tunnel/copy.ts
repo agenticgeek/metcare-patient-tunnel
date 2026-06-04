@@ -12,8 +12,9 @@ export type PatientForm1Data = {
 };
 
 export type PatientForm2Data = {
-  quandIntervention: string;
-  siPasEncore: string;
+  ville1: string;
+  ville2: string;
+  ville3: string;
   technologieConnue: string;
   technologieDetail: string;
   commentVousSentez: string[];
@@ -68,9 +69,9 @@ export const patientCopy = {
       title: 'METCARE® — Accompagnement patient',
     },
     hero: {
-      headline: "Vous n’êtes pas seule après votre intervention.",
+      headline: "Vous n'êtes pas seule après votre intervention.",
       body:
-        "Chaque jour, des femmes prennent une décision importante. Changer. Se transformer. Se retrouver. Mais une fois l’intervention passée… c’est souvent là que tout commence. Le corps change. Les sensations évoluent. Les émotions aussi. Et beaucoup de patientes se retrouvent seules face à cette étape. Chez METCARE®, nous avons fait de cette phase une priorité.",
+        "Chaque jour, des femmes prennent une décision importante. Changer. Se transformer. Se retrouver. Mais une fois l'intervention passée… c'est souvent là que tout commence. Le corps change. Les sensations évoluent. Les émotions aussi. Et beaucoup de patientes se retrouvent seules face à cette étape. Chez METCARE®, nous avons fait de cette phase une priorité.",
       ctaEchange: 'Je bénéficie de mon échange offert',
       ctaGuide: 'Je reçois mon guide patient',
     },
@@ -79,51 +80,54 @@ export const patientCopy = {
         label: 'UN PREMIER REPÈRE POUR VOUS',
         title: '',
         body:
-          "Suite à votre demande, vous recevrez un guide patient offert. Un guide simple pour vous aider à : comprendre ce qui se passe après votre intervention / savoir quoi observer / vous repérer dans les différentes étapes. Parce que comprendre… c’est déjà se rassurer.",
+          "Suite à votre demande, vous recevrez un guide patient offert. Un guide simple pour vous aider à : comprendre ce qui se passe après votre intervention / savoir quoi observer / vous repérer dans les différentes étapes. Parce que comprendre… c'est déjà se rassurer.",
       },
       normal: {
         label: 'CE QUE VOUS VIVEZ EST NORMAL',
         title: '',
-        body:
-          "Que vous ayez réalisé : une liposuccion / un BBL / un lifting cervico-facial / une augmentation mammaire / ou toute autre intervention. Vous pouvez ressentir : des doutes / de l’inconfort / un manque de repères / des questions sans réponse. Et c’est normal. Mais cela ne devrait pas être vécu seule.",
+        intro: 'Que vous ayez réalisé',
+        tags1: ['une liposuccion', 'un BBL', 'un lifting cervico-facial', 'une augmentation mammaire'],
+        bridge: 'ou toute autre intervention, vous pouvez ressentir :',
+        tags2: ["des doutes", "de l'inconfort", 'un manque de repères', 'des questions sans réponses'],
+        outro: "Et c'est normal, mais cela ne devrait pas être vécu seul(e).",
       },
       safety: {
         label: 'LA SÉCURITÉ AVANT TOUT — SAFETY PATIENT®',
         title: '',
         body:
-          "Chez METCARE®, la sécurité du patient est au cœur de tout. Nous sommes à l’origine du label Safety Patient®, pensé pour accompagner les patients avant et après leur intervention. Vous n’êtes pas seule. Vous êtes entourée.",
+          "Chez METCARE®, la sécurité du patient est au cœur de tout. Nous sommes à l'origine du label Safety Patient®, pensé pour accompagner les patients avant et après leur intervention. Vous n'êtes pas seule. Vous êtes entourée.",
       },
       expertise: {
         label: 'UNE EXPERTISE RECONNUE',
         title: '',
         body:
-          'Depuis plus de 17 ans, METCARE® accompagne : plus de 8000 patients chaque année / plus de 2500 chirurgiens partenaires / plus de 1300 experts spécialisés. Une approche structurée, dédiée à la chirurgie esthétique et à l’accompagnement périopératoire en chirurgie esthétique.',
+          "Depuis plus de 17 ans, METCARE® accompagne : plus de 8000 patients chaque année / plus de 2500 chirurgiens partenaires / plus de 1300 experts spécialisés. Une approche structurée, dédiée à la chirurgie esthétique et à l'accompagnement périopératoire en chirurgie esthétique.",
       },
       conciergerie: {
         label: 'UNE CONCIERGERIE ESTHÉTIQUE INTERNATIONALE',
         title: '',
         body:
-          "Où que vous soyez. Où que vous ayez réalisé votre intervention. Nous vous permettons d’accéder à un réseau de professionnels qualifiés, adaptés à votre situation et à votre parcours. Dans un cadre structuré, sécurisé et personnalisé.",
+          "Où que vous soyez. Où que vous ayez réalisé votre intervention. Nous vous permettons d'accéder à un réseau de professionnels qualifiés, adaptés à votre situation et à votre parcours. Dans un cadre structuré, sécurisé et personnalisé.",
         cta: 'Je trouve un expert adapté à ma situation',
       },
       echange: {
         label: 'UN PREMIER ÉCHANGE SIMPLE ET OFFERT',
         title: '',
         intro:
-          "Vous pouvez bénéficier d’un rendez-vous de mise en relation, entièrement offert.",
+          "Vous pouvez bénéficier d'un rendez-vous de mise en relation, entièrement offert.",
         bullets: [
-          'Un échange d’environ 15 minutes',
+          "Un échange d'environ 15 minutes",
           'Pour faire le point sur votre situation',
           'Et comprendre précisément vos besoins',
         ],
         followup:
-          "Ce rendez-vous vous permet : d’être écoutée / d’être orientée / de ne plus rester seule. Le patient est notre priorité. C’est pour cela que cet échange est proposé sans engagement.",
+          "Ce rendez-vous vous permet : d'être écoutée / d'être orientée / de ne plus rester seule. Le patient est notre priorité. C'est pour cela que cet échange est proposé sans engagement.",
         cta: 'Je bénéficie de mon échange offert',
       },
       parcours: {
         label: 'VOTRE PARCOURS',
         title: '',
-        intro: "Vous n’avez pas besoin de tout gérer seule.",
+        intro: "Vous n'avez pas besoin de tout gérer seule.",
         steps: [
           'Vous nous partagez votre situation (intervention, besoin, localisation)',
           'Nous vous contactons pour un échange personnalisé',
@@ -132,40 +136,47 @@ export const patientCopy = {
         outro: 'Simple, clair, structuré.',
       },
       solutions: {
-        label: 'VOS SOLUTIONS',
+        label: 'VOS SOLUTION',
         title: '',
         body:
           'Selon votre situation, vous pouvez bénéficier de : Accompagnement personnalisé / E-book complet 148 pages / Signature Recovery Protocol. Chaque solution est pensée pour vous.',
       },
       opportunite: {
-        label: 'UNE OPPORTUNITÉ COMPLÉMENTAIRE',
-        title: '',
+        label: 'OPPORTUNITÉ',
+        title: "Accès à notre Réseau International d'Experts",
         body:
-          'Selon votre profil, vous pouvez également accéder à : une liste d’attente pour bénéficier de soins encadrés dans certaines villes (Paris et régions). Ces soins sont réalisés dans un cadre spécifique, avec des professionnels formés à notre approche. Les places sont limitées.',
+          "Vous recherchez un accompagnement avant ou après votre intervention ? METCARE® vous permet d'accéder à son réseau international d'experts spécialisés dans le parcours péri-opératoire : infirmiers, kinésithérapeutes, ostéopathes, praticiens spécialisés, professionnels du bien-être et de la récupération. Notre équipe vous aide à identifier les professionnels les plus adaptés à votre situation, dans votre ville de récupération ou lors de vos déplacements en France et à l'international. Parce qu'un parcours bien encadré ne s'arrête pas à l'intervention.",
       },
       bonEndroit: {
         label: 'VOUS ÊTES AU BON ENDROIT',
         title: '',
         intro:
-          "Si vous êtes ici… ce n’est probablement pas un hasard.",
+          "Si vous êtes ici… ce n'est probablement pas un hasard.",
         bullets: [
-          'Le besoin d’être rassurée',
+          "Le besoin d'être rassurée",
           'Le besoin de comprendre',
-          'Le besoin d’être accompagnée',
+          "Le besoin d'être accompagnée",
         ],
-        followup: 'Et c’est exactement notre rôle.',
+        followup: "Et c'est exactement notre rôle.",
       },
       final: {
-        body:
-          'Parlons de votre situation. Prenez quelques instants pour nous expliquer votre parcours. Cela nous permet de vous orienter avec précision et de vous proposer un accompagnement adapté.',
-        cta: 'Je bénéficie de mon échange offert',
+        label: 'ACCOMPAGNEMENT PERSONNALISÉ',
+        intro: "Vous souhaitez bénéficier d'un accompagnement plus approfondi pour votre projet esthétique ?",
+        body: [
+          "Au-delà de notre échange d'orientation gratuit, METCARE® vous propose un rendez-vous d'accompagnement personnalisé d'1h30 entièrement dédié à votre situation.",
+          "Cet entretien vous permet de faire le point sur votre projet, de poser toutes vos questions et de bénéficier d'un regard expert sur les différentes étapes de votre parcours : préparation, intervention, récupération, organisation pratique, suivi post-opératoire et accompagnement global.",
+          "Notre mission est de vous aider à construire un parcours plus serein, plus structuré et plus sécurisé grâce à plus de 17 années d'expérience auprès de milliers de patients à travers le monde.",
+          "Grâce à cet échange approfondi, vous bénéficiez d'une vision plus claire de votre parcours et des actions à mettre en place avant, pendant et après votre intervention.",
+          "Parce qu'un projet esthétique ne se résume pas à une intervention, mais à l'ensemble du parcours qui l'entoure.",
+        ],
+        cta: "Consultation d'accompagnement 1h30",
       },
     },
     form1: {
       title: 'Parlons de votre situation',
       intro:
         'En quelques secondes, expliquez-nous votre situation. Cela nous permet de vous orienter rapidement et de vous proposer un accompagnement adapté.',
-      submit: 'Je bénéficie de mon échange offert',
+      submit: 'Je rentre en contact avec METCARE',
       fields: {
         nom: 'Nom',
         prenom: 'Prénom',
@@ -175,7 +186,7 @@ export const patientCopy = {
         dateIntervention: "Date d'intervention",
         pays: 'Pays',
         intervention: 'Avez-vous déjà réalisé votre intervention ?',
-        typeIntervention: 'Quel type d’intervention vous concerne ?',
+        typeIntervention: "Quel type d'intervention vous concerne ?",
         aide: "Qu'est-ce qui vous aiderait le plus aujourd'hui ?",
       },
     },
@@ -198,17 +209,20 @@ export const patientCopy = {
       thankYou: 'Merci. Ces informations nous permettent de mieux vous accompagner.',
       bookCta: 'Prendre rendez-vous',
       fields: {
-        quand: 'Quand a eu lieu votre intervention ?',
-        siPasEncore: "Si elle n’est pas encore réalisée, votre chirurgie aura lieu dans :",
-        technologie: 'Connaissez-vous la technologie utilisée ou prévue ?',
-        technologieDetail: 'Précisez la technologie',
-        sentiment: 'Aujourd\'hui, comment vous sentez-vous ?',
+        villesQuestion: "Indiquez la ou les villes dans lesquelles vous pourriez avoir besoin d'un accompagnement pendant votre parcours",
+        villesHelper: "Si vous ne le savez pas encore, indiquez simplement votre ville de résidence.",
+        ville1Label: "Ville 1",
+        ville2Label: "Ville 2 (optionnel)",
+        ville3Label: "Ville 3 (optionnel)",
+        technologie: "Connaissez-vous la technologie utilisée ou prévue ?",
+        technologieDetail: "Précisez la technologie",
+        sentiment: "Aujourd'hui, comment vous sentez-vous ?",
         aideMaintenant: "Qu'est-ce qui vous aiderait le plus maintenant ?",
-        accompagnement: 'Souhaitez-vous être accompagnée :',
+        accompagnement: "Souhaitez-vous être accompagnée :",
       },
     },
     ui: {
-      noSession: 'Aucune demande en cours. Utilisez le formulaire sur la page d’accueil.',
+      noSession: "Aucune demande en cours. Utilisez le formulaire sur la page d'accueil.",
     },
   },
   en: {
@@ -232,8 +246,11 @@ export const patientCopy = {
       normal: {
         label: 'WHAT YOU ARE EXPERIENCING IS NORMAL',
         title: '',
-        body:
-          "Whether you have undergone: a liposuction / a BBL / a face lift / a breast augmentation / or any other intervention. You may feel: doubts / discomfort / lack of landmarks / unanswered questions. And it's normal. But this should not be experienced alone.",
+        intro: 'Whether you have undergone',
+        tags1: ['a liposuction', 'a BBL', 'a face lift', 'a breast augmentation'],
+        bridge: 'or any other intervention, you may feel:',
+        tags2: ['doubts', 'discomfort', 'lack of landmarks', 'unanswered questions'],
+        outro: "And it's normal, but this should not be experienced alone.",
       },
       safety: {
         label: 'SAFETY FIRST — SAFETY PATIENT®',
@@ -286,16 +303,16 @@ export const patientCopy = {
           'Depending on your situation, you can benefit from: Personalized accompaniment / Complete 148-page e-book / Signature Recovery Protocol. Each solution is designed for you.',
       },
       opportunite: {
-        label: 'A COMPLEMENTARY OPPORTUNITY',
-        title: '',
+        label: 'OPPORTUNITY',
+        title: 'Access to our International Expert Network',
         body:
-          'Depending on your profile, you can also access: a waiting list to benefit from supervised care in certain cities (Paris and regions). This care is performed in a specific framework, with professionals trained in our approach. Places are limited.',
+          "Looking for support before or after your procedure? METCARE® gives you access to its international network of experts specialized in the peri-operative journey: nurses, physiotherapists, osteopaths, specialized practitioners, wellness and recovery professionals. Our team helps you identify the professionals best suited to your situation, in your recovery city or during your travels in France and internationally. Because a well-supported journey doesn't end with the procedure.",
       },
       bonEndroit: {
         label: 'YOU ARE IN THE RIGHT PLACE',
         title: '',
         intro:
-          'If you are here… it’s probably not a coincidence.',
+          "If you are here… it's probably not a coincidence.",
         bullets: [
           'The need to be reassured',
           'The need to understand',
@@ -304,16 +321,23 @@ export const patientCopy = {
         followup: 'And that is exactly our role.',
       },
       final: {
-        body:
-          'Let\'s talk about your situation. Take a few moments to explain your path to us. This allows us to orient you with precision and offer you an adapted accompaniment.',
-        cta: 'I benefit from my offered exchange',
+        label: 'PERSONALIZED ACCOMPANIMENT',
+        intro: "Are you looking for more in-depth support for your aesthetic project?",
+        body: [
+          "Beyond our free orientation exchange, METCARE® offers you a 1h30 personalized accompaniment appointment entirely dedicated to your situation.",
+          "This interview allows you to review your project, ask all your questions and benefit from expert insight on the different stages of your journey: preparation, procedure, recovery, practical organization, post-operative follow-up and overall support.",
+          "Our mission is to help you build a calmer, more structured and more secure journey thanks to more than 17 years of experience with thousands of patients around the world.",
+          "Through this in-depth exchange, you gain a clearer vision of your journey and the actions to put in place before, during and after your procedure.",
+          "Because an aesthetic project is not just about a procedure, but about the entire journey surrounding it.",
+        ],
+        cta: "Accompaniment Consultation 1h30",
       },
     },
     form1: {
       title: 'Let\'s talk about your situation',
       intro:
         'In a few seconds, explain your situation to us. This allows us to orient you quickly and offer you an adapted accompaniment.',
-      submit: 'I benefit from my offered exchange',
+      submit: 'I get in touch with METCARE',
       fields: {
         nom: 'Name',
         prenom: 'First Name',
@@ -346,8 +370,11 @@ export const patientCopy = {
       thankYou: 'Thank you. This information allows us to better accompany you.',
       bookCta: 'Book an Appointment',
       fields: {
-        quand: 'When did your intervention take place?',
-        siPasEncore: 'If it has not yet been performed, your surgery will take place in:',
+        villesQuestion: "Indicate the city or cities where you may need accompaniment during your journey",
+        villesHelper: "If you don't know yet, simply indicate your city of residence.",
+        ville1Label: 'City 1',
+        ville2Label: 'City 2 (optional)',
+        ville3Label: 'City 3 (optional)',
         technologie: 'Do you know the technology used or planned?',
         technologieDetail: 'Specify the technology',
         sentiment: 'How do you feel today?',
