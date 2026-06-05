@@ -144,8 +144,10 @@ export const patientCopy = {
       opportunite: {
         label: 'OPPORTUNITÉ',
         title: "Accès à notre Réseau International d'Experts",
-        body:
-          "Vous recherchez un accompagnement avant ou après votre intervention ? METCARE® vous permet d'accéder à son réseau international d'experts spécialisés dans le parcours péri-opératoire : infirmiers, kinésithérapeutes, ostéopathes, praticiens spécialisés, professionnels du bien-être et de la récupération. Notre équipe vous aide à identifier les professionnels les plus adaptés à votre situation, dans votre ville de récupération ou lors de vos déplacements en France et à l'international. Parce qu'un parcours bien encadré ne s'arrête pas à l'intervention.",
+        body: [
+          "Vous recherchez un accompagnement avant ou après votre intervention ?",
+          "METCARE® vous permet d'accéder à son réseau international d'experts spécialisés dans le parcours péri-opératoire : infirmiers, kinésithérapeutes, ostéopathes, praticiens spécialisés, professionnels du bien-être et de la récupération. Notre équipe vous aide à identifier les professionnels les plus adaptés à votre situation, dans votre ville de récupération ou lors de vos déplacements en France et à l'international. Parce qu'un parcours bien encadré ne s'arrête pas à l'intervention.",
+        ],
       },
       bonEndroit: {
         label: 'VOUS ÊTES AU BON ENDROIT',
@@ -305,8 +307,10 @@ export const patientCopy = {
       opportunite: {
         label: 'OPPORTUNITY',
         title: 'Access to our International Expert Network',
-        body:
-          "Looking for support before or after your procedure? METCARE® gives you access to its international network of experts specialized in the peri-operative journey: nurses, physiotherapists, osteopaths, specialized practitioners, wellness and recovery professionals. Our team helps you identify the professionals best suited to your situation, in your recovery city or during your travels in France and internationally. Because a well-supported journey doesn't end with the procedure.",
+        body: [
+          "Looking for support before or after your procedure?",
+          "METCARE® gives you access to its international network of experts specialized in the peri-operative journey: nurses, physiotherapists, osteopaths, specialized practitioners, wellness and recovery professionals. Our team helps you identify the professionals best suited to your situation, in your recovery city or during your travels in France and internationally. Because a well-supported journey doesn't end with the procedure.",
+        ],
       },
       bonEndroit: {
         label: 'YOU ARE IN THE RIGHT PLACE',

@@ -790,7 +790,7 @@ export default function PatientTunnelPage() {
             <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : 'Contact'}</a>
           </div>
 
-          <p className="text-[0.55rem] tracking-[0.1em] text-snow/20 uppercase">
+          <p className="text-[0.65rem] tracking-[0.1em] text-snow/60 uppercase">
             © {new Date().getFullYear()} METCARE. {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}
           </p>
         </div>
@@ -842,7 +842,7 @@ function SolutionCard({
 }: {
   label: string;
   title: string;
-  body: string;
+  body: string | string[];
   accent?: boolean;
   imageSrc: string;
   imageAlt?: string;
@@ -873,7 +873,10 @@ function SolutionCard({
           sizes="(max-width: 768px) 92vw, 400px"
         />
       </div>
-      <TextWithTags text={body} className={`relative z-10 shrink-0 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`} />
+      {Array.isArray(body)
+        ? <div className={`relative z-10 shrink-0 space-y-3 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`}>{body.map((p, i) => <p key={i}>{p}</p>)}</div>
+        : <TextWithTags text={body} className={`relative z-10 shrink-0 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`} />
+      }
       <motion.div className={`pointer-events-none absolute -right-20 -bottom-20 h-64 w-64 rounded-full opacity-10 ${accent ? 'bg-white' : 'bg-cherry'}`} whileHover={{ scale: 1.2, opacity: 0.2 }} />
     </>
   );
