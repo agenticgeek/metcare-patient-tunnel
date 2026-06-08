@@ -22,43 +22,43 @@ export type PatientForm2Data = {
   accompagnementSouhaite: string;
 };
 
-export const getPatientForm1InterventionOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm1InterventionOptions = (lang: 'fr' | 'en') =>
   lang === 'fr' ? ['Oui', "Non, c'est en projet"] as const : ['Yes', "No, it's a project"] as const;
 
-export const getPatientForm1TypeOptions = (lang: 'fr' | 'en') => 
-  lang === 'fr' 
+export const getPatientForm1TypeOptions = (lang: 'fr' | 'en') =>
+  lang === 'fr'
     ? ['Liposuccion', 'BBL', 'Augmentation mammaire', 'Lifting cervico-facial', 'Autre'] as const
     : ['Liposuction', 'BBL', 'Breast Augmentation', 'Face Lift', 'Other'] as const;
 
-export const getPatientForm1AideOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm1AideOptions = (lang: 'fr' | 'en') =>
   lang === 'fr'
     ? ['Être rassurée', 'Comprendre ma récupération', 'Être accompagnée', 'Trouver un expert'] as const
     : ['Be reassured', 'Understand my recovery', 'Be accompanied', 'Find an expert'] as const;
 
-export const getPatientForm2QuandOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm2QuandOptions = (lang: 'fr' | 'en') =>
   lang === 'fr'
     ? ['Moins de 7 jours', '1 à 3 semaines', '1 à 3 mois', 'Plus de 3 mois'] as const
     : ['Less than 7 days', '1 to 3 weeks', '1 to 3 months', 'More than 3 months'] as const;
 
-export const getPatientForm2SiPasEncoreOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm2SiPasEncoreOptions = (lang: 'fr' | 'en') =>
   lang === 'fr'
     ? ["Moins d'1 mois", '1 à 3 mois', 'Plus tard', 'En réflexion'] as const
     : ['Less than 1 month', '1 to 3 months', 'Later', 'In reflection'] as const;
 
-export const getPatientForm2TechnologieOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm2TechnologieOptions = (lang: 'fr' | 'en') =>
   lang === 'fr' ? ['Oui', 'Non', 'Je ne sais pas'] as const : ['Yes', 'No', 'I don\'t know'] as const;
 
-export const getPatientForm2SentimentOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm2SentimentOptions = (lang: 'fr' | 'en') =>
   lang === 'fr'
     ? ['Stressée', 'Perdue', 'En manque d\'informations', 'J\'ai des questions', 'Je veux être rassurée'] as const
     : ['Stressed', 'Lost', 'Lack of information', 'I have questions', 'I want to be reassured'] as const;
 
-export const getPatientForm2AideMaintenantOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm2AideMaintenantOptions = (lang: 'fr' | 'en') =>
   lang === 'fr'
     ? ['Comprendre mon évolution', 'Être accompagnée', 'Trouver un professionnel', 'Préparer mon intervention'] as const
     : ['Understand my progress', 'Be accompanied', 'Find a professional', 'Prepare my surgery'] as const;
 
-export const getPatientForm2AccompagnementOptions = (lang: 'fr' | 'en') => 
+export const getPatientForm2AccompagnementOptions = (lang: 'fr' | 'en') =>
   lang === 'fr'
     ? ['Près de chez moi', 'À l\'étranger', 'Les deux'] as const
     : ['Near me', 'Abroad', 'Both'] as const;
@@ -136,7 +136,7 @@ export const patientCopy = {
         outro: 'Simple, clair, structuré.',
       },
       solutions: {
-        label: 'VOS SOLUTION',
+        label: 'VOS SOLUTIONS',
         title: '',
         body:
           'Selon votre situation, vous pouvez bénéficier de : Accompagnement personnalisé / E-book complet 148 pages / Signature Recovery Protocol. Chaque solution est pensée pour vous.',
