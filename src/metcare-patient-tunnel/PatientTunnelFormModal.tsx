@@ -288,14 +288,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             onChange={(v) => setForm(c => ({ ...c, prenom: v }))}
                           />
                         </motion.div>
-                        <motion.div variants={staggerItem}>
+                        <motion.div variants={staggerItem} style={{ position: 'relative', zIndex: 5 }}>
                           <ModernInput
                             label={copy.fields.nom}
                             value={form.nom}
                             onChange={(v) => setForm(c => ({ ...c, nom: v }))}
                           />
                         </motion.div>
-                        <motion.div variants={staggerItem}>
+                        <motion.div variants={staggerItem} style={{ position: 'relative', zIndex: 4 }}>
                           <ModernInput
                             label={copy.fields.email}
                             type="email"
@@ -303,7 +303,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             onChange={(v) => setForm(c => ({ ...c, email: v }))}
                           />
                         </motion.div>
-                        <motion.div variants={staggerItem} className="min-w-0">
+                        <motion.div variants={staggerItem} className="min-w-0" style={{ position: 'relative', zIndex: 20 }}>
                           <label className="block space-y-2">
                             <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/50 uppercase ml-1">
                               {copy.fields.telephone}
@@ -325,14 +325,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             </div>
                           </label>
                         </motion.div>
-                        <motion.div variants={staggerItem}>
+                        <motion.div variants={staggerItem} style={{ position: 'relative', zIndex: 3 }}>
                           <ModernInput
                             label={copy.fields.ville}
                             value={form.ville}
                             onChange={(v) => setForm(c => ({ ...c, ville: v }))}
                           />
                         </motion.div>
-                        <motion.div variants={staggerItem}>
+                        <motion.div variants={staggerItem} style={{ position: 'relative', zIndex: 2 }}>
                           <ModernInput
                             label={copy.fields.dateIntervention}
                             type="date"
@@ -340,7 +340,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             onChange={(v) => setForm(c => ({ ...c, dateIntervention: v }))}
                           />
                         </motion.div>
-                        <motion.div variants={staggerItem} className="sm:col-span-2">
+                        <motion.div variants={staggerItem} className="sm:col-span-2" style={{ position: 'relative', zIndex: 1 }}>
                           <SearchableCountryField
                             label={copy.fields.pays}
                             value={form.pays}

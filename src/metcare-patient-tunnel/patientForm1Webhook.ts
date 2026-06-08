@@ -21,6 +21,8 @@ export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: Webhoo
     prenom: data.prenom.trim(),
     email: data.email.trim(),
     telephone: data.telephone.trim(),
+    ville: data.ville.trim(),
+    dateIntervention: data.dateIntervention,
     pays: data.pays.trim(),
     interventionRealisee: data.interventionRealisee,
     typesIntervention: [...data.typesIntervention],
