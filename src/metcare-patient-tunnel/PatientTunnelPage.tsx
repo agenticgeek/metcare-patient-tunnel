@@ -643,6 +643,8 @@ export default function PatientTunnelPage() {
             imageSrc={solutionCardImage3}
             imageAlt={lang === 'fr' ? 'Réseau international d\'experts METCARE' : 'METCARE international expert network'}
             accent
+            ctaLabel={lang === 'fr' ? 'Prendre contact avec un expert proche de chez moi' : 'Get in touch with an expert near me'}
+            onCtaClick={() => openForm('opportunite_card')}
           />
           <SolutionCard
             label={lang === 'fr' ? "Le protocole d'excellence" : "The excellence protocol"}
@@ -651,6 +653,7 @@ export default function PatientTunnelPage() {
             imageSrc={solutionCardImage1}
             imageAlt={lang === 'fr' ? 'Signature Recovery Protocol' : 'Signature Recovery Protocol'}
             href="https://myesthetictravel.com/les-incontournables/#signature-recovery-protocol"
+            ctaLabel={lang === 'fr' ? 'Découvrir' : 'Discover'}
           />
           <SolutionCard
             label={lang === 'fr' ? 'ACCOMPAGNEMENT' : 'ACCOMPANIMENT'}
@@ -659,6 +662,7 @@ export default function PatientTunnelPage() {
             imageSrc={solutionCardImage2}
             imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : 'Personalized accompaniment and e-book'}
             href="https://myesthetictravel.com/les-incontournables/#e-book"
+            ctaLabel={lang === 'fr' ? 'Découvrir' : 'Discover'}
           />
         </div>
       </PatientSection>
@@ -839,6 +843,8 @@ function SolutionCard({
   imageSrc,
   imageAlt = '',
   href,
+  ctaLabel,
+  onCtaClick,
 }: {
   label: string;
   title: string;
@@ -847,6 +853,8 @@ function SolutionCard({
   imageSrc: string;
   imageAlt?: string;
   href?: string;
+  ctaLabel?: string;
+  onCtaClick?: () => void;
 }) {
   const cardClass = `group relative flex min-h-[520px] min-w-[300px] snap-center flex-col justify-between overflow-hidden rounded-[3rem] p-8 shadow-xl transition-all duration-500 md:min-h-[580px] md:min-w-[380px] md:p-10 ${accent ? 'bg-cherry text-snow' : 'patient-tunnel-glass border-none bg-white/40'}`;
   const motionProps = {
@@ -874,9 +882,28 @@ function SolutionCard({
         />
       </div>
       {Array.isArray(body)
-        ? <div className={`relative z-10 shrink-0 space-y-3 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`}>{body.map((p, i) => <p key={i}>{p}</p>)}</div>
+        ? <div className="relative z-10 shrink-0 space-y-3">
+            {body.map((p, i) =>
+              i === 0 && accent
+                ? <p key={i} className="text-xl font-semibold leading-snug text-snow md:text-2xl">{p}</p>
+                : <p key={i} className={`text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`}>{p}</p>
+            )}
+          </div>
         : <TextWithTags text={body} className={`relative z-10 shrink-0 text-sm font-light leading-relaxed ${accent ? 'text-snow/60' : 'text-cherry/60'}`} />
       }
+      {ctaLabel && (
+        onCtaClick
+          ? <button
+              type="button"
+              onClick={onCtaClick}
+              className="relative z-10 mt-5 w-full rounded-full border border-snow/30 bg-snow/15 px-5 py-3.5 text-[0.7rem] font-bold tracking-[0.12em] text-snow uppercase transition-all hover:bg-snow/25 hover:border-snow/50"
+            >
+              {ctaLabel}
+            </button>
+          : <span className={`relative z-10 mt-5 flex w-full items-center justify-center rounded-full border px-5 py-3.5 text-[0.7rem] font-bold tracking-[0.12em] uppercase transition-all ${accent ? 'border-snow/30 bg-snow/15 text-snow hover:bg-snow/25 hover:border-snow/50' : 'border-cherry/20 bg-cherry/5 text-cherry hover:bg-cherry/10 hover:border-cherry/40'}`}>
+              {ctaLabel}
+            </span>
+      )}
       <motion.div className={`pointer-events-none absolute -right-20 -bottom-20 h-64 w-64 rounded-full opacity-10 ${accent ? 'bg-white' : 'bg-cherry'}`} whileHover={{ scale: 1.2, opacity: 0.2 }} />
     </>
   );

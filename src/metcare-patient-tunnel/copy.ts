@@ -165,13 +165,13 @@ export const patientCopy = {
         label: 'ACCOMPAGNEMENT PERSONNALISÉ',
         intro: "Vous souhaitez bénéficier d'un accompagnement plus approfondi pour votre projet esthétique ?",
         body: [
-          "Au-delà de notre échange d'orientation gratuit, METCARE® vous propose un rendez-vous d'accompagnement personnalisé d'1h30 entièrement dédié à votre situation.",
+          "Au-delà de notre échange d'orientation gratuit, METCARE® vous propose un rendez-vous d'accompagnement personnalisé d'1h00 entièrement dédié à votre situation.",
           "Cet entretien vous permet de faire le point sur votre projet, de poser toutes vos questions et de bénéficier d'un regard expert sur les différentes étapes de votre parcours : préparation, intervention, récupération, organisation pratique, suivi post-opératoire et accompagnement global.",
           "Notre mission est de vous aider à construire un parcours plus serein, plus structuré et plus sécurisé grâce à plus de 17 années d'expérience auprès de milliers de patients à travers le monde.",
           "Grâce à cet échange approfondi, vous bénéficiez d'une vision plus claire de votre parcours et des actions à mettre en place avant, pendant et après votre intervention.",
           "Parce qu'un projet esthétique ne se résume pas à une intervention, mais à l'ensemble du parcours qui l'entoure.",
         ],
-        cta: "Consultation d'accompagnement 1h30",
+        cta: "Consultation d'accompagnement 1h00",
       },
     },
     form1: {
@@ -328,13 +328,13 @@ export const patientCopy = {
         label: 'PERSONALIZED ACCOMPANIMENT',
         intro: "Are you looking for more in-depth support for your aesthetic project?",
         body: [
-          "Beyond our free orientation exchange, METCARE® offers you a 1h30 personalized accompaniment appointment entirely dedicated to your situation.",
+          "Beyond our free orientation exchange, METCARE® offers you a 1h00 personalized accompaniment appointment entirely dedicated to your situation.",
           "This interview allows you to review your project, ask all your questions and benefit from expert insight on the different stages of your journey: preparation, procedure, recovery, practical organization, post-operative follow-up and overall support.",
           "Our mission is to help you build a calmer, more structured and more secure journey thanks to more than 17 years of experience with thousands of patients around the world.",
           "Through this in-depth exchange, you gain a clearer vision of your journey and the actions to put in place before, during and after your procedure.",
           "Because an aesthetic project is not just about a procedure, but about the entire journey surrounding it.",
         ],
-        cta: "Accompaniment Consultation 1h30",
+        cta: "Accompaniment Consultation 1h00",
       },
     },
     form1: {
