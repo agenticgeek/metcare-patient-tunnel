@@ -208,8 +208,8 @@ export const patientCopy = {
       title: 'Pour aller plus loin',
       intro: 'Ces informations nous permettent de vous accompagner avec précision.',
       submit: 'Je valide mon profil',
-      thankYou: 'Merci. Ces informations nous permettent de mieux vous accompagner.',
-      bookCta: 'Prendre rendez-vous',
+      thankYou: "Profitez d'un rendez-vous offert de 15 minutes pour nous présenter vos besoins et être orienté(e) vers un expert METCARE® de notre réseau, proche de chez vous.",
+      bookCta: 'Trouver mon accompagnement',
       fields: {
         villesQuestion: "Indiquez la ou les villes dans lesquelles vous pourriez avoir besoin d'un accompagnement pendant votre parcours",
         villesHelper: "Si vous ne le savez pas encore, indiquez simplement votre ville de résidence.",
@@ -371,8 +371,8 @@ export const patientCopy = {
       title: 'To go further',
       intro: 'This information allows us to accompany you with precision.',
       submit: 'I validate my profile',
-      thankYou: 'Thank you. This information allows us to better accompany you.',
-      bookCta: 'Book an Appointment',
+      thankYou: 'Enjoy a complimentary 15-minute appointment to present your needs and be guided towards a METCARE® expert in our network, near you.',
+      bookCta: 'Find my accompaniment',
       fields: {
         villesQuestion: "Indicate the city or cities where you may need accompaniment during your journey",
         villesHelper: "If you don't know yet, simply indicate your city of residence.",

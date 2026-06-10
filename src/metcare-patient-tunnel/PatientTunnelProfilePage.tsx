@@ -405,9 +405,9 @@ export default function PatientTunnelProfilePage() {
              </button>
              
              <div className="flex flex-col gap-4 sm:flex-row">
-               <button 
+               <button
                  type="button"
-                 onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)}
+                 onClick={() => setDone(true)}
                  className="px-6 py-2 text-[0.6rem] font-bold tracking-[0.25em] text-cherry/30 uppercase transition-colors hover:text-cherry/60"
                >
                  {lang === 'fr' ? 'Passer cette étape' : 'Skip this step'}
