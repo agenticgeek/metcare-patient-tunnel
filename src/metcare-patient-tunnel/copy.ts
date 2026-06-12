@@ -180,7 +180,7 @@ export const patientCopy = {
         'En quelques secondes, expliquez-nous votre situation. Cela nous permet de vous orienter rapidement et de vous proposer un accompagnement adapté.',
       submit: 'Je rentre en contact avec METCARE',
       fields: {
-        nom: 'Nom',
+        nom: 'Nom de famille',
         prenom: 'Prénom',
         email: 'Email',
         telephone: 'Téléphone',
@@ -343,7 +343,7 @@ export const patientCopy = {
         'In a few seconds, explain your situation to us. This allows us to orient you quickly and offer you an adapted accompaniment.',
       submit: 'I get in touch with METCARE',
       fields: {
-        nom: 'Name',
+        nom: 'Last Name',
         prenom: 'First Name',
         email: 'Email',
         telephone: 'Phone',
