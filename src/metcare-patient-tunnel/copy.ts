@@ -71,9 +71,10 @@ export const patientCopy = {
     hero: {
       headline: "Vous n'êtes pas seule après votre intervention.",
       body:
-        "Chaque jour, des femmes prennent une décision importante. Changer. Se transformer. Se retrouver. Mais une fois l'intervention passée… c'est souvent là que tout commence. Le corps change. Les sensations évoluent. Les émotions aussi. Et beaucoup de patientes se retrouvent seules face à cette étape. Chez METCARE®, nous avons fait de cette phase une priorité.",
+        "Changer. Se transformer. Se retrouver. Mais une fois l'intervention passée c'est souvent là que tout commence.\nLe corps change.\nLes sensations évoluent. Les émotions aussi.\nEt beaucoup de patientes se retrouvent seules face à cette étape.\nChez METCARE®, nous avons fait de cette phase une priorité.",
       ctaEchange: 'Je bénéficie de mon échange offert',
       ctaGuide: 'Je reçois mon guide patient',
+      ctaExpert: 'Trouver un expert du péri-opératoire dans ma région',
     },
     sections: {
       repere: {
@@ -234,9 +235,10 @@ export const patientCopy = {
     hero: {
       headline: "You are not alone after your intervention.",
       body:
-        "Every day, women make an important decision. To change. To transform. To find themselves. But once the intervention is over... that's often where it all begins. The body changes. Sensations evolve. Emotions too. And many patients find themselves alone facing this stage. At METCARE®, we have made this phase a priority.",
+        "To change. To transform. To find themselves. But once the intervention is over that's often where it all begins.\nThe body changes.\nSensations evolve. Emotions too.\nAnd many patients find themselves alone facing this stage.\nAt METCARE®, we have made this phase a priority.",
       ctaEchange: 'I benefit from my offered exchange',
       ctaGuide: 'I receive my patient guide',
+      ctaExpert: 'Find a peri-operative expert in my region',
     },
     sections: {
       repere: {
