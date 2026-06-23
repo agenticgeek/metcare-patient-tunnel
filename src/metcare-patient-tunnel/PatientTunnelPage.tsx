@@ -101,7 +101,7 @@ const HERO_HIGHLIGHT_PHRASES: Record<string, string[]> = {
   en: ['To change.', 'To transform.', 'To find themselves.'],
 };
 
-function HeroBodyText({ body }: { body: string }) {
+function HeroBodyText({ body, ctaLabel, onCtaClick }: { body: string; ctaLabel?: string; onCtaClick?: () => void }) {
   const langKey = Object.keys(HERO_HIGHLIGHT_PHRASES).find(k =>
     HERO_HIGHLIGHT_PHRASES[k].every(p => body.includes(p))
   );
@@ -113,7 +113,13 @@ function HeroBodyText({ body }: { body: string }) {
 
   return (
     <>
-      {before.trim()}
+      {ctaLabel && onCtaClick && (
+        <motion.div variants={fadeUp} className="mb-6 flex flex-col items-start">
+          <PatientPrimaryButton onClick={onCtaClick} className="px-8! py-4! text-base! rounded-full! shadow-xl shadow-cherry/25 group overflow-hidden">
+            <span className="relative z-10">{ctaLabel}</span>
+          </PatientPrimaryButton>
+        </motion.div>
+      )}
       <ul className="my-3 space-y-1.5">
         {phrases.map(phrase => (
           <li key={phrase} className="flex items-center gap-2.5">
@@ -126,7 +132,26 @@ function HeroBodyText({ body }: { body: string }) {
           </li>
         ))}
       </ul>
-      {after.trim()}
+      {after.trim().split('\n')[0] && (
+        <p className="mb-6 leading-relaxed font-semibold text-cherry">{after.trim().split('\n')[0]}</p>
+      )}
+      <ul className="my-6 space-y-2.5">
+        {after.trim().split('\n').slice(1).map((line, i) => {
+          const lines = after.trim().split('\n');
+          const isLastLine = i === lines.slice(1).length - 1;
+          if (isLastLine) {
+            return <p key={i} className="mb-4 leading-relaxed font-semibold text-cherry">{line}</p>;
+          }
+          return (
+            <li key={i} className="flex items-start gap-2.5">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cherry/20 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-cherry"></span>
+              </span>
+              <span className="leading-relaxed">{line}</span>
+            </li>
+          );
+        })}
+      </ul>
     </>
   );
 }
@@ -236,9 +261,9 @@ export default function PatientTunnelPage() {
 
               <motion.div
                 variants={fadeUp}
-                className="mb-10 max-w-xl text-base font-light leading-relaxed text-cherry/70 md:mb-14 md:text-lg lg:text-xl"
+                className="mb-10 max-w-xl text-base font-light leading-relaxed text-cherry/70 text-justify whitespace-pre-line md:mb-14 md:text-lg lg:text-xl"
               >
-                <HeroBodyText body={c.hero.body} />
+                <HeroBodyText body={c.hero.body} ctaLabel={c.hero.ctaExpert} onCtaClick={() => openForm(c.hero.ctaExpert)} />
               </motion.div>
 
               {/* Image for Mobile (only visible on small/medium screens, hidden on lg) */}
