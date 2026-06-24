@@ -9,6 +9,7 @@ import bonEndroitSectionImage from '../../assets/image4.jpg';
 import solutionCardImage1 from '../../assets/1.jpg';
 import solutionCardImage2 from '../../assets/2.jpg';
 import solutionCardImage3 from '../../assets/3.jpg';
+import signatureRecoveryImage from '../../assets/coffret 2.png';
 import safetyPatientLogo from '../../assets/Safety patient Blanc .png';
 import { patientCopy, type PatientForm1Data } from './copy';
 import PatientTunnelFormModal from './PatientTunnelFormModal';
@@ -675,9 +676,9 @@ export default function PatientTunnelPage() {
             label={lang === 'fr' ? "Le protocole d'excellence" : "The excellence protocol"}
             title="Signature Recovery Protocol"
             body={lang === 'fr' ? 'Une approche structurée pour optimiser votre rétablissement après chaque type d\'intervention.' : 'A structured approach to optimize your recovery after each type of intervention.'}
-            imageSrc={solutionCardImage1}
+            imageSrc={signatureRecoveryImage}
             imageAlt={lang === 'fr' ? 'Signature Recovery Protocol' : 'Signature Recovery Protocol'}
-            href="https://myesthetictravel.com/les-incontournables/#signature-recovery-protocol"
+            href="https://www.metcare.eu"
             ctaLabel={lang === 'fr' ? 'Découvrir' : 'Discover'}
           />
           <SolutionCard
@@ -814,9 +815,9 @@ export default function PatientTunnelPage() {
           </Link>
 
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[0.6rem] font-bold tracking-[0.2em] text-snow/30 uppercase">
-            <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Mentions Légales' : 'Legal Mentions'}</a>
-            <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Confidentialité' : 'Privacy'}</a>
-            <a href="#" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : 'Contact'}</a>
+            <a href="https://www.metcare.eu" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Mentions Légales' : 'Legal Mentions'}</a>
+            <a href="https://www.metcare.eu" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Confidentialité' : 'Privacy'}</a>
+            <a href="https://www.metcare.eu" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : 'Contact'}</a>
           </div>
 
           <p className="text-[0.65rem] tracking-[0.1em] text-snow/60 uppercase">
