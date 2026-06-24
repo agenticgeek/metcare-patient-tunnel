@@ -687,7 +687,7 @@ export default function PatientTunnelPage() {
             body={lang === 'fr' ? 'Un guide complet de 148 pages et une écoute active tout au long de votre parcours de guérison.' : 'A complete 148-page guide and active listening throughout your healing journey.'}
             imageSrc={solutionCardImage2}
             imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : 'Personalized accompaniment and e-book'}
-            href="https://myesthetictravel.com/les-incontournables/#e-book"
+            href="https://www.metcare.eu"
             ctaLabel={lang === 'fr' ? 'Découvrir' : 'Discover'}
           />
         </div>
