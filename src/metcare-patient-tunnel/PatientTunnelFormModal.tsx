@@ -103,12 +103,13 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
 
   if (step === 3) {
     const phoneDigits = form.telephone.replace(/\D/g, '');
+    const isValidPhone = phoneDigits.length >= 8 && phoneDigits.length <= 15;
 
     return (
       form.nom.trim() &&
       form.prenom.trim() &&
       /\S+@\S+\.\S+/.test(form.email) &&
-      phoneDigits.length >= 8 &&
+      isValidPhone &&
       form.ville.trim() &&
       form.dateIntervention.trim() &&
       form.pays.trim()
@@ -312,13 +313,20 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                   setForm((c) => ({ ...c, telephone: phone }))
                                 }
                                 preferredCountries={['fr', 'be', 'ch', 'ca', 'us', 'gb']}
-                                inputClassName="!font-medium !text-cherry placeholder:text-cherry/30"
+                                inputClassName={`!font-medium !text-cherry placeholder:text-cherry/30 ${
+                                  form.telephone && form.telephone.replace(/\D/g, '').length < 8 ? '!border-red-500' : ''
+                                }`}
                                 countrySelectorStyleProps={{
                                   buttonClassName:
                                     '!border-cherry/10 !bg-white/40 hover:!bg-white/60',
                                 }}
                               />
                             </div>
+                            {form.telephone && form.telephone.replace(/\D/g, '').length < 8 && (
+                              <span className="text-xs font-medium text-red-500 ml-1">
+                                {lang === 'fr' ? 'Numéro invalide (minimum 8 chiffres)' : 'Invalid number (minimum 8 digits)'}
+                              </span>
+                            )}
                           </label>
                         </motion.div>
                         <motion.div variants={staggerItem} style={{ position: 'relative', zIndex: 3 }}>
