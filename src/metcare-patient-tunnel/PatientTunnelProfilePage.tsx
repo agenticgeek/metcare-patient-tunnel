@@ -105,13 +105,15 @@ export default function PatientTunnelProfilePage() {
     trackViewContent(
       lang === 'fr'
         ? 'Patient Tunnel – Profile (FR)'
-        : 'Patient Tunnel – Profile (EN)'
+        : lang === 'en'
+        ? 'Patient Tunnel – Profile (EN)'
+        : 'Patient Tunnel – Perfil (ES)'
     );
   }, [lang]);
 
   const canGoNext = useMemo(() => {
     if (step === 1) return form.ville1.trim();
-    if (step === 2) return form.technologieConnue && (form.technologieConnue !== (lang === 'fr' ? 'Oui' : 'Yes') || form.technologieDetail.trim());
+    if (step === 2) return form.technologieConnue && (form.technologieConnue !== (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Sí') || form.technologieDetail.trim());
     if (step === 3) return form.commentVousSentez.length > 0 && form.aideMaintenant.length > 0 && form.accompagnementSouhaite;
     return false;
   }, [step, form, projetSeulement, lang]);
@@ -186,7 +188,7 @@ export default function PatientTunnelProfilePage() {
           >
              <CheckCircle2 className="h-12 w-12" />
           </motion.div>
-          <h1 className="mb-6 font-heading text-3xl font-semibold text-cherry md:text-5xl">{lang === 'fr' ? 'Profil complété.' : 'Profile completed.'}</h1>
+          <h1 className="mb-6 font-heading text-3xl font-semibold text-cherry md:text-5xl">{lang === 'fr' ? 'Profil complété.' : lang === 'en' ? 'Profile completed.' : 'Perfil completado.'}</h1>
           <p className="mb-10 text-lg font-light italic leading-relaxed text-cherry/70 md:text-xl">
              {copy.thankYou}
           </p>
@@ -249,7 +251,7 @@ export default function PatientTunnelProfilePage() {
              </span>
              <span className="h-3 w-px bg-cherry/20" />
              <span className="text-[0.55rem] font-bold tracking-[0.18em] text-cherry/60 uppercase">
-               {lang === 'fr' ? 'CONCIERGERIE ESTHÉTIQUE INTERNATIONALE' : 'INTERNATIONAL AESTHETIC CONCIERGE'}
+               {lang === 'fr' ? 'CONCIERGERIE ESTHÉTIQUE INTERNATIONALE' : lang === 'en' ? 'INTERNATIONAL AESTHETIC CONCIERGE' : 'CONSERJERÍA ESTÉTICA INTERNACIONAL'}
              </span>
            </motion.div>
            <h1 className="mt-4 font-heading text-3xl font-semibold text-cherry md:text-5xl">{copy.title}</h1>
@@ -316,7 +318,7 @@ export default function PatientTunnelProfilePage() {
                        ))}
                     </motion.div>
                     
-                    {form.technologieConnue === (lang === 'fr' ? 'Oui' : 'Yes') && (
+                    {form.technologieConnue === (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Sí') && (
                        <motion.div 
                          initial={{ opacity: 0, y: 10 }}
                          animate={{ opacity: 1, y: 0 }}
@@ -329,7 +331,7 @@ export default function PatientTunnelProfilePage() {
                              type="text"
                              value={form.technologieDetail}
                              onChange={(e) => setForm(c => ({ ...c, technologieDetail: e.target.value }))}
-                             placeholder={lang === 'fr' ? "Ex: J-Plasma, VASER, Renuvion..." : "Ex: J-Plasma, VASER, Renuvion..."}
+                             placeholder={lang === 'fr' ? "Ex: J-Plasma, VASER, Renuvion..." : lang === 'en' ? "Ex: J-Plasma, VASER, Renuvion..." : "Ej: J-Plasma, VASER, Renuvion..."}
                              className="w-full rounded-2xl border border-cherry/10 bg-white/40 px-6 py-4 text-center text-lg font-medium text-cherry outline-none focus:border-cherry focus:bg-white/80 focus:shadow-xl transition-all"
                           />
                        </motion.div>
@@ -401,7 +403,7 @@ export default function PatientTunnelProfilePage() {
                className="group flex items-center gap-3 text-sm font-bold tracking-[0.25em] text-cherry/40 transition-colors hover:text-cherry"
              >
                <ChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
-               {step > 1 ? (lang === 'fr' ? 'PRÉCÉDENT' : 'PREVIOUS') : (lang === 'fr' ? 'RETOUR' : 'BACK')}
+               {step > 1 ? (lang === 'fr' ? 'PRÉCÉDENT' : lang === 'en' ? 'PREVIOUS' : 'ANTERIOR') : (lang === 'fr' ? 'RETOUR' : lang === 'en' ? 'BACK' : 'ATRÁS')}
              </button>
              
              <div className="flex flex-col gap-4 sm:flex-row">
@@ -410,14 +412,14 @@ export default function PatientTunnelProfilePage() {
                  onClick={() => setDone(true)}
                  className="px-6 py-2 text-[0.6rem] font-bold tracking-[0.25em] text-cherry/30 uppercase transition-colors hover:text-cherry/60"
                >
-                 {lang === 'fr' ? 'Passer cette étape' : 'Skip this step'}
+                 {lang === 'fr' ? 'Passer cette étape' : lang === 'en' ? 'Skip this step' : 'Saltar este paso'}
                </button>
                <PatientPrimaryButton 
                  type="submit" 
                  disabled={!canGoNext}
                  className="!px-16 !py-5 !text-lg shadow-2xl transition-all"
                >
-                 {step === 3 ? copy.submit : (lang === 'fr' ? 'ÉTAPE SUIVANTE' : 'NEXT STEP')}
+                 {step === 3 ? copy.submit : (lang === 'fr' ? 'ÉTAPE SUIVANTE' : lang === 'en' ? 'NEXT STEP' : 'SIGUIENTE PASO')}
                  {step < 3 && <ChevronRight className="h-5 w-5 ml-2" />}
                  {step === 3 && <Sparkles className="h-5 w-5 ml-2" />}
                </PatientPrimaryButton>

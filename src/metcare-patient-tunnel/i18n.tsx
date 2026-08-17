@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-export type Language = 'fr' | 'en';
+export type Language = 'fr' | 'en' | 'es';
 
 interface LanguageContextType {
   lang: Language;
@@ -12,7 +12,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
     const saved = localStorage.getItem('metcare_lang');
-    if (saved === 'en' || saved === 'fr') return saved;
+    if (saved === 'en' || saved === 'fr' || saved === 'es') return saved as Language;
     return 'fr';
   });
 

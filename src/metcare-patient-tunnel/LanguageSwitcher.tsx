@@ -9,8 +9,8 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setLang('fr')}
         className={`px-3 py-1 text-[0.6rem] font-bold tracking-widest transition-all rounded-full ${
-          lang === 'fr' 
-            ? 'bg-cherry text-snow shadow-lg shadow-cherry/20' 
+          lang === 'fr'
+            ? 'bg-cherry text-snow shadow-lg shadow-cherry/20'
             : 'text-cherry/40 hover:text-cherry hover:bg-white/40'
         }`}
       >
@@ -19,12 +19,22 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setLang('en')}
         className={`px-3 py-1 text-[0.6rem] font-bold tracking-widest transition-all rounded-full ${
-          lang === 'en' 
-            ? 'bg-cherry text-snow shadow-lg shadow-cherry/20' 
+          lang === 'en'
+            ? 'bg-cherry text-snow shadow-lg shadow-cherry/20'
             : 'text-cherry/40 hover:text-cherry hover:bg-white/40'
         }`}
       >
         EN
+      </button>
+      <button
+        onClick={() => setLang('es')}
+        className={`px-3 py-1 text-[0.6rem] font-bold tracking-widest transition-all rounded-full ${
+          lang === 'es'
+            ? 'bg-cherry text-snow shadow-lg shadow-cherry/20'
+            : 'text-cherry/40 hover:text-cherry hover:bg-white/40'
+        }`}
+      >
+        ES
       </button>
     </div>
   );

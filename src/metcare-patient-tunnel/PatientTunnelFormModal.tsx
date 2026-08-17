@@ -79,7 +79,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
 
     // Meta Pixel: Track AssessmentStarted when modal opens
     trackCustom('AssessmentStarted', {
-      name: lang === 'fr' ? 'Patient Tunnel Form 1 (FR)' : 'Patient Tunnel Form 1 (EN)',
+      name: lang === 'fr' ? 'Patient Tunnel Form 1 (FR)' : lang === 'en' ? 'Patient Tunnel Form 1 (EN)' : 'Patient Tunnel Form 1 (ES)',
       sourceCta,
     });
 
@@ -92,8 +92,8 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
 
   const steps = [
     { title: copy.title, fields: ['interventionRealisee', 'typesIntervention'] },
-    { title: lang === 'fr' ? 'Vos besoins' : 'Your needs', fields: ['aideAujourdhui'] },
-    { title: lang === 'fr' ? 'Vos coordonnées' : 'Your contact info', fields: ['nom', 'prenom', 'email', 'telephone', 'ville', 'dateIntervention', 'pays'] },
+    { title: lang === 'fr' ? 'Vos besoins' : lang === 'en' ? 'Your needs' : 'Tus necesidades', fields: ['aideAujourdhui'] },
+    { title: lang === 'fr' ? 'Vos coordonnées' : lang === 'en' ? 'Your contact info' : 'Tu información de contacto', fields: ['nom', 'prenom', 'email', 'telephone', 'ville', 'dateIntervention', 'pays'] },
   ];
 
   const canGoNext = useMemo(() => {
@@ -133,7 +133,9 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     trackLead(
       lang === 'fr'
         ? 'Patient Tunnel – Form 1 (FR)'
-        : 'Patient Tunnel – Form 1 (EN)'
+        : lang === 'en'
+        ? 'Patient Tunnel – Form 1 (EN)'
+        : 'Patient Tunnel – Form 1 (ES)'
     );
 
     submitPatientForm1ToWebhook(form, { sourceCta });
@@ -196,7 +198,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                         />
                       ))}
                    </div>
-                   <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/40 uppercase">{lang === 'fr' ? 'ÉTAPE' : 'STEP'} {step}/3</span>
+                   <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/40 uppercase">{lang === 'fr' ? 'ÉTAPE' : lang === 'en' ? 'STEP' : 'PASO'} {step}/3</span>
                 </div>
                 <motion.h2 
                   key={step}
@@ -307,7 +309,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             </span>
                             <div className="patient-tunnel-phone-wrap">
                               <PhoneInput
-                                defaultCountry={lang === 'fr' ? 'fr' : 'gb'}
+                                defaultCountry={lang === 'fr' ? 'fr' : lang === 'en' ? 'gb' : 'es'}
                                 value={form.telephone}
                                 onChange={(phone) =>
                                   setForm((c) => ({ ...c, telephone: phone }))
@@ -324,7 +326,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             </div>
                             {form.telephone && form.telephone.replace(/\D/g, '').length < 8 && (
                               <span className="text-xs font-medium text-red-500 ml-1">
-                                {lang === 'fr' ? 'Numéro invalide (minimum 8 chiffres)' : 'Invalid number (minimum 8 digits)'}
+                                {lang === 'fr' ? 'Numéro invalide (minimum 8 chiffres)' : lang === 'en' ? 'Invalid number (minimum 8 digits)' : 'Número inválido (mínimo 8 dígitos)'}
                               </span>
                             )}
                           </label>
@@ -366,14 +368,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                      className="group flex items-center justify-center gap-2 text-sm font-semibold tracking-widest text-cherry/40 transition-colors hover:text-cherry"
                    >
                      {step > 1 ? <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> : null}
-                     {step > 1 ? (lang === 'fr' ? 'RETOUR' : 'BACK') : (lang === 'fr' ? 'ANNULER' : 'CANCEL')}
+                     {step > 1 ? (lang === 'fr' ? 'RETOUR' : lang === 'en' ? 'BACK' : 'ATRÁS') : (lang === 'fr' ? 'ANNULER' : lang === 'en' ? 'CANCEL' : 'CANCELAR')}
                    </button>
                    <PatientPrimaryButton 
                     type="submit" 
                     disabled={!canGoNext}
                     className="!w-full sm:!w-auto !px-12 !py-4 transition-all !rounded-full shadow-xl shadow-cherry/20"
                    >
-                     {step === 3 ? copy.submit : (lang === 'fr' ? 'CONTINUER' : 'CONTINUE')}
+                     {step === 3 ? copy.submit : (lang === 'fr' ? 'CONTINUER' : lang === 'en' ? 'CONTINUE' : 'CONTINUAR')}
                      {step < 3 && <ChevronRight className="h-4 w-4 ml-2" />}
                    </PatientPrimaryButton>
                 </div>
@@ -415,7 +417,7 @@ function useFixedDropdownPosition(
 }
 
 function buildCountryOptions(lang: 'fr' | 'en') {
-  const regionNames = new Intl.DisplayNames([lang === 'fr' ? 'fr' : 'en'], { type: 'region' });
+  const regionNames = new Intl.DisplayNames([lang === 'fr' ? 'fr' : lang === 'en' ? 'en' : 'es'], { type: 'region' });
   return defaultCountries
     .map((row) => {
       const c = parseCountry(row);
@@ -428,7 +430,7 @@ function buildCountryOptions(lang: 'fr' | 'en') {
       return { iso2: c.iso2, label };
     })
     .sort((a, b) =>
-      a.label.localeCompare(b.label, lang === 'fr' ? 'fr' : 'en', { sensitivity: 'base' })
+      a.label.localeCompare(b.label, lang === 'fr' ? 'fr' : lang === 'en' ? 'en' : 'es', { sensitivity: 'base' })
     );
 }
 
@@ -473,9 +475,9 @@ function SearchableCountryField({
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
-  const placeholder = lang === 'fr' ? 'Sélectionnez un pays' : 'Select a country';
+  const placeholder = lang === 'fr' ? 'Sélectionnez un pays' : lang === 'en' ? 'Select a country' : 'Selecciona un país';
   const searchPlaceholder =
-    lang === 'fr' ? 'Rechercher un pays…' : 'Search country…';
+    lang === 'fr' ? 'Rechercher un pays…' : lang === 'en' ? 'Search country…' : 'Buscar país…';
 
   return (
     <label className="block space-y-2">
@@ -500,7 +502,7 @@ function SearchableCountryField({
             <>
               <button
                 type="button"
-                aria-label={lang === 'fr' ? 'Fermer' : 'Close'}
+                aria-label={lang === 'fr' ? 'Fermer' : lang === 'en' ? 'Close' : 'Cerrar'}
                 className="fixed inset-0 z-[1098] cursor-default bg-transparent"
                 onClick={() => setOpen(false)}
               />
@@ -544,7 +546,7 @@ function SearchableCountryField({
                 </ul>
                 {filtered.length === 0 && (
                   <p className="px-3 py-4 text-center text-sm text-cherry/45">
-                    {lang === 'fr' ? 'Aucun pays trouvé.' : 'No country found.'}
+                    {lang === 'fr' ? 'Aucun pays trouvé.' : lang === 'en' ? 'No country found.' : 'Ningún país encontrado.'}
                   </p>
                 )}
               </div>

@@ -172,7 +172,7 @@ export default function PatientTunnelPage() {
 
   useEffect(() => {
     document.title = c.meta.title;
-    trackViewContent(lang === 'fr' ? 'Landing – Patient Tunnel (FR)' : 'Landing – Patient Tunnel (EN)');
+    trackViewContent(lang === 'fr' ? 'Landing – Patient Tunnel (FR)' : lang === 'en' ? 'Landing – Patient Tunnel (EN)' : 'Landing – Patient Tunnel (ES)');
   }, [c.meta.title, lang]);
 
   const openForm = (cta: string) => {
@@ -219,7 +219,7 @@ export default function PatientTunnelPage() {
             />
             <div className="flex flex-col border-l border-cherry/10 pl-2 md:pl-4">
               <span className="hidden text-[0.5rem] font-bold tracking-[0.4em] text-cherry/40 uppercase md:block">
-                {lang === 'fr' ? 'ÉTABLI EN 2009' : 'ESTABLISHED 2009'}
+                {lang === 'fr' ? 'ÉTABLI EN 2009' : lang === 'en' ? 'ESTABLISHED 2009' : 'ESTABLECIDO EN 2009'}
               </span>
               <span className="text-[0.7rem] font-bold tracking-[0.2em] text-cherry md:text-[0.85rem]">
                 METCARE®
@@ -299,7 +299,7 @@ export default function PatientTunnelPage() {
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[3rem] border border-white/20 bg-cherry/5 shadow-2xl shadow-cherry/15 md:rounded-[4rem]">
                 <img
                   src={heroImage}
-                  alt={lang === 'fr' ? 'Accompagnement METCARE après intervention' : 'METCARE post-surgery support'}
+                  alt={lang === 'fr' ? 'Accompagnement METCARE après intervention' : lang === 'en' ? 'METCARE post-surgery support' : 'Acompañamiento METCARE después de la intervención'}
                   className="h-full w-full object-cover object-[center_20%] scale-105"
                   width={5464}
                   height={6271}
@@ -330,9 +330,9 @@ export default function PatientTunnelPage() {
         <div className="editorial-grid max-w-[1400px] mx-auto">
           <div className="col-span-12 lg:col-span-5 mb-16 lg:mb-0">
             <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
-              <span className="mb-6 inline-block text-[0.6rem] font-bold tracking-[0.4em] text-cherry/30 uppercase italic">{lang === 'fr' ? 'REPOS & SÉRÉNITÉ' : 'REST & SERENITY'}</span>
+              <span className="mb-6 inline-block text-[0.6rem] font-bold tracking-[0.4em] text-cherry/30 uppercase italic">{lang === 'fr' ? 'REPOS & SÉRÉNITÉ' : lang === 'en' ? 'REST & SERENITY' : 'DESCANSO Y SERENIDAD'}</span>
               <h2 className="mb-8 text-4xl font-semibold leading-[1.1] text-cherry md:text-6xl lg:text-[4.5rem]">
-                {lang === 'fr' ? 'Votre sérénité' : 'Your serenity'}<br /><span className="italic font-light">{lang === 'fr' ? 'commence' : 'begins'}</span> {lang === 'fr' ? 'ici.' : 'here.'}
+                {lang === 'fr' ? 'Votre sérénité' : lang === 'en' ? 'Your serenity' : 'Tu serenidad'}<br /><span className="italic font-light">{lang === 'fr' ? 'commence' : lang === 'en' ? 'begins' : 'comienza'}</span> {lang === 'fr' ? 'ici.' : lang === 'en' ? 'here.' : 'aquí.'}
               </h2>
               <TextWithTags
                 text={c.sections.repere.body}
@@ -351,8 +351,8 @@ export default function PatientTunnelPage() {
               <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry text-snow shadow-lg shadow-cherry/20">
                 <span className="text-xs font-bold tracking-widest">01</span>
               </div>
-              <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Savoir quoi observer' : 'Know what to observe'}</h3>
-              <p className="text-base font-light leading-relaxed text-cherry/70">{lang === 'fr' ? 'Comprendre les signaux de votre corps pour vous repérer avec confiance dans chaque étape de votre évolution.' : 'Understand your body\'s signals to navigate with confidence through every stage of your progress.'}</p>
+              <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Savoir quoi observer' : lang === 'en' ? 'Know what to observe' : 'Saber qué observar'}</h3>
+              <p className="text-base font-light leading-relaxed text-cherry/70">{lang === 'fr' ? 'Comprendre les signaux de votre corps pour vous repérer avec confiance dans chaque étape de votre évolution.' : lang === 'en' ? 'Understand your body\'s signals to navigate with confidence through every stage of your progress.' : 'Entiende las señales de tu cuerpo para navegar con confianza en cada etapa de tu progreso.'}</p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 100 }}
@@ -364,7 +364,7 @@ export default function PatientTunnelPage() {
               <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-cherry/10 text-cherry shadow-lg">
                 <span className="text-xs font-bold tracking-widest">02</span>
               </div>
-              <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Ne plus rester seule' : 'No longer stay alone'}</h3>
+              <h3 className="mb-6 font-heading text-2xl font-semibold text-cherry uppercase tracking-tight">{lang === 'fr' ? 'Ne plus rester seule' : lang === 'en' ? 'No longer stay alone' : 'Dejar de estar sola'}</h3>
               <div className="space-y-3 text-base font-light leading-relaxed text-cherry/70">
                 <p className="text-sm">{c.sections.normal.intro}</p>
                 <div className="flex flex-wrap gap-2">
@@ -415,7 +415,9 @@ export default function PatientTunnelPage() {
               alt={
                 lang === 'fr'
                   ? 'Ambiance repos et sérénité METCARE'
-                  : 'METCARE rest and serenity'
+                  : lang === 'en'
+                  ? 'METCARE rest and serenity'
+                  : 'Ambiente de descanso y serenidad METCARE'
               }
               className="block h-auto w-full"
               width={8569}
@@ -438,11 +440,13 @@ export default function PatientTunnelPage() {
             transition={{ duration: 1 }}
             className="md:col-span-8 md:row-span-3 flex flex-col justify-center p-10 lg:p-16 patient-tunnel-glass rounded-[4rem] border-none bg-white/50"
           >
-            <h3 className="mb-6 text-4xl font-semibold leading-tight text-cherry md:text-5xl lg:text-6xl">{lang === 'fr' ? 'La sécurité' : 'Safety'}<br />{lang === 'fr' ? 'avant tout.' : 'first.'}</h3>
+            <h3 className="mb-6 text-4xl font-semibold leading-tight text-cherry md:text-5xl lg:text-6xl">{lang === 'fr' ? 'La sécurité' : lang === 'en' ? 'Safety' : 'La seguridad'}<br />{lang === 'fr' ? 'avant tout.' : lang === 'en' ? 'first.' : 'ante todo.'}</h3>
             <p className="max-w-lg text-base font-light leading-relaxed text-cherry/70 md:text-lg">
               {lang === 'fr'
                 ? 'Un cadre structuré, sécurisé et personnalisé pour chaque patiente, où qu\'elle soit. Notre approche combine expertise médicale et soutien émotionnel.'
-                : 'A structured, secure, and personalized framework for every patient, wherever they are. Our approach combines medical expertise and emotional support.'}
+                : lang === 'en'
+                ? 'A structured, secure, and personalized framework for every patient, wherever they are. Our approach combines medical expertise and emotional support.'
+                : 'Un marco estructurado, seguro y personalizado para cada paciente, dondequiera que se encuentre. Nuestro enfoque combina experiencia médica y apoyo emocional.'}
             </p>
           </motion.div>
 
@@ -455,7 +459,7 @@ export default function PatientTunnelPage() {
             className="md:col-span-4 md:row-span-4 bg-cherry rounded-[3rem] p-10 flex flex-col justify-start group overflow-hidden"
           >
             <div className="space-y-6 relative z-10">
-              <span className="text-[0.65rem] font-bold tracking-[0.4em] text-snow/40 uppercase">{lang === 'fr' ? 'LE LABEL PRIVÉ' : 'THE PRIVATE LABEL'}</span>
+              <span className="text-[0.65rem] font-bold tracking-[0.4em] text-snow/40 uppercase">{lang === 'fr' ? 'LE LABEL PRIVÉ' : lang === 'en' ? 'THE PRIVATE LABEL' : 'LA ETIQUETA PRIVADA'}</span>
               <h4 className="text-3xl font-semibold text-snow leading-tight tracking-tight">Safety Patient®</h4>
               <p className="text-sm font-light leading-relaxed text-snow/60">{c.sections.safety.body}</p>
             </div>
@@ -497,7 +501,7 @@ export default function PatientTunnelPage() {
             >
               +8000
             </motion.span>
-            <span className="text-[0.6rem] font-bold tracking-[0.3em] text-cherry/40 uppercase">{lang === 'fr' ? 'Patients par an' : 'Patients per year'}</span>
+            <span className="text-[0.6rem] font-bold tracking-[0.3em] text-cherry/40 uppercase">{lang === 'fr' ? 'Patients par an' : lang === 'en' ? 'Patients per year' : 'Pacientes por año'}</span>
           </motion.div>
 
           {/* Expertise List Card */}
@@ -528,7 +532,9 @@ export default function PatientTunnelPage() {
               alt={
                 lang === 'fr'
                   ? 'Réseau et expertise METCARE'
-                  : 'METCARE network and expertise'
+                  : lang === 'en'
+                  ? 'METCARE network and expertise'
+                  : 'Red y experiencia METCARE'
               }
               className="block h-auto w-full"
               width={2816}
@@ -558,7 +564,7 @@ export default function PatientTunnelPage() {
               <div className="space-y-8">
                 <div className="space-y-4">
                   <span className="inline-block rounded-full bg-cherry/5 px-4 py-1.5 text-[0.6rem] font-bold tracking-[0.2em] text-cherry/60 uppercase">
-                    {lang === 'fr' ? 'Échange Gratuit' : 'Free Exchange'}
+                    {lang === 'fr' ? 'Échange Gratuit' : lang === 'en' ? 'Free Exchange' : 'Intercambio Gratuito'}
                   </span>
                   <h3 className="text-3xl font-semibold leading-tight text-cherry md:text-4xl lg:text-5xl">
                     {c.sections.echange.intro}
@@ -593,10 +599,10 @@ export default function PatientTunnelPage() {
                   />
                   <div className="rounded-2xl bg-beige/20 p-6 border border-beige/30">
                     <p className="text-xs font-bold tracking-widest text-cherry/40 uppercase mb-2">
-                      {lang === 'fr' ? 'Priorité Patient' : 'Patient Priority'}
+                      {lang === 'fr' ? 'Priorité Patient' : lang === 'en' ? 'Patient Priority' : 'Prioridad del Paciente'}
                     </p>
                     <p className="text-sm font-medium text-cherry/80">
-                      {lang === 'fr' ? 'Un moment d\'écoute privilégié, sans aucune pression commerciale.' : 'A privileged moment of listening, without any commercial pressure.'}
+                      {lang === 'fr' ? 'Un moment d\'écoute privilégié, sans aucune pression commerciale.' : lang === 'en' ? 'A privileged moment of listening, without any commercial pressure.' : 'Un momento privilegiado de escucha, sin ninguna presión comercial.'}
                     </p>
                   </div>
                 </div>
@@ -620,7 +626,7 @@ export default function PatientTunnelPage() {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.015] md:opacity-[0.03]"
           style={{ x: parcoursX }}
         >
-          <span className="text-[10rem] md:text-[20rem] font-bold tracking-tighter whitespace-nowrap text-cherry uppercase">{lang === 'fr' ? 'PARCOURS' : 'JOURNEY'}</span>
+          <span className="text-[10rem] md:text-[20rem] font-bold tracking-tighter whitespace-nowrap text-cherry uppercase">{lang === 'fr' ? 'PARCOURS' : lang === 'en' ? 'JOURNEY' : 'VIAJE'}</span>
         </motion.div>
 
         <div className="max-w-[1200px] mx-auto relative z-10">
@@ -635,19 +641,19 @@ export default function PatientTunnelPage() {
 
             <EditorialStep
               number="01"
-              title={lang === 'fr' ? 'Partage de situation' : 'Situation Sharing'}
+              title={lang === 'fr' ? 'Partage de situation' : lang === 'en' ? 'Situation Sharing' : 'Compartir la situación'}
               side="left"
               body={c.sections.parcours.steps[0]}
             />
             <EditorialStep
               number="02"
-              title={lang === 'fr' ? 'Échange personnalisé' : 'Personalized Exchange'}
+              title={lang === 'fr' ? 'Échange personnalisé' : lang === 'en' ? 'Personalized Exchange' : 'Intercambio personalizado'}
               side="right"
               body={c.sections.parcours.steps[1]}
             />
             <EditorialStep
               number="03"
-              title={lang === 'fr' ? 'Orientation & Solutions' : 'Orientation & Solutions'}
+              title={lang === 'fr' ? 'Orientation & Solutions' : lang === 'en' ? 'Orientation & Solutions' : 'Orientación y Soluciones'}
               side="left"
               body={c.sections.parcours.steps[2]}
               isLast
@@ -667,28 +673,28 @@ export default function PatientTunnelPage() {
             title={c.sections.opportunite.title}
             body={c.sections.opportunite.body}
             imageSrc={solutionCardImage3}
-            imageAlt={lang === 'fr' ? 'Réseau international d\'experts METCARE' : 'METCARE international expert network'}
+            imageAlt={lang === 'fr' ? 'Réseau international d\'experts METCARE' : lang === 'en' ? 'METCARE international expert network' : 'Red internacional de expertos METCARE'}
             accent
-            ctaLabel={lang === 'fr' ? 'Prendre contact avec un expert proche de chez moi' : 'Get in touch with an expert near me'}
+            ctaLabel={lang === 'fr' ? 'Prendre contact avec un expert proche de chez moi' : lang === 'en' ? 'Get in touch with an expert near me' : 'Contactar con un experto cerca de mí'}
             onCtaClick={() => openForm('opportunite_card')}
           />
           <SolutionCard
-            label={lang === 'fr' ? "Le protocole d'excellence" : "The excellence protocol"}
+            label={lang === 'fr' ? "Le protocole d'excellence" : lang === 'en' ? "The excellence protocol" : "El protocolo de excelencia"}
             title="Signature Recovery Protocol"
-            body={lang === 'fr' ? 'Une approche structurée pour optimiser votre rétablissement après chaque type d\'intervention.' : 'A structured approach to optimize your recovery after each type of intervention.'}
+            body={lang === 'fr' ? 'Une approche structurée pour optimiser votre rétablissement après chaque type d\'intervention.' : lang === 'en' ? 'A structured approach to optimize your recovery after each type of intervention.' : 'Un enfoque estructurado para optimizar tu recuperación después de cada tipo de intervención.'}
             imageSrc={signatureRecoveryImage}
-            imageAlt={lang === 'fr' ? 'Signature Recovery Protocol' : 'Signature Recovery Protocol'}
+            imageAlt={lang === 'fr' ? 'Signature Recovery Protocol' : lang === 'en' ? 'Signature Recovery Protocol' : 'Protocolo de recuperación de firma'}
             href="https://www.metcare.eu"
-            ctaLabel={lang === 'fr' ? 'Découvrir' : 'Discover'}
+            ctaLabel={lang === 'fr' ? 'Découvrir' : lang === 'en' ? 'Discover' : 'Descubrir'}
           />
           <SolutionCard
-            label={lang === 'fr' ? 'ACCOMPAGNEMENT' : 'ACCOMPANIMENT'}
-            title={lang === 'fr' ? 'Accompagnement Personnalisé & E-book' : 'Personalized Accompaniment & E-book'}
-            body={lang === 'fr' ? 'Un guide complet de 148 pages et une écoute active tout au long de votre parcours de guérison.' : 'A complete 148-page guide and active listening throughout your healing journey.'}
+            label={lang === 'fr' ? 'ACCOMPAGNEMENT' : lang === 'en' ? 'ACCOMPANIMENT' : 'ACOMPAÑAMIENTO'}
+            title={lang === 'fr' ? 'Accompagnement Personnalisé & E-book' : lang === 'en' ? 'Personalized Accompaniment & E-book' : 'Acompañamiento personalizado y E-book'}
+            body={lang === 'fr' ? 'Un guide complet de 148 pages et une écoute active tout au long de votre parcours de guérison.' : lang === 'en' ? 'A complete 148-page guide and active listening throughout your healing journey.' : 'Una guía completa de 148 páginas y escucha activa a lo largo de tu viaje de sanación.'}
             imageSrc={solutionCardImage2}
-            imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : 'Personalized accompaniment and e-book'}
+            imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : lang === 'en' ? 'Personalized accompaniment and e-book' : 'Acompañamiento personalizado y e-book'}
             href="https://www.metcare.eu"
-            ctaLabel={lang === 'fr' ? 'Découvrir' : 'Discover'}
+            ctaLabel={lang === 'fr' ? 'Découvrir' : lang === 'en' ? 'Discover' : 'Descubrir'}
           />
         </div>
       </PatientSection>
@@ -727,7 +733,7 @@ export default function PatientTunnelPage() {
                   className="space-y-4"
                 >
                   <span className="text-[0.65rem] font-bold tracking-[0.3em] text-cherry/30 uppercase italic">
-                    {lang === 'fr' ? 'Ressenti' : 'Feeling'} 0{i + 1}
+                    {lang === 'fr' ? 'Ressenti' : lang === 'en' ? 'Feeling' : 'Sentimiento'} 0{i + 1}
                   </span>
                   <p className="text-lg font-medium text-cherry leading-tight">{bullet}</p>
                 </motion.div>
@@ -755,7 +761,9 @@ export default function PatientTunnelPage() {
                 alt={
                   lang === 'fr'
                     ? 'Accompagnement et écoute METCARE'
-                    : 'METCARE listening and support'
+                    : lang === 'en'
+                    ? 'METCARE listening and support'
+                    : 'Acompañamiento y apoyo METCARE'
                 }
                 className="h-auto w-full max-h-[min(62vh,520px)] rounded-[2rem] border border-cherry/10 object-cover shadow-2xl shadow-cherry/10 md:max-h-[min(66vh,580px)] md:rounded-4xl"
                 width={5714}
@@ -815,13 +823,13 @@ export default function PatientTunnelPage() {
           </Link>
 
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[0.6rem] font-bold tracking-[0.2em] text-snow/30 uppercase">
-            <a href="https://www.myesthetictravel.com" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Mentions Légales' : 'Legal Mentions'}</a>
-            <a href="https://www.myesthetictravel.com" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Confidentialité' : 'Privacy'}</a>
-            <a href="https://www.myesthetictravel.com" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : 'Contact'}</a>
+            <a href="https://www.myesthetictravel.com" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Mentions Légales' : lang === 'en' ? 'Legal Mentions' : 'Aviso Legal'}</a>
+            <a href="https://www.myesthetictravel.com" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Confidentialité' : lang === 'en' ? 'Privacy' : 'Privacidad'}</a>
+            <a href="https://www.myesthetictravel.com" target="_blank" rel="noopener noreferrer" className="hover:text-snow transition-colors">{lang === 'fr' ? 'Contact' : lang === 'en' ? 'Contact' : 'Contacto'}</a>
           </div>
 
           <p className="text-[0.65rem] tracking-[0.1em] text-snow/60 uppercase">
-            © {new Date().getFullYear()} METCARE. {lang === 'fr' ? 'Tous droits réservés.' : 'All rights reserved.'}
+            © {new Date().getFullYear()} METCARE. {lang === 'fr' ? 'Tous droits réservés.' : lang === 'en' ? 'All rights reserved.' : 'Todos los derechos reservados.'}
           </p>
         </div>
       </footer>

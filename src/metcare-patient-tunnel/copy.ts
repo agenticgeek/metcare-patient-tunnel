@@ -22,46 +22,60 @@ export type PatientForm2Data = {
   accompagnementSouhaite: string;
 };
 
-export const getPatientForm1InterventionOptions = (lang: 'fr' | 'en') =>
-  lang === 'fr' ? ['Oui', "Non, c'est en projet"] as const : ['Yes', "No, it's a project"] as const;
+export const getPatientForm1InterventionOptions = (lang: 'fr' | 'en' | 'es') =>
+  lang === 'fr' ? ['Oui', "Non, c'est en projet"] as const : lang === 'en' ? ['Yes', "No, it's a project"] as const : ['Sí', 'No, es un proyecto'] as const;
 
-export const getPatientForm1TypeOptions = (lang: 'fr' | 'en') =>
+export const getPatientForm1TypeOptions = (lang: 'fr' | 'en' | 'es') =>
   lang === 'fr'
     ? ['Liposuccion', 'BBL', 'Augmentation mammaire', 'Lifting cervico-facial', 'Autre'] as const
-    : ['Liposuction', 'BBL', 'Breast Augmentation', 'Face Lift', 'Other'] as const;
+    : lang === 'en'
+    ? ['Liposuction', 'BBL', 'Breast Augmentation', 'Face Lift', 'Other'] as const
+    : ['Liposucción', 'BBL', 'Aumento de senos', 'Lifting cervicofacial', 'Otro'] as const;
 
-export const getPatientForm1AideOptions = (lang: 'fr' | 'en') =>
+export const getPatientForm1AideOptions = (lang: 'fr' | 'en' | 'es') =>
   lang === 'fr'
     ? ['Être rassurée', 'Comprendre ma récupération', 'Être accompagnée', 'Trouver un expert'] as const
-    : ['Be reassured', 'Understand my recovery', 'Be accompanied', 'Find an expert'] as const;
+    : lang === 'en'
+    ? ['Be reassured', 'Understand my recovery', 'Be accompanied', 'Find an expert'] as const
+    : ['Ser tranquilizada', 'Entender mi recuperación', 'Ser acompañada', 'Encontrar un experto'] as const;
 
-export const getPatientForm2QuandOptions = (lang: 'fr' | 'en') =>
+export const getPatientForm2QuandOptions = (lang: 'fr' | 'en' | 'es') =>
   lang === 'fr'
     ? ['Moins de 7 jours', '1 à 3 semaines', '1 à 3 mois', 'Plus de 3 mois'] as const
-    : ['Less than 7 days', '1 to 3 weeks', '1 to 3 months', 'More than 3 months'] as const;
+    : lang === 'en'
+    ? ['Less than 7 days', '1 to 3 weeks', '1 to 3 months', 'More than 3 months'] as const
+    : ['Menos de 7 días', '1 a 3 semanas', '1 a 3 meses', 'Más de 3 meses'] as const;
 
-export const getPatientForm2SiPasEncoreOptions = (lang: 'fr' | 'en') =>
+export const getPatientForm2SiPasEncoreOptions = (lang: 'fr' | 'en' | 'es') =>
   lang === 'fr'
     ? ["Moins d'1 mois", '1 à 3 mois', 'Plus tard', 'En réflexion'] as const
-    : ['Less than 1 month', '1 to 3 months', 'Later', 'In reflection'] as const;
+    : lang === 'en'
+    ? ['Less than 1 month', '1 to 3 months', 'Later', 'In reflection'] as const
+    : ['Menos de 1 mes', '1 a 3 meses', 'Más tarde', 'En reflexión'] as const;
 
-export const getPatientForm2TechnologieOptions = (lang: 'fr' | 'en') =>
-  lang === 'fr' ? ['Oui', 'Non', 'Je ne sais pas'] as const : ['Yes', 'No', 'I don\'t know'] as const;
+export const getPatientForm2TechnologieOptions = (lang: 'fr' | 'en' | 'es') =>
+  lang === 'fr' ? ['Oui', 'Non', 'Je ne sais pas'] as const : lang === 'en' ? ['Yes', 'No', 'I don\'t know'] as const : ['Sí', 'No', 'No sé'] as const;
 
-export const getPatientForm2SentimentOptions = (lang: 'fr' | 'en') =>
+export const getPatientForm2SentimentOptions = (lang: 'fr' | 'en' | 'es') =>
   lang === 'fr'
     ? ['Stressée', 'Perdue', 'En manque d\'informations', 'J\'ai des questions', 'Je veux être rassurée'] as const
-    : ['Stressed', 'Lost', 'Lack of information', 'I have questions', 'I want to be reassured'] as const;
+    : lang === 'en'
+    ? ['Stressed', 'Lost', 'Lack of information', 'I have questions', 'I want to be reassured'] as const
+    : ['Estresada', 'Perdida', 'Falta de información', 'Tengo preguntas', 'Quiero ser tranquilizada'] as const;
 
-export const getPatientForm2AideMaintenantOptions = (lang: 'fr' | 'en') =>
+export const getPatientForm2AideMaintenantOptions = (lang: 'fr' | 'en' | 'es') =>
   lang === 'fr'
     ? ['Comprendre mon évolution', 'Être accompagnée', 'Trouver un professionnel', 'Préparer mon intervention'] as const
-    : ['Understand my progress', 'Be accompanied', 'Find a professional', 'Prepare my surgery'] as const;
+    : lang === 'en'
+    ? ['Understand my progress', 'Be accompanied', 'Find a professional', 'Prepare my surgery'] as const
+    : ['Entender mi progreso', 'Ser acompañada', 'Encontrar un profesional', 'Preparar mi cirugía'] as const;
 
-export const getPatientForm2AccompagnementOptions = (lang: 'fr' | 'en') =>
+export const getPatientForm2AccompagnementOptions = (lang: 'fr' | 'en' | 'es') =>
   lang === 'fr'
     ? ['Près de chez moi', 'À l\'étranger', 'Les deux'] as const
-    : ['Near me', 'Abroad', 'Both'] as const;
+    : lang === 'en'
+    ? ['Near me', 'Abroad', 'Both'] as const
+    : ['Cerca de mí', 'En el extranjero', 'Ambos'] as const;
 
 export const patientCopy = {
   fr: {
@@ -390,6 +404,170 @@ export const patientCopy = {
     },
     ui: {
       noSession: 'No current request. Use the form on the home page.',
+    },
+  },
+  es: {
+    meta: {
+      title: 'METCARE® — Acompañamiento del paciente',
+    },
+    hero: {
+      headline: "No estás sola después de tu intervención.",
+      body:
+        "Cambiar. Transformarte. Redescubrirte. Pero una vez que la intervención ha pasado, es a menudo cuando todo comienza.\nTu cuerpo cambia.\nLas sensaciones evolucionan. Las emociones también.\nY muchas pacientes se encuentran solas frente a esta etapa.\nEn METCARE®, hemos hecho que esta fase sea una prioridad.",
+      ctaEchange: 'Me beneficio de mi intercambio gratuito',
+      ctaGuide: 'Recibo mi guía del paciente',
+      ctaExpert: 'Encontrar un experto perioperatorio en mi región',
+    },
+    sections: {
+      repere: {
+        label: 'UN PRIMER PUNTO DE REFERENCIA PARA TI',
+        title: '',
+        body:
+          "Tras tu solicitud, recibirás una guía del paciente gratuita. Una guía simple para ayudarte a: entender qué sucede después de tu intervención / saber qué observar / orientarte en las diferentes etapas. Porque entender... es ya tranquilizarse.",
+      },
+      normal: {
+        label: 'LO QUE ESTÁS EXPERIMENTANDO ES NORMAL',
+        title: '',
+        intro: 'Ya sea que hayas realizado',
+        tags1: ['una liposucción', 'un BBL', 'un lifting cervicofacial', 'un aumento de senos'],
+        bridge: 'o cualquier otra intervención, puedes sentir:',
+        tags2: ['dudas', 'incomodidad', 'falta de puntos de referencia', 'preguntas sin respuesta'],
+        outro: "Y es normal, pero esto no debería experimentarse solo.",
+      },
+      safety: {
+        label: 'LA SEGURIDAD ANTE TODO — SAFETY PATIENT®',
+        title: '',
+        body:
+          "En METCARE®, la seguridad del paciente está en el corazón de todo. Somos los creadores de la etiqueta Safety Patient®, diseñada para acompañar a los pacientes antes y después de su intervención. No estás sola. Estás rodeada.",
+      },
+      expertise: {
+        label: 'EXPERIENCIA RECONOCIDA',
+        title: '',
+        body:
+          "Durante más de 17 años, METCARE® ha acompañado: más de 8000 pacientes cada año / más de 2500 cirujanos asociados / más de 1300 expertos especializados. Un enfoque estructurado, dedicado a la cirugía estética y al acompañamiento perioperatorio en cirugía estética.",
+      },
+      conciergerie: {
+        label: 'UNA CONSERJERÍA ESTÉTICA INTERNACIONAL',
+        title: '',
+        body:
+          "Dondequiera que estés. Dondequiera que hayas realizado tu intervención. Te permitimos acceder a una red de profesionales calificados, adaptados a tu situación y tu camino. En un marco estructurado, seguro y personalizado.",
+        cta: 'Encuentro un experto adaptado a mi situación',
+      },
+      echange: {
+        label: 'UN PRIMER INTERCAMBIO SIMPLE Y GRATUITO',
+        title: '',
+        intro:
+          "Puedes beneficiarte de una cita de conexión, completamente gratuita.",
+        bullets: [
+          "Un intercambio de aproximadamente 15 minutos",
+          'Para hacer un balance de tu situación',
+          'Y entender precisamente tus necesidades',
+        ],
+        followup:
+          "Esta cita te permite: ser escuchada / ser orientada / dejar de estar sola. El paciente es nuestra prioridad. Es por eso que este intercambio se ofrece sin compromiso.",
+        cta: 'Me beneficio de mi intercambio gratuito',
+      },
+      parcours: {
+        label: 'TU VIAJE',
+        title: '',
+        intro: "No necesitas gestionar todo sola.",
+        steps: [
+          'Nos compartes tu situación (intervención, necesidad, ubicación)',
+          'Nos ponemos en contacto contigo para un intercambio personalizado',
+          'Te orientamos hacia las soluciones adaptadas.',
+        ],
+        outro: 'Simple, claro, estructurado.',
+      },
+      solutions: {
+        label: 'TUS SOLUCIONES',
+        title: '',
+        body:
+          'Dependiendo de tu situación, puedes beneficiarte de: Acompañamiento personalizado / E-book completo de 148 páginas / Signature Recovery Protocol. Cada solución está pensada para ti.',
+      },
+      opportunite: {
+        label: 'OPORTUNIDAD',
+        title: "Acceso a nuestra Red Internacional de Expertos",
+        body: [
+          "¿Buscas apoyo antes o después de tu intervención?",
+          "METCARE® te permite acceder a su red internacional de expertos especializados en el viaje perioperatorio: enfermeros, fisioterapeutas, osteópatas, profesionales especializados, profesionales del bienestar y la recuperación. Nuestro equipo te ayuda a identificar los profesionales más adecuados para tu situación, en tu ciudad de recuperación o durante tus viajes en Francia e internacionalmente. Porque un viaje bien apoyado no termina con la intervención.",
+        ],
+      },
+      bonEndroit: {
+        label: 'ESTÁS EN EL LUGAR CORRECTO',
+        title: '',
+        intro:
+          "Si estás aquí… probablemente no es una coincidencia.",
+        bullets: [
+          "La necesidad de ser tranquilizada",
+          'La necesidad de entender',
+          "La necesidad de ser acompañada",
+        ],
+        followup: "Y ese es exactamente nuestro papel.",
+      },
+      final: {
+        label: 'ACOMPAÑAMIENTO PERSONALIZADO',
+        intro: "¿Buscas un apoyo más profundo para tu proyecto estético?",
+        body: [
+          "Más allá de nuestro intercambio de orientación gratuito, METCARE® te ofrece una cita de acompañamiento personalizado de 1h00 completamente dedicada a tu situación.",
+          "Esta entrevista te permite hacer un balance de tu proyecto, hacer todas tus preguntas y beneficiarte de una perspectiva experta en las diferentes etapas de tu viaje: preparación, intervención, recuperación, organización práctica, seguimiento postoperatorio y apoyo general.",
+          "Nuestra misión es ayudarte a construir un viaje más tranquilo, más estructurado y más seguro gracias a más de 17 años de experiencia con miles de pacientes en todo el mundo.",
+          "A través de este intercambio profundo, obtienes una visión más clara de tu viaje y las acciones a implementar antes, durante y después de tu intervención.",
+          "Porque un proyecto estético no se reduce a una intervención, sino al conjunto del viaje que la rodea.",
+        ],
+        cta: "Consulta de acompañamiento 1h00",
+      },
+    },
+    form1: {
+      title: 'Hablemos de tu situación',
+      intro:
+        'En unos segundos, explícanos tu situación. Esto nos permite orientarte rápidamente y ofrecerte un acompañamiento adaptado.',
+      submit: 'Me pongo en contacto con METCARE',
+      fields: {
+        nom: 'Apellido',
+        prenom: 'Nombre',
+        email: 'Correo electrónico',
+        telephone: 'Teléfono',
+        ville: 'Ciudad',
+        dateIntervention: 'Fecha de intervención',
+        pays: 'País',
+        intervention: '¿Ya has realizado tu intervención?',
+        typeIntervention: '¿Qué tipo de intervención te concierne?',
+        aide: '¿Qué te ayudaría más hoy?',
+      },
+    },
+    transition: {
+      title: 'Tu solicitud ha sido recibida correctamente',
+      bodyIntro: 'Gracias por tu confianza. Recibirás:',
+      bodyItems: ['Tu guía del paciente', 'La información inicial', 'Un seguimiento rápido de nuestro equipo'],
+      bodyOutro: 'Antes de eso...',
+      promptIntro: 'Dedica 1 minuto para contarnos un poco más. Esto nos permite:',
+      promptItems: ['Entender mejor tu situación', 'Adaptar nuestras recomendaciones', 'Orientarte con precisión'],
+      notice: 'Este formulario es opcional. Pero nos permite acompañarte con precisión.',
+      cta: 'Completo mi perfil',
+      skip: 'Saltar este paso',
+      backHome: 'Atrás',
+    },
+    form2: {
+      title: 'Para ir más lejos',
+      intro: 'Esta información nos permite acompañarte con precisión.',
+      submit: 'Valido mi perfil',
+      thankYou: "Disfruta de una cita gratuita de 15 minutos para presentar tus necesidades y ser orientada hacia un experto METCARE® de nuestra red, cerca de ti.",
+      bookCta: 'Encuentro mi acompañamiento',
+      fields: {
+        villesQuestion: "Indica la ciudad o ciudades donde podrías necesitar acompañamiento durante tu viaje",
+        villesHelper: "Si aún no lo sabes, simplemente indica tu ciudad de residencia.",
+        ville1Label: "Ciudad 1",
+        ville2Label: "Ciudad 2 (opcional)",
+        ville3Label: "Ciudad 3 (opcional)",
+        technologie: "¿Conoces la tecnología utilizada o prevista?",
+        technologieDetail: "Especifica la tecnología",
+        sentiment: "Hoy, ¿cómo te sientes?",
+        aideMaintenant: "¿Qué te ayudaría más ahora?",
+        accompagnement: "¿Te gustaría ser acompañada:",
+      },
+    },
+    ui: {
+      noSession: 'Sin solicitud actual. Usa el formulario en la página de inicio.',
     },
   }
 } as const;
