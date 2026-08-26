@@ -41,9 +41,11 @@ const initialForm: PatientForm1Data = {
   prenom: '',
   email: '',
   telephone: '',
+  telephoneIso2: '',
   ville: '',
   dateIntervention: '',
   pays: '',
+  paysIso2: '',
   interventionRealisee: '',
   typesIntervention: [],
   aideAujourdhui: [],
@@ -323,7 +325,11 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                 value={form.telephone}
                                 onChange={(phone, meta) => {
                                   setPhoneDialCode(meta.country.dialCode);
-                                  setForm((c) => ({ ...c, telephone: phone }));
+                                  setForm((c) => ({
+                                    ...c,
+                                    telephone: phone,
+                                    telephoneIso2: meta.country.iso2,
+                                  }));
                                 }}
                                 preferredCountries={
                                   lang === 'es'
@@ -367,7 +373,9 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                           <SearchableCountryField
                             label={copy.fields.pays}
                             value={form.pays}
-                            onChange={(v) => setForm((c) => ({ ...c, pays: v }))}
+                            onChange={(label, iso2) =>
+                              setForm((c) => ({ ...c, pays: label, paysIso2: iso2 }))
+                            }
                             lang={lang}
                           />
                         </motion.div>
@@ -459,7 +467,7 @@ function SearchableCountryField({
 }: {
   label: string;
   value: string;
-  onChange: (v: string) => void;
+  onChange: (label: string, iso2: string) => void;
   lang: 'fr' | 'en' | 'es';
 }) {
   const [open, setOpen] = useState(false);
@@ -551,7 +559,7 @@ function SearchableCountryField({
                         aria-selected={value === opt.label}
                         className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm text-cherry hover:bg-cherry/5"
                         onClick={() => {
-                          onChange(opt.label);
+                          onChange(opt.label, opt.iso2);
                           setOpen(false);
                         }}
                       >

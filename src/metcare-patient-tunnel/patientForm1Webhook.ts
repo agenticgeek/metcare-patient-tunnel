@@ -12,18 +12,40 @@ type WebhookMeta = {
   sourceCta?: string;
 };
 
+/** GHL phone fields require E.164: + followed by digits only. */
+function toE164(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  return digits ? `+${digits}` : '';
+}
+
+function englishCountryName(iso2: string): string {
+  if (!iso2) return '';
+  try {
+    return new Intl.DisplayNames(['en'], { type: 'region' }).of(iso2.toUpperCase()) ?? '';
+  } catch {
+    return '';
+  }
+}
+
 /**
  * POSTs Form 1 JSON payload to the configured webhook (LeadConnector by default).
  */
 export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: WebhookMeta): void {
+  const telephone = toE164(data.telephone);
+  const countryCode = (data.paysIso2 || data.telephoneIso2 || '').toUpperCase();
+  const countryNameEn = englishCountryName(countryCode) || data.pays.trim();
+
   const form: PatientForm1Data = {
     nom: data.nom.trim(),
     prenom: data.prenom.trim(),
     email: data.email.trim(),
-    telephone: data.telephone.trim(),
+    telephone,
+    telephoneIso2: (data.telephoneIso2 || '').toLowerCase(),
     ville: data.ville.trim(),
     dateIntervention: data.dateIntervention,
-    pays: data.pays.trim(),
+    // GHL contact.country rejects localized names like "España"; English/ISO work for FR+EN.
+    pays: countryNameEn,
+    paysIso2: countryCode.toLowerCase(),
     interventionRealisee: data.interventionRealisee,
     typesIntervention: [...data.typesIntervention],
     aideAujourdhui: [...data.aideAujourdhui],
@@ -33,6 +55,11 @@ export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: Webhoo
   const payload = {
     formId: 'patient_tunnel_form_1',
     ...form,
+    phone: telephone,
+    country: countryNameEn,
+    countryCode,
+    phoneCountry: (data.telephoneIso2 || '').toUpperCase(),
+    paysLocal: data.pays.trim(),
     typesInterventionText: form.typesIntervention.join(', '),
     aideAujourdhuiText: form.aideAujourdhui.join(', '),
     sourceCta: meta.sourceCta ?? '',
