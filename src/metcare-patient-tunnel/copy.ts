@@ -3,9 +3,13 @@ export type PatientForm1Data = {
   prenom: string;
   email: string;
   telephone: string;
+  /** ISO 3166-1 alpha-2 of the phone number (e.g. es, fr, gb). */
+  telephoneIso2: string;
   ville: string;
   dateIntervention: string;
   pays: string;
+  /** ISO 3166-1 alpha-2 of the selected country of residence. */
+  paysIso2: string;
   interventionRealisee: string;
   typesIntervention: string[];
   aideAujourdhui: string[];
