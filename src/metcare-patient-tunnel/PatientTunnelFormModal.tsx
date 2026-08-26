@@ -68,12 +68,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<PatientForm1Data>(initialForm);
   const [submitted, setSubmitted] = useState(false);
+  const [phoneDialCode, setPhoneDialCode] = useState('');
 
   useEffect(() => {
     if (!isOpen) {
       setStep(1);
       setForm(initialForm);
       setSubmitted(false);
+      setPhoneDialCode('');
       return;
     }
 
@@ -96,28 +98,35 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     { title: lang === 'fr' ? 'Vos coordonnées' : lang === 'en' ? 'Your contact info' : 'Tu información de contacto', fields: ['nom', 'prenom', 'email', 'telephone', 'ville', 'dateIntervention', 'pays'] },
   ];
 
+  const phoneDigits = form.telephone.replace(/\D/g, '');
+  const nationalPhoneDigits =
+    phoneDialCode && phoneDigits.startsWith(phoneDialCode)
+      ? phoneDigits.slice(phoneDialCode.length)
+      : phoneDigits;
+  const showPhoneError = nationalPhoneDigits.length > 0 && phoneDigits.length < 8;
+
   const canGoNext = useMemo(() => {
-  if (step === 1) return form.interventionRealisee && form.typesIntervention.length > 0;
+    if (step === 1) return form.interventionRealisee && form.typesIntervention.length > 0;
 
-  if (step === 2) return form.aideAujourdhui.length > 0;
+    if (step === 2) return form.aideAujourdhui.length > 0;
 
-  if (step === 3) {
-    const phoneDigits = form.telephone.replace(/\D/g, '');
-    const isValidPhone = phoneDigits.length >= 8 && phoneDigits.length <= 15;
+    if (step === 3) {
+      const digits = form.telephone.replace(/\D/g, '');
+      const isValidPhone = digits.length >= 8 && digits.length <= 15;
 
-    return (
-      form.nom.trim() &&
-      form.prenom.trim() &&
-      /\S+@\S+\.\S+/.test(form.email) &&
-      isValidPhone &&
-      form.ville.trim() &&
-      form.dateIntervention.trim() &&
-      form.pays.trim()
-    );
-  }
+      return (
+        form.nom.trim() &&
+        form.prenom.trim() &&
+        /\S+@\S+\.\S+/.test(form.email) &&
+        isValidPhone &&
+        form.ville.trim() &&
+        form.dateIntervention.trim() &&
+        form.pays.trim()
+      );
+    }
 
-  return false;
-}, [step, form]);
+    return false;
+  }, [step, form]);
 
 
   const handleSubmit = (e: FormEvent) => {
@@ -279,7 +288,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                     )}
 
                     {step === 3 && (
-                      <motion.div variants={staggerContainer} className="grid gap-6 pb-48 sm:grid-cols-2">
+                      <motion.div variants={staggerContainer} className="grid gap-x-6 gap-y-8 pb-48 sm:grid-cols-2">
                         <motion.div variants={staggerItem}>
                           <ModernInput
                             label={copy.fields.prenom}
@@ -309,14 +318,22 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             </span>
                             <div className="patient-tunnel-phone-wrap">
                               <PhoneInput
+                                key={lang}
                                 defaultCountry={lang === 'fr' ? 'fr' : lang === 'en' ? 'gb' : 'es'}
                                 value={form.telephone}
-                                onChange={(phone) =>
-                                  setForm((c) => ({ ...c, telephone: phone }))
+                                onChange={(phone, meta) => {
+                                  setPhoneDialCode(meta.country.dialCode);
+                                  setForm((c) => ({ ...c, telephone: phone }));
+                                }}
+                                preferredCountries={
+                                  lang === 'es'
+                                    ? ['es', 'mx', 'ar', 'co', 'cl', 'pe', 'us', 'fr', 'gb']
+                                    : lang === 'en'
+                                    ? ['gb', 'us', 'fr', 'es', 'ca', 'au']
+                                    : ['fr', 'be', 'ch', 'ca', 'us', 'gb', 'es']
                                 }
-                                preferredCountries={['fr', 'be', 'ch', 'ca', 'us', 'gb']}
                                 inputClassName={`!font-medium !text-cherry placeholder:text-cherry/30 ${
-                                  form.telephone && form.telephone.replace(/\D/g, '').length < 8 ? '!border-red-500' : ''
+                                  showPhoneError ? '!border-red-500' : ''
                                 }`}
                                 countrySelectorStyleProps={{
                                   buttonClassName:
@@ -324,8 +341,8 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                 }}
                               />
                             </div>
-                            {form.telephone && form.telephone.replace(/\D/g, '').length < 8 && (
-                              <span className="text-xs font-medium text-red-500 ml-1">
+                            {showPhoneError && (
+                              <span className="mt-1 mb-3 block text-xs font-medium leading-relaxed text-red-500 ml-1">
                                 {lang === 'fr' ? 'Numéro invalide (minimum 8 chiffres)' : lang === 'en' ? 'Invalid number (minimum 8 digits)' : 'Número inválido (mínimo 8 dígitos)'}
                               </span>
                             )}
@@ -416,7 +433,7 @@ function useFixedDropdownPosition(
   return pos;
 }
 
-function buildCountryOptions(lang: 'fr' | 'en') {
+function buildCountryOptions(lang: 'fr' | 'en' | 'es') {
   const regionNames = new Intl.DisplayNames([lang === 'fr' ? 'fr' : lang === 'en' ? 'en' : 'es'], { type: 'region' });
   return defaultCountries
     .map((row) => {
@@ -443,7 +460,7 @@ function SearchableCountryField({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  lang: 'fr' | 'en';
+  lang: 'fr' | 'en' | 'es';
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
