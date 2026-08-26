@@ -97,20 +97,19 @@ function MouseSpotlight() {
   );
 }
 
-const HERO_HIGHLIGHT_PHRASES: Record<string, string[]> = {
+const HERO_HIGHLIGHT_PHRASES: Record<'fr' | 'en' | 'es', string[]> = {
   fr: ['Changer.', 'Se transformer.', 'Se retrouver.'],
   en: ['To change.', 'To transform.', 'To find themselves.'],
+  es: ['Cambiar.', 'Transformarte.', 'Redescubrirte.'],
 };
 
 function HeroBodyText({ body, ctaLabel, onCtaClick }: { body: string; ctaLabel?: string; onCtaClick?: () => void }) {
-  const langKey = Object.keys(HERO_HIGHLIGHT_PHRASES).find(k =>
-    HERO_HIGHLIGHT_PHRASES[k].every(p => body.includes(p))
-  );
-  if (!langKey) return <>{body}</>;
+  const { lang } = useLanguage();
+  const phrases = HERO_HIGHLIGHT_PHRASES[lang];
+  if (!phrases?.every(p => body.includes(p))) return <>{body}</>;
 
-  const phrases = HERO_HIGHLIGHT_PHRASES[langKey];
   const fullPhrase = phrases.join(' ');
-  const [before, after] = body.split(fullPhrase);
+  const after = body.split(fullPhrase)[1] ?? '';
 
   return (
     <>
@@ -238,7 +237,7 @@ export default function PatientTunnelPage() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="patient-tunnel-hero-aurora relative flex flex-col items-center justify-center px-6 pt-28 pb-16 md:min-h-screen md:px-12 md:pt-40 md:pb-0 lg:px-24">
+      <section className="patient-tunnel-hero-aurora relative flex flex-col items-center justify-center px-6 pt-28 pb-24 md:min-h-screen md:px-12 md:pt-40 md:pb-28 lg:px-24 lg:pb-32">
         <motion.div
           className="relative z-10 w-full max-w-[1400px]"
           initial="hidden"
@@ -284,7 +283,7 @@ export default function PatientTunnelPage() {
                 </div>
               </motion.div>
 
-              <motion.div variants={fadeUp} className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
+              <motion.div variants={fadeUp} className="mb-4 mt-2 flex flex-col items-start gap-8 sm:flex-row sm:items-center md:mb-6">
                 <PatientPrimaryButton onClick={() => openForm(c.hero.ctaGuide)} className="px-12! py-5! text-lg! rounded-full! shadow-2xl shadow-cherry/25 group overflow-hidden">
                   <span className="relative z-10">{c.hero.ctaGuide}</span>
                 </PatientPrimaryButton>
