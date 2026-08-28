@@ -8,6 +8,7 @@ import {
   FlagImage,
 } from 'react-international-phone';
 import 'react-international-phone/style.css';
+import { isValidPhoneNumber, type CountryCode } from 'libphonenumber-js';
 import {
   useCallback,
   useEffect,
@@ -105,7 +106,10 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     phoneDialCode && phoneDigits.startsWith(phoneDialCode)
       ? phoneDigits.slice(phoneDialCode.length)
       : phoneDigits;
-  const showPhoneError = nationalPhoneDigits.length > 0 && phoneDigits.length < 8;
+  const isPhoneValid =
+    nationalPhoneDigits.length > 0 &&
+    isValidPhoneNumber(form.telephone, form.telephoneIso2.toUpperCase() as CountryCode);
+  const showPhoneError = nationalPhoneDigits.length > 0 && !isPhoneValid;
 
   const canGoNext = useMemo(() => {
     if (step === 1) return form.interventionRealisee && form.typesIntervention.length > 0;
@@ -113,14 +117,11 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     if (step === 2) return form.aideAujourdhui.length > 0;
 
     if (step === 3) {
-      const digits = form.telephone.replace(/\D/g, '');
-      const isValidPhone = digits.length >= 8 && digits.length <= 15;
-
       return (
         form.nom.trim() &&
         form.prenom.trim() &&
         /\S+@\S+\.\S+/.test(form.email) &&
-        isValidPhone &&
+        isPhoneValid &&
         form.ville.trim() &&
         form.dateIntervention.trim() &&
         form.pays.trim()
@@ -349,7 +350,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             </div>
                             {showPhoneError && (
                               <span className="mt-1 mb-3 block text-xs font-medium leading-relaxed text-red-500 ml-1">
-                                {lang === 'fr' ? 'Numéro invalide (minimum 8 chiffres)' : lang === 'en' ? 'Invalid number (minimum 8 digits)' : 'Número inválido (mínimo 8 dígitos)'}
+                                {lang === 'fr' ? 'Numéro invalide pour le pays sélectionné' : lang === 'en' ? 'Invalid number for the selected country' : 'Número inválido para el país seleccionado'}
                               </span>
                             )}
                           </label>
