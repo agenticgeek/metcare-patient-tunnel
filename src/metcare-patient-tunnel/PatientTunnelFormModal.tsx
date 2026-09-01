@@ -186,7 +186,10 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed inset-0 z-[1001] flex items-center justify-center overflow-x-hidden p-4 sm:p-6"
           >
-            <div className="patient-tunnel-glass relative flex h-full max-h-[min(750px,calc(100dvh-2rem))] w-full min-w-0 max-w-4xl flex-col overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-cherry/30">
+            <div
+              className="patient-tunnel-glass relative flex h-auto max-h-[min(750px,calc(100dvh-2rem))] w-full min-w-0 max-w-4xl flex-col overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-cherry/30"
+              data-lenis-prevent
+            >
               {/* Header */}
               <div className="relative border-b border-cherry/10 bg-white/30 px-6 py-8 md:px-10">
                 <button
@@ -225,11 +228,9 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
               {/* Form Content */}
               <form
                 onSubmit={handleSubmit}
-                className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6 py-8 md:px-10 no-scrollbar"
+                className="flex flex-col flex-1 min-h-0 overflow-y-auto"
               >
-                <div
-                  className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto"
-                >
+                <div className="px-6 py-8 md:px-10">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step}
@@ -387,7 +388,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                 </div>
 
                 {/* Footer Actions */}
-                <div className="mt-10 flex flex-col gap-4 border-t border-cherry/10 pt-8 sm:flex-row sm:justify-between">
+                <div className="flex flex-col gap-4 border-t border-cherry/10 px-6 py-8 md:px-10 sm:flex-row sm:justify-between">
                    <button
                      type="button"
                      onClick={() => step > 1 ? setStep(s => s - 1) : onClose()}
