@@ -6,6 +6,8 @@ import {
   defaultCountries,
   parseCountry,
   FlagImage,
+  type ParsedCountry,
+  type PhoneInputRefType,
 } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import { isValidPhoneNumber, type CountryCode } from 'libphonenumber-js';
@@ -16,6 +18,7 @@ import {
   useRef,
   useState,
   type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type RefObject,
 } from 'react';
 import {
@@ -26,6 +29,7 @@ import {
   type PatientForm1Data,
 } from './copy';
 import { submitPatientForm1ToWebhook } from './patientForm1Webhook';
+import { exceedsMaxNationalDigits } from './phoneLimits';
 import { PatientPrimaryButton } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
 import { trackCustom, trackLead } from '../utils/metaPixel';
@@ -52,6 +56,50 @@ const initialForm: PatientForm1Data = {
   aideAujourdhui: [],
 };
 
+const PHONE_PREFERRED_COUNTRIES: Record<'fr' | 'en' | 'es', string[]> = {
+  es: ['es', 'mx', 'ar', 'co', 'cl', 'pe', 'us', 'fr', 'gb'],
+  en: ['gb', 'us', 'fr', 'es', 'ca', 'au'],
+  fr: ['fr', 'be', 'ch', 'ca', 'us', 'gb', 'es'],
+};
+
+/** Time window (ms) during which consecutive keystrokes in the country dropdown form one dial-code query. */
+const DIAL_CODE_TYPEAHEAD_WINDOW_MS = 1000;
+
+/**
+ * National digits of a phone string (formatted or E.164) for the given dial code.
+ * Returns null when the digits don't start with that dial code (e.g. the user is
+ * typing a different "+xx" prefix to switch country) so no cap is applied.
+ */
+function nationalDigitsFor(phone: string, dialCode: string): string | null {
+  const digits = phone.replace(/\D/g, '');
+  if (!dialCode || !digits.startsWith(dialCode)) return null;
+  return digits.slice(dialCode.length);
+}
+
+/**
+ * True when the digits exceed the country's mobile/landline maximum (not libphonenumber's
+ * general possible lengths, which include rare number types and over-accept e.g. PK 12 vs 10).
+ */
+function isNationalNumberTooLong(nationalDigits: string, iso2: string): boolean {
+  if (!nationalDigits || !iso2) return false;
+  return exceedsMaxNationalDigits(nationalDigits, iso2.toUpperCase());
+}
+
+/** Find a country by dial code (exact first, then prefix), preferred countries taking priority. */
+function findCountryByDialCode(digits: string, preferred: string[]): ParsedCountry | undefined {
+  const all = defaultCountries.map(parseCountry);
+  const ordered = [
+    ...preferred
+      .map((iso2) => all.find((c) => c.iso2 === iso2))
+      .filter((c): c is ParsedCountry => Boolean(c)),
+    ...all.filter((c) => !preferred.includes(c.iso2)),
+  ];
+  return (
+    ordered.find((c) => c.dialCode === digits) ??
+    ordered.find((c) => c.dialCode.startsWith(digits))
+  );
+}
+
 const staggerContainer = {
   hidden: { opacity: 0 },
   show: {
@@ -72,6 +120,76 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
   const [form, setForm] = useState<PatientForm1Data>(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [phoneDialCode, setPhoneDialCode] = useState('');
+  const phoneInputRef = useRef<PhoneInputRefType>(null);
+  /** Mirror of the selected phone country for the native listener (fallback if the ref lacks `state`). */
+  const phoneCountryRef = useRef<{ iso2: string; dialCode: string } | null>(null);
+  const dialCodeTypeaheadRef = useRef<{ value: string; at: number }>({ value: '', at: 0 });
+  const phonePreferredCountries = PHONE_PREFERRED_COUNTRIES[lang];
+
+  // Hard cap: refuse digits beyond the maximum national-number length of the selected country.
+  // Listens to the native (bubbling, cancelable) `beforeinput` event on the phone wrapper so the
+  // library never sees the excess. Covers typing, paste and drop; an over-long paste is trimmed
+  // to the digits that still fit. The wrapper is mounted together with <PhoneInput>, so a callback
+  // ref (rather than an effect) attaches the listener exactly when step 3 appears.
+  const onPhoneBeforeInput = useCallback((e: Event) => {
+    const ev = e as InputEvent;
+    const el = ev.target;
+    if (!(el instanceof HTMLInputElement)) return;
+    if (el !== phoneInputRef.current && !el.classList.contains('react-international-phone-input')) return;
+    if (!ev.inputType?.startsWith('insert') || ev.inputType.includes('Composition')) return;
+    const inserted = ev.data ?? ev.dataTransfer?.getData('text/plain') ?? '';
+    const insertedDigits = inserted.replace(/\D/g, '');
+    if (!insertedDigits) return;
+    const country = phoneInputRef.current?.state?.country ?? phoneCountryRef.current;
+    if (!country) return;
+
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? start;
+    const fits = (text: string) => {
+      const next = el.value.slice(0, start) + text + el.value.slice(end);
+      const national = nationalDigitsFor(next, country.dialCode);
+      return national === null || !isNationalNumberTooLong(national, country.iso2);
+    };
+    if (fits(inserted)) return;
+
+    ev.preventDefault();
+    // Multi-digit insert (paste/drop): keep the leading digits that still fit.
+    let keep = insertedDigits.length - 1;
+    while (keep > 0 && !fits(insertedDigits.slice(0, keep))) keep -= 1;
+    if (keep > 0) {
+      const text = insertedDigits.slice(0, keep);
+      el.setRangeText(text, start, end, 'end');
+      el.dispatchEvent(
+        new InputEvent('input', { bubbles: true, inputType: 'insertText', data: text })
+      );
+    }
+  }, []);
+
+  const phoneWrapNodeRef = useRef<HTMLDivElement | null>(null);
+  const phoneWrapRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      phoneWrapNodeRef.current?.removeEventListener('beforeinput', onPhoneBeforeInput);
+      phoneWrapNodeRef.current = node;
+      node?.addEventListener('beforeinput', onPhoneBeforeInput);
+    },
+    [onPhoneBeforeInput]
+  );
+
+  // Country dropdown: the library only offers type-to-jump on the (English) country name.
+  // Add type-to-jump on the dial code ("+92" / "92") so the country can be found either way.
+  const handlePhoneWrapKeyDownCapture = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement | null;
+    if (!target?.closest?.('.react-international-phone-country-selector-dropdown')) return;
+    if (e.altKey || e.ctrlKey || e.metaKey || !/^[\d+]$/.test(e.key)) return;
+    const now = Date.now();
+    const prev = dialCodeTypeaheadRef.current;
+    const value = (now - prev.at > DIAL_CODE_TYPEAHEAD_WINDOW_MS ? '' : prev.value) + e.key;
+    dialCodeTypeaheadRef.current = { value, at: now };
+    const digits = value.replace(/\D/g, '');
+    if (!digits) return;
+    const match = findCountryByDialCode(digits, phonePreferredCountries);
+    if (match) phoneInputRef.current?.setCountry(match.iso2);
+  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -320,12 +438,21 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/50 uppercase ml-1">
                               {copy.fields.telephone}
                             </span>
-                            <div className="patient-tunnel-phone-wrap">
+                            <div
+                              ref={phoneWrapRef}
+                              className="patient-tunnel-phone-wrap"
+                              onKeyDownCapture={handlePhoneWrapKeyDownCapture}
+                            >
                               <PhoneInput
                                 key={lang}
+                                ref={phoneInputRef}
                                 defaultCountry={lang === 'fr' ? 'fr' : lang === 'en' ? 'gb' : 'es'}
                                 value={form.telephone}
                                 onChange={(phone, meta) => {
+                                  phoneCountryRef.current = {
+                                    iso2: meta.country.iso2,
+                                    dialCode: meta.country.dialCode,
+                                  };
                                   setPhoneDialCode(meta.country.dialCode);
                                   setForm((c) => ({
                                     ...c,
@@ -333,13 +460,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                     telephoneIso2: meta.country.iso2,
                                   }));
                                 }}
-                                preferredCountries={
-                                  lang === 'es'
-                                    ? ['es', 'mx', 'ar', 'co', 'cl', 'pe', 'us', 'fr', 'gb']
-                                    : lang === 'en'
-                                    ? ['gb', 'us', 'fr', 'es', 'ca', 'au']
-                                    : ['fr', 'be', 'ch', 'ca', 'us', 'gb', 'es']
-                                }
+                                preferredCountries={phonePreferredCountries}
                                 inputClassName={`!font-medium !text-cherry placeholder:text-cherry/30 ${
                                   showPhoneError ? '!border-red-500' : ''
                                 }`}
