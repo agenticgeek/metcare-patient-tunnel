@@ -16,6 +16,7 @@ import PatientTunnelFormModal from './PatientTunnelFormModal';
 import './patientTunnel.css';
 import { PATIENT_TUNNEL_ROUTES } from './routes';
 import { PATIENT_TUNNEL_STORAGE_KEYS } from './storageKeys';
+import { PATIENT_TUNNEL_CTA_SOURCES, type PatientTunnelCtaSource, type PatientTunnelCtaSourceId } from './ctaSources';
 import {
   PatientPrimaryButton,
   PatientSection,
@@ -160,7 +161,7 @@ export default function PatientTunnelPage() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
   const [showForm, setShowForm] = useState(false);
-  const [activeCta, setActiveCta] = useState<string>();
+  const [activeCta, setActiveCta] = useState<PatientTunnelCtaSource>();
 
   const { scrollYProgress } = useScroll();
   const parcoursX = useTransform(scrollYProgress, [0.4, 0.8], [100, -100]);
@@ -174,14 +175,16 @@ export default function PatientTunnelPage() {
     trackViewContent(lang === 'fr' ? 'Landing – Patient Tunnel (FR)' : lang === 'en' ? 'Landing – Patient Tunnel (EN)' : 'Landing – Patient Tunnel (ES)');
   }, [c.meta.title, lang]);
 
-  const openForm = (cta: string) => {
-    trackCustom('CTAClick', { cta, page: 'patient_tunnel_landing' });
-    setActiveCta(cta);
+  const openForm = (cta: PatientTunnelCtaSourceId, label?: string) => {
+    const source = { id: cta, label: label ?? PATIENT_TUNNEL_CTA_SOURCES[cta].label };
+    trackCustom('CTAClick', { cta: source.label, ctaId: cta, page: 'patient_tunnel_landing' });
+    setActiveCta(source);
     setShowForm(true);
   };
 
   const handleForm1 = (data: PatientForm1Data) => {
     sessionStorage.setItem(PATIENT_TUNNEL_STORAGE_KEYS.form1, JSON.stringify(data));
+    if (activeCta) sessionStorage.setItem(PATIENT_TUNNEL_STORAGE_KEYS.ctaSource, JSON.stringify(activeCta));
     navigate(PATIENT_TUNNEL_ROUTES.transition);
   };
 
@@ -196,7 +199,7 @@ export default function PatientTunnelPage() {
         isOpen={showForm}
         onClose={() => setShowForm(false)}
         onSubmit={handleForm1}
-        sourceCta={activeCta}
+        source={activeCta}
       />
 
       <motion.nav
@@ -263,7 +266,7 @@ export default function PatientTunnelPage() {
                 variants={fadeUp}
                 className="mb-10 max-w-xl text-base font-light leading-relaxed text-cherry/70 text-justify whitespace-pre-line md:mb-14 md:text-lg lg:text-xl"
               >
-                <HeroBodyText body={c.hero.body} ctaLabel={c.hero.ctaExpert} onCtaClick={() => openForm(c.hero.ctaExpert)} />
+                <HeroBodyText body={c.hero.body} ctaLabel={c.hero.ctaExpert} onCtaClick={() => openForm('expert_peri_operatoire')} />
               </motion.div>
 
               {/* Image for Mobile (only visible on small/medium screens, hidden on lg) */}
@@ -284,7 +287,7 @@ export default function PatientTunnelPage() {
               </motion.div>
 
               <motion.div variants={fadeUp} className="mb-4 mt-2 flex flex-col items-start gap-8 sm:flex-row sm:items-center md:mb-6">
-                <PatientPrimaryButton onClick={() => openForm(c.hero.ctaGuide)} className="px-12! py-5! text-lg! rounded-full! shadow-2xl shadow-cherry/25 group overflow-hidden">
+                <PatientPrimaryButton onClick={() => openForm('guide_patient')} className="px-12! py-5! text-lg! rounded-full! shadow-2xl shadow-cherry/25 group overflow-hidden">
                   <span className="relative z-10">{c.hero.ctaGuide}</span>
                 </PatientPrimaryButton>
               </motion.div>
@@ -607,7 +610,7 @@ export default function PatientTunnelPage() {
                 </div>
 
                 <PatientPrimaryButton
-                  onClick={() => openForm(c.sections.echange.cta)}
+                  onClick={() => openForm('echange_offert', c.sections.echange.cta)}
                   className="w-full! px-12! py-6! text-lg! rounded-full! shadow-2xl shadow-cherry/20 hover:scale-105 transition-transform"
                 >
                   {c.sections.echange.cta}

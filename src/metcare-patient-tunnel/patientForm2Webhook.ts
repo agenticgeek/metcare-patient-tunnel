@@ -1,4 +1,5 @@
 import type { PatientForm2Data } from './copy';
+import { buildFormName, type PatientTunnelCtaSource } from './ctaSources';
 
 /**
  * Form 2 questionnaire webhook payload shape:
@@ -35,6 +36,8 @@ export type PatientForm2WebhookMeta = {
   emailFromForm1?: string;
   /** Raw Form 1 answer for “intervention déjà réalisée / projet” — used to document which Form 2 timing field applies. */
   interventionRealiseeFromForm1?: string;
+  /** Landing CTA that started the funnel (Form 1), carried over so Form 2 leads are attributable. */
+  source?: PatientTunnelCtaSource;
 };
 
 
@@ -47,6 +50,9 @@ export function submitPatientForm2ToWebhook(
 
   const payload = {
     formId: 'questionare',
+    formName: buildFormName(2, meta.source),
+    sourceCta: meta.source?.label ?? '',
+    sourceCtaId: meta.source?.id ?? '',
     email,
     emailFromForm1: email,
     interventionRealiseeFromForm1: fromForm1,

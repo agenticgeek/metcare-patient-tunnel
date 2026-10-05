@@ -16,6 +16,7 @@ import { submitPatientForm2ToWebhook } from './patientForm2Webhook';
 import './patientTunnel.css';
 import { PATIENT_TUNNEL_ROUTES } from './routes';
 import { PATIENT_TUNNEL_STORAGE_KEYS } from './storageKeys';
+import type { PatientTunnelCtaSource } from './ctaSources';
 import { PatientPrimaryButton, PatientTunnelDecor } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -128,9 +129,16 @@ export default function PatientTunnelProfilePage() {
     if (!canGoNext) return;
     sessionStorage.setItem(PATIENT_TUNNEL_STORAGE_KEYS.form2, JSON.stringify(form));
     const form1AtSubmit = readForm1();
+    let source: PatientTunnelCtaSource | undefined;
+    try {
+      source = JSON.parse(sessionStorage.getItem(PATIENT_TUNNEL_STORAGE_KEYS.ctaSource) ?? 'null') ?? undefined;
+    } catch {
+      source = undefined;
+    }
     submitPatientForm2ToWebhook(form, {
       emailFromForm1: form1AtSubmit?.email?.trim() ?? '',
       interventionRealiseeFromForm1: form1AtSubmit?.interventionRealisee ?? '',
+      source,
     });
     // Meta Pixel: Track custom event on form completion
     trackCustom('AssessmentStep', {
