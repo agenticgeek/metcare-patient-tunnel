@@ -29,6 +29,7 @@ import {
   type PatientForm1Data,
 } from './copy';
 import { submitPatientForm1ToWebhook } from './patientForm1Webhook';
+import type { PatientTunnelCtaSource } from './ctaSources';
 import { exceedsMaxNationalDigits } from './phoneLimits';
 import { PatientPrimaryButton } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
@@ -38,7 +39,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: PatientForm1Data) => void;
-  sourceCta?: string;
+  source?: PatientTunnelCtaSource;
 };
 
 const initialForm: PatientForm1Data = {
@@ -113,7 +114,7 @@ const staggerItem = {
   show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.4 } }
 };
 
-export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sourceCta }: Props) {
+export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, source }: Props) {
   const { lang } = useLanguage();
   const copy = patientCopy[lang].form1;
   const [step, setStep] = useState(1);
@@ -203,7 +204,8 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     // Meta Pixel: Track AssessmentStarted when modal opens
     trackCustom('AssessmentStarted', {
       name: lang === 'fr' ? 'Patient Tunnel Form 1 (FR)' : lang === 'en' ? 'Patient Tunnel Form 1 (EN)' : 'Patient Tunnel Form 1 (ES)',
-      sourceCta,
+      sourceCta: source?.label,
+      sourceCtaId: source?.id,
     });
 
     const prev = document.body.style.overflow;
@@ -211,7 +213,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [isOpen, lang, sourceCta]);
+  }, [isOpen, lang, source]);
 
   const steps = [
     { title: copy.title, fields: ['interventionRealisee', 'typesIntervention'] },
@@ -268,7 +270,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
         : 'Patient Tunnel – Form 1 (ES)'
     );
 
-    submitPatientForm1ToWebhook(form, { sourceCta });
+    submitPatientForm1ToWebhook(form, { source });
     onSubmit(form);
     onClose();
   };
