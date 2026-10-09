@@ -360,11 +360,11 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
               {/* Form Content */}
               <form
                 onSubmit={handleSubmit}
-                className="flex flex-col flex-1 min-h-0 overflow-y-auto"
+                className="flex flex-col flex-1 min-h-0 overflow-hidden"
               >
                 <div
                   data-lenis-prevent
-                  className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto [overscroll-behavior:contain]"
+                  className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto [overscroll-behavior:contain] px-6 py-8 md:px-10 no-scrollbar"
                 >
                 <AnimatePresence mode="wait">
                   <motion.div
