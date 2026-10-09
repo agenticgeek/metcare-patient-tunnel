@@ -1,5 +1,6 @@
 import Lenis from 'lenis';
 import { type ReactNode, useEffect } from 'react';
+import { setLenisInstance } from './lenisControl';
 
 type SmoothScrollProviderProps = {
   children: ReactNode;
@@ -16,7 +17,9 @@ export default function SmoothScrollProvider({ children }: SmoothScrollProviderP
       autoRaf: true,
     });
     document.documentElement.classList.add('lenis');
+    setLenisInstance(lenis);
     return () => {
+      setLenisInstance(null);
       lenis.destroy();
       document.documentElement.classList.remove('lenis');
     };

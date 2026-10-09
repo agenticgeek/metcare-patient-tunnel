@@ -43,6 +43,7 @@ export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: Webhoo
     telephone,
     telephoneIso2: (data.telephoneIso2 || '').toLowerCase(),
     ville: data.ville.trim(),
+    codePostal: data.codePostal.trim(),
     dateIntervention: data.dateIntervention,
     // GHL contact.country rejects localized names like "España"; English/ISO work for FR+EN.
     pays: countryNameEn,
@@ -58,6 +59,7 @@ export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: Webhoo
     formName: buildFormName(1, meta.source),
     ...form,
     phone: telephone,
+    postalCode: data.codePostal.trim(),
     country: countryNameEn,
     countryCode,
     phoneCountry: (data.telephoneIso2 || '').toUpperCase(),

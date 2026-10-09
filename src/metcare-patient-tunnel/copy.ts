@@ -6,6 +6,7 @@ export type PatientForm1Data = {
   /** ISO 3166-1 alpha-2 of the phone number (e.g. es, fr, gb). */
   telephoneIso2: string;
   ville: string;
+  codePostal: string;
   dateIntervention: string;
   pays: string;
   /** ISO 3166-1 alpha-2 of the selected country of residence. */
@@ -204,6 +205,7 @@ export const patientCopy = {
         email: 'Email',
         telephone: 'Téléphone',
         ville: 'Ville',
+        codePostal: 'Code postal',
         dateIntervention: "Date d'intervention",
         pays: 'Pays',
         intervention: 'Avez-vous déjà réalisé votre intervention ?',
@@ -368,6 +370,7 @@ export const patientCopy = {
         email: 'Email',
         telephone: 'Phone',
         ville: 'City',
+        codePostal: 'Postal code',
         dateIntervention: 'Date of Intervention',
         pays: 'Country',
         intervention: 'Have you already had your intervention?',
@@ -532,6 +535,7 @@ export const patientCopy = {
         email: 'Correo electrónico',
         telephone: 'Teléfono',
         ville: 'Ciudad',
+        codePostal: 'Código postal',
         dateIntervention: 'Fecha de intervención',
         pays: 'País',
         intervention: '¿Ya has realizado tu intervención?',

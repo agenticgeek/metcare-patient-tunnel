@@ -34,6 +34,7 @@ import { exceedsMaxNationalDigits } from './phoneLimits';
 import { PatientPrimaryButton } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
 import { trackCustom, trackLead } from '../utils/metaPixel';
+import { startLenis, stopLenis } from '../lenisControl';
 
 type Props = {
   isOpen: boolean;
@@ -49,6 +50,7 @@ const initialForm: PatientForm1Data = {
   telephone: '',
   telephoneIso2: '',
   ville: '',
+  codePostal: '',
   dateIntervention: '',
   pays: '',
   paysIso2: '',
@@ -208,17 +210,26 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
       sourceCtaId: source?.id,
     });
 
-    const prev = document.body.style.overflow;
+    // Lenis scrolls the <html> element from JS, so overflow:hidden on <body>
+    // alone won't stop the background from moving. Pause Lenis AND lock overflow
+    // on both <html> and <body> while the modal is open.
+    const html = document.documentElement;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = html.style.overflow;
+    stopLenis();
     document.body.style.overflow = 'hidden';
+    html.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevBodyOverflow;
+      html.style.overflow = prevHtmlOverflow;
+      startLenis();
     };
   }, [isOpen, lang, source]);
 
   const steps = [
     { title: copy.title, fields: ['interventionRealisee', 'typesIntervention'] },
     { title: lang === 'fr' ? 'Vos besoins' : lang === 'en' ? 'Your needs' : 'Tus necesidades', fields: ['aideAujourdhui'] },
-    { title: lang === 'fr' ? 'Vos coordonnées' : lang === 'en' ? 'Your contact info' : 'Tu información de contacto', fields: ['nom', 'prenom', 'email', 'telephone', 'ville', 'dateIntervention', 'pays'] },
+    { title: lang === 'fr' ? 'Vos coordonnées' : lang === 'en' ? 'Your contact info' : 'Tu información de contacto', fields: ['nom', 'prenom', 'email', 'telephone', 'ville', 'codePostal', 'dateIntervention', 'pays'] },
   ];
 
   const phoneDigits = form.telephone.replace(/\D/g, '');
@@ -243,6 +254,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
         /\S+@\S+\.\S+/.test(form.email) &&
         isPhoneValid &&
         form.ville.trim() &&
+        form.codePostal.trim() &&
         form.dateIntervention.trim() &&
         form.pays.trim()
       );
@@ -350,7 +362,10 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                 onSubmit={handleSubmit}
                 className="flex flex-col flex-1 min-h-0 overflow-y-auto"
               >
-                <div className="px-6 py-8 md:px-10">
+                <div
+                  data-lenis-prevent
+                  className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto [overscroll-behavior:contain]"
+                >
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step}
@@ -364,7 +379,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                     {step === 1 && (
                       <>
                         <motion.div variants={staggerItem} className="space-y-4">
-                           <p className="patient-tunnel-section-label text-cherry/60">{copy.fields.intervention}</p>
+                           <p className="patient-tunnel-section-label text-cherry/60">{copy.fields.intervention}<RequiredMark /></p>
                            <div className="flex flex-wrap gap-3">
                               {interventionOptions.map(opt => (
                                 <SelectButton
@@ -377,7 +392,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                            </div>
                         </motion.div>
                         <motion.div variants={staggerItem} className="space-y-4">
-                           <p className="patient-tunnel-section-label text-cherry/60">{copy.fields.typeIntervention}</p>
+                           <p className="patient-tunnel-section-label text-cherry/60">{copy.fields.typeIntervention}<RequiredMark /></p>
                            <div className="grid gap-3 sm:grid-cols-2">
                               {typeOptions.map(opt => (
                                 <SelectButton
@@ -395,7 +410,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
 
                     {step === 2 && (
                       <motion.div variants={staggerContainer} className="space-y-6">
-                         <motion.p variants={staggerItem} className="text-lg font-light italic text-cherry/80 md:text-xl">{copy.fields.aide}</motion.p>
+                         <motion.p variants={staggerItem} className="text-lg font-light italic text-cherry/80 md:text-xl">{copy.fields.aide}<RequiredMark /></motion.p>
                          <motion.div variants={staggerItem} className="grid gap-4 sm:grid-cols-2">
                             {aideOptions.map(opt => (
                               <SelectButton
@@ -412,7 +427,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                     )}
 
                     {step === 3 && (
-                      <motion.div variants={staggerContainer} className="grid gap-x-6 gap-y-8 pb-48 sm:grid-cols-2">
+                      <motion.div variants={staggerContainer} className="grid gap-x-6 gap-y-8 pb-2 sm:grid-cols-2">
                         <motion.div variants={staggerItem}>
                           <ModernInput
                             label={copy.fields.prenom}
@@ -439,6 +454,7 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                           <label className="block space-y-2">
                             <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/50 uppercase ml-1">
                               {copy.fields.telephone}
+                              <RequiredMark />
                             </span>
                             <div
                               ref={phoneWrapRef}
@@ -486,7 +502,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                             onChange={(v) => setForm(c => ({ ...c, ville: v }))}
                           />
                         </motion.div>
-                        <motion.div variants={staggerItem} style={{ position: 'relative', zIndex: 2 }}>
+                        <motion.div variants={staggerItem} style={{ position: 'relative', zIndex: 3 }}>
+                          <ModernInput
+                            label={copy.fields.codePostal}
+                            value={form.codePostal}
+                            onChange={(v) => setForm(c => ({ ...c, codePostal: v }))}
+                          />
+                        </motion.div>
+                        <motion.div variants={staggerItem} className="sm:col-span-2" style={{ position: 'relative', zIndex: 2 }}>
                           <ModernInput
                             label={copy.fields.dateIntervention}
                             type="date"
@@ -536,6 +559,10 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
       )}
     </AnimatePresence>
   );
+}
+
+function RequiredMark() {
+  return <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>;
 }
 
 function stripDiacritics(s: string) {
@@ -633,6 +660,7 @@ function SearchableCountryField({
     <label className="block space-y-2">
       <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/50 uppercase ml-1">
         {label}
+        <RequiredMark />
       </span>
       <div ref={anchorRef} className="relative">
         <button
@@ -743,6 +771,7 @@ function ModernInput({ label, value, onChange, type = 'text', className = '' }: 
     <label className={`block space-y-2 ${className}`}>
       <span className="text-[0.6rem] font-bold tracking-[0.2em] text-cherry/50 uppercase ml-1">
         {label}
+        <RequiredMark />
       </span>
       <input
         type={type}
