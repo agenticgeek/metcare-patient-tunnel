@@ -1,4 +1,5 @@
 import type { PatientForm1Data } from './copy';
+import { buildFormName, type PatientTunnelCtaSource } from './ctaSources';
 
 /** LeadConnector / HighLevel webhook — override with VITE_PATIENT_TUNNEL_FORM1_WEBHOOK_URL if needed. */
 const DEFAULT_FORM1_WEBHOOK_URL =
@@ -9,7 +10,7 @@ const WEBHOOK_URL =
   DEFAULT_FORM1_WEBHOOK_URL;
 
 type WebhookMeta = {
-  sourceCta?: string;
+  source?: PatientTunnelCtaSource;
 };
 
 /** GHL phone fields require E.164: + followed by digits only. */
@@ -55,6 +56,7 @@ export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: Webhoo
   /** Single JSON object: all form fields (flat) + derived text + submission context for LeadConnector. */
   const payload = {
     formId: 'patient_tunnel_form_1',
+    formName: buildFormName(1, meta.source),
     ...form,
     phone: telephone,
     postalCode: data.codePostal.trim(),
@@ -64,7 +66,8 @@ export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: Webhoo
     paysLocal: data.pays.trim(),
     typesInterventionText: form.typesIntervention.join(', '),
     aideAujourdhuiText: form.aideAujourdhui.join(', '),
-    sourceCta: meta.sourceCta ?? '',
+    sourceCta: meta.source?.label ?? '',
+    sourceCtaId: meta.source?.id ?? '',
     pageUrl: typeof window !== 'undefined' ? window.location.href : '',
     submittedAt: new Date().toISOString(),
   };
