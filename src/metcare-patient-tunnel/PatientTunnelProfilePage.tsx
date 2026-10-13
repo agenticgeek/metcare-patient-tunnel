@@ -523,8 +523,8 @@ function BookingCalendarModal({
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed inset-0 z-[1001] flex items-center justify-center p-4 sm:p-6"
           >
-            <div className="patient-tunnel-glass relative flex h-full max-h-[min(850px,calc(100dvh-2rem))] w-full max-w-3xl flex-col overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-cherry/30">
-              <div className="relative flex items-center justify-between border-b border-cherry/10 bg-white/30 px-6 py-5 md:px-8">
+            <div className="patient-tunnel-glass relative flex h-[calc(100dvh-2rem)] max-h-[1000px] w-full max-w-4xl flex-col overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-cherry/30">
+              <div className="relative flex shrink-0 items-center justify-between border-b border-cherry/10 bg-white/30 px-6 py-5 md:px-8">
                 <h2 className="text-lg font-semibold text-cherry md:text-xl">{title}</h2>
                 <button
                   type="button"
@@ -535,12 +535,14 @@ function BookingCalendarModal({
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="min-h-0 flex-1 bg-white">
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-white">
                 <iframe
+                  id="patient-tunnel-booking-iframe"
                   src={BOOKING_CALENDAR_URL}
                   title={title}
-                  className="h-full w-full border-0"
-                  scrolling="yes"
+                  className="block w-full border-0"
+                  style={{ minHeight: '100%', height: '1100px' }}
+                  scrolling="no"
                 />
               </div>
             </div>
