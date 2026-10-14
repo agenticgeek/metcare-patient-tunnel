@@ -1,10 +1,12 @@
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, ArrowRight, ChevronLeft } from 'lucide-react';
+import { CheckCircle2, ArrowRight, ChevronLeft, CalendarDays } from 'lucide-react';
 import { patientCopy } from './copy';
 import './patientTunnel.css';
 import { PATIENT_TUNNEL_ROUTES } from './routes';
 import { PatientPrimaryButton, PatientTunnelDecor } from './PatientTunnelShared';
+import BookingCalendarModal from './BookingCalendarModal';
 import { useLanguage } from './i18n';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -42,6 +44,10 @@ export default function PatientTunnelTransitionPage() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
   const c = patientCopy[lang].transition;
+  const [showBooking, setShowBooking] = useState(false);
+
+  const bookLabel =
+    lang === 'fr' ? 'Prendre rendez-vous' : lang === 'en' ? 'Book an appointment' : 'Reservar cita';
 
   return (
     <div className="patient-tunnel-root relative flex min-h-screen flex-col items-center justify-center px-5 py-24 md:px-10 overflow-hidden">
@@ -119,27 +125,36 @@ export default function PatientTunnelTransitionPage() {
           </div>
            
            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <PatientPrimaryButton 
-                onClick={() => navigate(PATIENT_TUNNEL_ROUTES.profile)} 
+              <PatientPrimaryButton
+                onClick={() => navigate(PATIENT_TUNNEL_ROUTES.profile)}
                 className="!px-12 !py-5 !text-lg shadow-2xl shadow-cherry/20"
               >
                 {c.cta}
                 <ArrowRight className="h-5 w-5 ml-2" />
               </PatientPrimaryButton>
-              
-              <button
-                onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)}
-                className="group flex items-center justify-center gap-2 px-8 py-5 text-sm font-bold tracking-[0.2em] text-cherry/40 transition-colors hover:text-cherry"
+
+              <PatientPrimaryButton
+                variant="outline"
+                onClick={() => setShowBooking(true)}
+                className="!px-10 !py-5 !text-lg"
               >
-                {c.skip}
-                <motion.span 
-                  animate={{ x: [0, 4, 0] }} 
-                  transition={{ repeat: Infinity, duration: 2 }}
-                >
-                  →
-                </motion.span>
-              </button>
+                <CalendarDays className="h-5 w-5 mr-2" />
+                {bookLabel}
+              </PatientPrimaryButton>
            </div>
+
+           <button
+             onClick={() => navigate(PATIENT_TUNNEL_ROUTES.home)}
+             className="group mx-auto flex items-center justify-center gap-2 text-sm font-bold tracking-[0.2em] text-cherry/40 transition-colors hover:text-cherry"
+           >
+             {c.skip}
+             <motion.span
+               animate={{ x: [0, 4, 0] }}
+               transition={{ repeat: Infinity, duration: 2 }}
+             >
+               →
+             </motion.span>
+           </button>
            
            <p className="text-[0.65rem] font-medium tracking-[0.2em] text-cherry/30 uppercase italic">
              {c.notice}
@@ -154,6 +169,12 @@ export default function PatientTunnelTransitionPage() {
         <ChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
         {c.backHome}
       </button>
+
+      <BookingCalendarModal
+        isOpen={showBooking}
+        onClose={() => setShowBooking(false)}
+        lang={lang}
+      />
     </div>
   );
 }
