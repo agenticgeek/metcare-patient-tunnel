@@ -28,7 +28,7 @@ function AppRoutes() {
 
 export default function App() {
   useEffect(() => {
-    document.title = 'Metcare Patient Tunnel';
+    document.title = 'Recovery METCARE';
     const faviconLinks = [
       { rel: 'icon', type: 'image/svg+xml' },
       { rel: 'shortcut icon', type: 'image/svg+xml' },
