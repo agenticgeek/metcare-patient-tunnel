@@ -695,7 +695,7 @@ export default function PatientTunnelPage() {
             body={lang === 'fr' ? 'Un guide complet de 148 pages et une écoute active tout au long de votre parcours de guérison.' : lang === 'en' ? 'A complete 148-page guide and active listening throughout your healing journey.' : 'Una guía completa de 148 páginas y escucha activa a lo largo de tu viaje de sanación.'}
             imageSrc={solutionCardImage2}
             imageAlt={lang === 'fr' ? 'Accompagnement personnalisé et e-book' : lang === 'en' ? 'Personalized accompaniment and e-book' : 'Acompañamiento personalizado y e-book'}
-            href="https://www.metcare.eu"
+            href="https://metcare.eu/products/e-book-pre-post-operatoire?variant=57317238997369"
             ctaLabel={lang === 'fr' ? 'Découvrir' : lang === 'en' ? 'Discover' : 'Descubrir'}
           />
         </div>
