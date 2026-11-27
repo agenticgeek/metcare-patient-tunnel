@@ -10,7 +10,7 @@ import {
   type PhoneInputRefType,
 } from 'react-international-phone';
 import 'react-international-phone/style.css';
-import { isValidPhoneNumber, type CountryCode } from 'libphonenumber-js';
+import { parsePhoneNumberFromString, type CountryCode } from 'libphonenumber-js/max';
 import {
   useCallback,
   useEffect,
@@ -30,7 +30,13 @@ import {
 } from './copy';
 import { submitPatientForm1ToWebhook } from './patientForm1Webhook';
 import type { PatientTunnelCtaSource } from './ctaSources';
-import { exceedsMaxNationalDigits } from './phoneLimits';
+import {
+  clampNationalDigits,
+  exceedsMaxNationalDigits,
+  isValidPhoneForCountry,
+  nationalPrefixOf,
+  phoneInsertOverflows,
+} from './phoneLimits';
 import { PatientPrimaryButton } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
 import { trackCustom, trackLead } from '../utils/metaPixel';
@@ -82,10 +88,31 @@ function nationalDigitsFor(phone: string, dialCode: string): string | null {
 /**
  * True when the digits exceed the country's mobile/landline maximum (not libphonenumber's
  * general possible lengths, which include rare number types and over-accept e.g. PK 12 vs 10).
+ * The digits are those after "+<dial code>", so a trunk prefix is not allowed (FR: exactly 9).
  */
 function isNationalNumberTooLong(nationalDigits: string, iso2: string): boolean {
   if (!nationalDigits || !iso2) return false;
-  return exceedsMaxNationalDigits(nationalDigits, iso2.toUpperCase());
+  return exceedsMaxNationalDigits(nationalDigits, iso2.toUpperCase(), { international: true });
+}
+
+/**
+ * National number without trunk prefix ("06 12 34 56 78", FR → "612345678") when `text` is a
+ * valid national-format number for `iso`; null otherwise.
+ */
+function trunkFreeNationalNumber(text: string, iso: string): string | null {
+  if (!isValidPhoneForCountry(text, iso)) return null;
+  return parsePhoneNumberFromString(text, iso as CountryCode)?.nationalNumber ?? null;
+}
+
+/**
+ * Safety net applied to every value the phone input reports (country switch via a typed
+ * "+xx", autofill, IME composition…): trims national digits beyond the country's limit.
+ * Returns the phone unchanged when it already fits or doesn't start with the dial code.
+ */
+function clampPhoneToCountry(phone: string, iso2: string, dialCode: string): string {
+  const national = nationalDigitsFor(phone, dialCode);
+  if (national === null || !isNationalNumberTooLong(national, iso2)) return phone;
+  return `+${dialCode}${clampNationalDigits(national, iso2.toUpperCase(), { international: true })}`;
 }
 
 /** Find a country by dial code (exact first, then prefix), preferred countries taking priority. */
@@ -148,24 +175,45 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
 
     const start = el.selectionStart ?? el.value.length;
     const end = el.selectionEnd ?? start;
+    const iso = country.iso2.toUpperCase();
     const fits = (text: string) => {
       const next = el.value.slice(0, start) + text + el.value.slice(end);
-      const national = nationalDigitsFor(next, country.dialCode);
-      return national === null || !isNationalNumberTooLong(national, country.iso2);
+      // The field is always international; the library re-adds a deleted "+".
+      const nextText = next.trimStart().startsWith('+') ? next : `+${next}`;
+      // Inserts containing "+" (typing/pasting a dial code) are never blocked here; the
+      // onChange clamp trims them once the library has resolved the country.
+      return !phoneInsertOverflows(nextText, text, iso);
     };
-    if (fits(inserted)) return;
+    let text = inserted;
 
-    ev.preventDefault();
-    // Multi-digit insert (paste/drop): keep the leading digits that still fit.
-    let keep = insertedDigits.length - 1;
-    while (keep > 0 && !fits(insertedDigits.slice(0, keep))) keep -= 1;
-    if (keep > 0) {
-      const text = insertedDigits.slice(0, keep);
-      el.setRangeText(text, start, end, 'end');
-      el.dispatchEvent(
-        new InputEvent('input', { bubbles: true, inputType: 'insertText', data: text })
-      );
+    // National-format paste right after the dial code ("06 12 34 56 78" into "+33 "):
+    // drop the trunk prefix so the field holds +33 6 12 34 56 78, not +33 06…. Done before
+    // trimming, since the trunk digit would otherwise use up one of the allowed digits.
+    const digitsBefore = el.value.slice(0, start).replace(/\D/g, '');
+    if (insertedDigits.length > 1 && !inserted.includes('+') && digitsBefore === country.dialCode) {
+      const national = trunkFreeNationalNumber(inserted, iso);
+      const np = nationalPrefixOf(iso);
+      if (national && national !== insertedDigits) text = national;
+      else if (!fits(inserted) && np && insertedDigits.startsWith(np)) {
+        text = insertedDigits.slice(np.length);
+      }
     }
+
+    if (!fits(text)) {
+      // Multi-digit insert (paste/drop): keep the leading digits that still fit.
+      const digits = text.replace(/\D/g, '');
+      let keep = digits.length - 1;
+      while (keep > 0 && !fits(digits.slice(0, keep))) keep -= 1;
+      text = digits.slice(0, keep);
+    }
+
+    if (text === inserted) return;
+    ev.preventDefault();
+    if (!text) return;
+    el.setRangeText(text, start, end, 'end');
+    el.dispatchEvent(
+      new InputEvent('input', { bubbles: true, inputType: 'insertText', data: text })
+    );
   }, []);
 
   const phoneWrapNodeRef = useRef<HTMLDivElement | null>(null);
@@ -237,9 +285,14 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     phoneDialCode && phoneDigits.startsWith(phoneDialCode)
       ? phoneDigits.slice(phoneDialCode.length)
       : phoneDigits;
+  // Same rule as the typing cap (phoneLimits): a real number of the selected country, with its
+  // dial code, and no more national digits than that country's mobiles/landlines have.
   const isPhoneValid =
     nationalPhoneDigits.length > 0 &&
-    isValidPhoneNumber(form.telephone, form.telephoneIso2.toUpperCase() as CountryCode);
+    !!phoneDialCode &&
+    phoneDigits.startsWith(phoneDialCode) &&
+    !isNationalNumberTooLong(nationalPhoneDigits, form.telephoneIso2) &&
+    isValidPhoneForCountry(form.telephone, form.telephoneIso2.toUpperCase());
   const showPhoneError = nationalPhoneDigits.length > 0 && !isPhoneValid;
 
   const canGoNext = useMemo(() => {
@@ -474,7 +527,11 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
                                   setPhoneDialCode(meta.country.dialCode);
                                   setForm((c) => ({
                                     ...c,
-                                    telephone: phone,
+                                    telephone: clampPhoneToCountry(
+                                      phone,
+                                      meta.country.iso2,
+                                      meta.country.dialCode
+                                    ),
                                     telephoneIso2: meta.country.iso2,
                                   }));
                                 }}
