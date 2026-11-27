@@ -39,7 +39,7 @@ import {
 } from './phoneLimits';
 import { PatientPrimaryButton } from './PatientTunnelShared';
 import { useLanguage } from './i18n';
-import { trackCustom, trackLead } from '../utils/metaPixel';
+import { newEventId, trackCustom, trackInitiateCheckout, trackLead } from '../utils/metaPixel';
 import { startLenis, stopLenis } from '../lenisControl';
 
 type Props = {
@@ -257,6 +257,10 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
       sourceCta: source?.label,
       sourceCtaId: source?.id,
     });
+    // Meta Pixel + CAPI: InitiateCheckout when the form opens (once per session)
+    trackInitiateCheckout(
+      lang === 'fr' ? 'Patient Tunnel – Form 1 (FR)' : lang === 'en' ? 'Patient Tunnel – Form 1 (EN)' : 'Patient Tunnel – Form 1 (ES)'
+    );
 
     // Lenis scrolls the <html> element from JS, so overflow:hidden on <body>
     // alone won't stop the background from moving. Pause Lenis AND lock overflow
@@ -326,16 +330,29 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
     setSubmitted(true);
     if (!canGoNext) return;
 
-    // Meta Pixel: Track Lead on form submission
-    trackLead(
+    // Meta Pixel + CAPI: Lead only once the webhook has accepted the submission.
+    // Same event id on both sides for dedup; contact details go to CAPI only (hashed server-side).
+    const leadContentName =
       lang === 'fr'
         ? 'Patient Tunnel – Form 1 (FR)'
         : lang === 'en'
         ? 'Patient Tunnel – Form 1 (EN)'
-        : 'Patient Tunnel – Form 1 (ES)'
-    );
-
-    submitPatientForm1ToWebhook(form, { source });
+        : 'Patient Tunnel – Form 1 (ES)';
+    const leadEventId = newEventId();
+    const submittedForm = form;
+    const phoneDigitsForLead = submittedForm.telephone.replace(/\D/g, '');
+    void submitPatientForm1ToWebhook(submittedForm, { source }).then((ok) => {
+      if (!ok) return;
+      trackLead(leadContentName, leadEventId, {
+        email: submittedForm.email,
+        phone: phoneDigitsForLead ? `+${phoneDigitsForLead}` : undefined,
+        firstName: submittedForm.prenom,
+        lastName: submittedForm.nom,
+        city: submittedForm.ville,
+        zip: submittedForm.codePostal,
+        country: submittedForm.paysIso2 || submittedForm.telephoneIso2,
+      });
+    });
     onSubmit(form);
     onClose();
   };
