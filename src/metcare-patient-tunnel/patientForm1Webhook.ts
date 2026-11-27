@@ -30,8 +30,9 @@ function englishCountryName(iso2: string): string {
 
 /**
  * POSTs Form 1 JSON payload to the configured webhook (LeadConnector by default).
+ * Resolves `true` only when the webhook answered with a 2xx (used to gate the Meta Lead).
  */
-export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: WebhookMeta): void {
+export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: WebhookMeta): Promise<boolean> {
   const telephone = toE164(data.telephone);
   const countryCode = (data.paysIso2 || data.telephoneIso2 || '').toUpperCase();
   const countryNameEn = englishCountryName(countryCode) || data.pays.trim();
@@ -72,11 +73,17 @@ export function submitPatientForm1ToWebhook(data: PatientForm1Data, meta: Webhoo
     submittedAt: new Date().toISOString(),
   };
 
-  void fetch(WEBHOOK_URL, {
+  return fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload),
-  }).catch((err) => {
-    console.warn('[Patient tunnel form 1] Webhook request failed:', err);
-  });
+  })
+    .then((res) => {
+      if (!res.ok) console.warn('[Patient tunnel form 1] Webhook responded', res.status);
+      return res.ok;
+    })
+    .catch((err) => {
+      console.warn('[Patient tunnel form 1] Webhook request failed:', err);
+      return false;
+    });
 }

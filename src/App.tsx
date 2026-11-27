@@ -5,6 +5,7 @@ import PatientTunnelPage from './metcare-patient-tunnel/PatientTunnelPage';
 import PatientTunnelProfilePage from './metcare-patient-tunnel/PatientTunnelProfilePage';
 import PatientTunnelTransitionPage from './metcare-patient-tunnel/PatientTunnelTransitionPage';
 import { LanguageProvider } from './metcare-patient-tunnel/i18n';
+import MetaPixelRouteTracker from './utils/MetaPixelRouteTracker';
 
 function AppRoutes() {
   return (
@@ -53,6 +54,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <MetaPixelRouteTracker />
       <AppRoutes />
     </BrowserRouter>
   );
