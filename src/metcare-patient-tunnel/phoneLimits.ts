@@ -57,6 +57,14 @@ export function nationalPrefixOf(iso: string | undefined): string | undefined {
   return typeof np === "string" && np.length > 0 ? np : undefined;
 }
 
+/**
+ * Options for the length checks.
+ * `international: true` means the digits follow a "+<calling code>" (e.g. the
+ * part after "+33"). A trunk prefix never belongs there, so every digit counts
+ * against the limit: France allows exactly 9 digits after +33.
+ */
+export type PhoneLengthOptions = { international?: boolean };
+
 /** Strip a leading trunk prefix, if present, from a string of national digits. */
 function withoutTrunkPrefix(digits: string, iso: string | undefined): string {
   const np = nationalPrefixOf(iso);
@@ -65,22 +73,34 @@ function withoutTrunkPrefix(digits: string, iso: string | undefined): string {
 
 /**
  * True when `nationalDigits` (what the user typed after the dial code, any
- * formatting allowed) has more digits than the country allows. A leading
- * trunk prefix is not counted.
+ * formatting allowed) has more digits than the country allows. In national
+ * format a leading trunk prefix is not counted (FR "06 12 34 56 78" is OK);
+ * with `{ international: true }` every digit counts.
  */
-export function exceedsMaxNationalDigits(nationalDigits: string, iso: string | undefined): boolean {
-  const d = withoutTrunkPrefix(nationalDigits.replace(/\D/g, ""), iso);
+export function exceedsMaxNationalDigits(
+  nationalDigits: string,
+  iso: string | undefined,
+  opts: PhoneLengthOptions = {},
+): boolean {
+  const digits = nationalDigits.replace(/\D/g, "");
+  const d = opts.international ? digits : withoutTrunkPrefix(digits, iso);
   return d.length > maxNationalDigits(iso);
 }
 
 /**
- * Trim a national-number string down to the country's limit (keeps a leading
- * trunk prefix). Use on paste and when the selected country changes.
+ * Trim a national-number string down to the country's limit. In national
+ * format a leading trunk prefix is kept on top of the limit; with
+ * `{ international: true }` it is not. Use on paste and when the selected
+ * country changes.
  */
-export function clampNationalDigits(nationalDigits: string, iso: string | undefined): string {
+export function clampNationalDigits(
+  nationalDigits: string,
+  iso: string | undefined,
+  opts: PhoneLengthOptions = {},
+): string {
   const digits = nationalDigits.replace(/\D/g, "");
   const np = nationalPrefixOf(iso);
-  const hasTrunk = !!np && digits.startsWith(np) && digits.length > np.length;
+  const hasTrunk = !opts.international && !!np && digits.startsWith(np) && digits.length > np.length;
   const max = maxNationalDigits(iso) + (hasTrunk ? np!.length : 0);
   return digits.slice(0, max);
 }
@@ -100,14 +120,15 @@ export function phoneInsertOverflows(nextText: string, inserted: string, iso: st
   if (!digits) return false;
 
   let national = digits;
-  if (nextText.trimStart().startsWith("+")) {
+  const international = nextText.trimStart().startsWith("+");
+  if (international) {
     const callingCode = getCountryCallingCode(iso as CountryCode);
     if (!digits.startsWith(callingCode)) return false;
     national = digits.slice(callingCode.length);
   }
 
   if (!national) return false;
-  return exceedsMaxNationalDigits(national, iso);
+  return exceedsMaxNationalDigits(national, iso, { international });
 }
 
 /**

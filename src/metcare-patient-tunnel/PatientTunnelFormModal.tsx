@@ -34,6 +34,7 @@ import {
   clampNationalDigits,
   exceedsMaxNationalDigits,
   isValidPhoneForCountry,
+  nationalPrefixOf,
   phoneInsertOverflows,
 } from './phoneLimits';
 import { PatientPrimaryButton } from './PatientTunnelShared';
@@ -87,10 +88,11 @@ function nationalDigitsFor(phone: string, dialCode: string): string | null {
 /**
  * True when the digits exceed the country's mobile/landline maximum (not libphonenumber's
  * general possible lengths, which include rare number types and over-accept e.g. PK 12 vs 10).
+ * The digits are those after "+<dial code>", so a trunk prefix is not allowed (FR: exactly 9).
  */
 function isNationalNumberTooLong(nationalDigits: string, iso2: string): boolean {
   if (!nationalDigits || !iso2) return false;
-  return exceedsMaxNationalDigits(nationalDigits, iso2.toUpperCase());
+  return exceedsMaxNationalDigits(nationalDigits, iso2.toUpperCase(), { international: true });
 }
 
 /**
@@ -110,7 +112,7 @@ function trunkFreeNationalNumber(text: string, iso: string): string | null {
 function clampPhoneToCountry(phone: string, iso2: string, dialCode: string): string {
   const national = nationalDigitsFor(phone, dialCode);
   if (national === null || !isNationalNumberTooLong(national, iso2)) return phone;
-  return `+${dialCode}${clampNationalDigits(national, iso2.toUpperCase())}`;
+  return `+${dialCode}${clampNationalDigits(national, iso2.toUpperCase(), { international: true })}`;
 }
 
 /** Find a country by dial code (exact first, then prefix), preferred countries taking priority. */
@@ -183,19 +185,26 @@ export default function PatientTunnelFormModal({ isOpen, onClose, onSubmit, sour
       return !phoneInsertOverflows(nextText, text, iso);
     };
     let text = inserted;
-    if (!fits(text)) {
-      // Multi-digit insert (paste/drop): keep the leading digits that still fit.
-      let keep = insertedDigits.length - 1;
-      while (keep > 0 && !fits(insertedDigits.slice(0, keep))) keep -= 1;
-      text = insertedDigits.slice(0, keep);
-    }
 
     // National-format paste right after the dial code ("06 12 34 56 78" into "+33 "):
-    // drop the trunk prefix so the field holds +33 6 12 34 56 78, not +33 06….
+    // drop the trunk prefix so the field holds +33 6 12 34 56 78, not +33 06…. Done before
+    // trimming, since the trunk digit would otherwise use up one of the allowed digits.
     const digitsBefore = el.value.slice(0, start).replace(/\D/g, '');
-    if (text.replace(/\D/g, '').length > 1 && !text.includes('+') && digitsBefore === country.dialCode) {
-      const national = trunkFreeNationalNumber(text, iso);
-      if (national && national !== text.replace(/\D/g, '') && fits(national)) text = national;
+    if (insertedDigits.length > 1 && !inserted.includes('+') && digitsBefore === country.dialCode) {
+      const national = trunkFreeNationalNumber(inserted, iso);
+      const np = nationalPrefixOf(iso);
+      if (national && national !== insertedDigits) text = national;
+      else if (!fits(inserted) && np && insertedDigits.startsWith(np)) {
+        text = insertedDigits.slice(np.length);
+      }
+    }
+
+    if (!fits(text)) {
+      // Multi-digit insert (paste/drop): keep the leading digits that still fit.
+      const digits = text.replace(/\D/g, '');
+      let keep = digits.length - 1;
+      while (keep > 0 && !fits(digits.slice(0, keep))) keep -= 1;
+      text = digits.slice(0, keep);
     }
 
     if (text === inserted) return;
