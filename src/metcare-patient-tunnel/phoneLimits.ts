@@ -1,57 +1,128 @@
-import { Metadata } from 'libphonenumber-js/core';
-import type { CountryCode } from 'libphonenumber-js';
-import metadata from 'libphonenumber-js/metadata.max.json';
-
 /**
- * The runtime `Metadata` / `NumberingPlan` objects expose `hasCountry`, `type()` and
- * `nationalPrefix()`, but the shipped `.d.ts` (1.13.x) only declares a subset, so the
- * members we rely on are described here and the instance is cast once.
+ * Per-country phone length rules, shared by every phone field in the app.
+ *
+ * The cap is the longest real MOBILE / FIXED_LINE national number for the
+ * country (libphonenumber "max" metadata). libphonenumber's *general* possible
+ * lengths also include pagers, VoIP, premium numbers, etc. (e.g. Pakistan
+ * would allow 12 digits when real phones have 10), so we do not use those.
+ *
+ * A leading national trunk prefix (the "0" in FR/BE/GB/PK…, "1" in US/CA,
+ * "8" in RU) is allowed on top of the cap, so France accepts 06 12 34 56 78
+ * (10 typed digits) or +33 6 12 34 56 78 (9 national digits), and nothing longer.
  */
-type NumberTypeInfo = { possibleLengths(): number[] };
-type NumberingPlanRuntime = {
+import { Metadata } from "libphonenumber-js/core";
+import { getCountryCallingCode, isValidPhoneNumber, type CountryCode } from "libphonenumber-js/max";
+import metadata from "libphonenumber-js/metadata.max.json";
+
+// libphonenumber-js ships these members at runtime but leaves them out of its
+// public typings, so we describe the slice we rely on here.
+type NumberingPlanInternals = {
   possibleLengths(): number[];
-  nationalPrefix(): string | undefined;
-  type(t: 'MOBILE' | 'FIXED_LINE'): NumberTypeInfo | undefined;
-};
-type MetadataRuntime = {
-  hasCountry(iso: string): boolean;
-  selectNumberingPlan(iso: CountryCode): void;
-  numberingPlan?: NumberingPlanRuntime;
+  nationalPrefix(): string | number | undefined;
+  type(type: "MOBILE" | "FIXED_LINE"): { possibleLengths(): number[] } | undefined;
 };
 
-const meta = new Metadata(metadata) as unknown as MetadataRuntime;
+type MetadataInternals = {
+  hasCountry(country: string): boolean;
+  selectNumberingPlan(country: CountryCode): void;
+  numberingPlan?: NumberingPlanInternals;
+};
 
-function planFor(iso: string): NumberingPlanRuntime | undefined {
-  if (!meta.hasCountry(iso)) return undefined;
+const meta = new Metadata(metadata) as unknown as MetadataInternals;
+
+/** E.164 ceiling, used for countries the metadata does not know. */
+const FALLBACK_MAX_DIGITS = 15;
+
+function selectPlan(iso: string | undefined): NumberingPlanInternals | undefined {
+  if (!iso || !meta.hasCountry(iso)) return undefined;
   meta.selectNumberingPlan(iso as CountryCode);
   return meta.numberingPlan;
 }
 
-/**
- * Maximum national-number length for real mobile / landline numbers of a country.
- * libphonenumber's general "possible lengths" include rare number types (pagers, VoIP,
- * premium...), so e.g. Pakistan would accept 12 digits when a phone is 10. Falls back to
- * the general possible lengths when the plan lists no mobile/landline type, and to 15
- * (E.164 max) for unknown countries.
- */
-export function maxNationalDigits(iso: string): number {
-  const plan = planFor(iso);
-  if (!plan) return 15;
-  const lengths = (['MOBILE', 'FIXED_LINE'] as const).flatMap(
-    (t) => plan.type(t)?.possibleLengths() ?? []
+/** Longest national number (without trunk prefix) a real mobile or landline can have in `iso`. */
+export function maxNationalDigits(iso: string | undefined): number {
+  const plan = selectPlan(iso);
+  if (!plan) return FALLBACK_MAX_DIGITS;
+  const lengths = (["MOBILE", "FIXED_LINE"] as const).flatMap(
+    (t) => plan.type(t)?.possibleLengths() ?? [],
   );
-  return lengths.length ? Math.max(...lengths) : Math.max(...plan.possibleLengths());
+  if (lengths.length) return Math.max(...lengths);
+  const general = plan.possibleLengths();
+  return general.length ? Math.max(...general) : FALLBACK_MAX_DIGITS;
 }
 
-function nationalPrefixOf(iso: string): string | undefined {
-  const np = planFor(iso)?.nationalPrefix();
-  return typeof np === 'string' && np.length > 0 ? np : undefined;
+/** The country's trunk prefix ("0" for FR), or undefined when it has none. */
+export function nationalPrefixOf(iso: string | undefined): string | undefined {
+  const np = selectPlan(iso)?.nationalPrefix();
+  return typeof np === "string" && np.length > 0 ? np : undefined;
 }
 
-/** More digits than the country's mobile/landline numbers allow (a leading trunk prefix like FR/PK/GB "0" is not counted). */
-export function exceedsMaxNationalDigits(nationalDigits: string, iso: string): boolean {
-  let d = nationalDigits.replace(/\D/g, '');
+/** Strip a leading trunk prefix, if present, from a string of national digits. */
+function withoutTrunkPrefix(digits: string, iso: string | undefined): string {
   const np = nationalPrefixOf(iso);
-  if (np && d.startsWith(np) && d.length > np.length) d = d.slice(np.length);
+  return np && digits.startsWith(np) && digits.length > np.length ? digits.slice(np.length) : digits;
+}
+
+/**
+ * True when `nationalDigits` (what the user typed after the dial code, any
+ * formatting allowed) has more digits than the country allows. A leading
+ * trunk prefix is not counted.
+ */
+export function exceedsMaxNationalDigits(nationalDigits: string, iso: string | undefined): boolean {
+  const d = withoutTrunkPrefix(nationalDigits.replace(/\D/g, ""), iso);
   return d.length > maxNationalDigits(iso);
+}
+
+/**
+ * Trim a national-number string down to the country's limit (keeps a leading
+ * trunk prefix). Use on paste and when the selected country changes.
+ */
+export function clampNationalDigits(nationalDigits: string, iso: string | undefined): string {
+  const digits = nationalDigits.replace(/\D/g, "");
+  const np = nationalPrefixOf(iso);
+  const hasTrunk = !!np && digits.startsWith(np) && digits.length > np.length;
+  const max = maxNationalDigits(iso) + (hasTrunk ? np!.length : 0);
+  return digits.slice(0, max);
+}
+
+/**
+ * Decides whether an edit to an *international* phone field ("+33 6 12…")
+ * should be blocked. `nextText` is the field's prospective text, `inserted`
+ * the inserted text, `iso` the country the field currently resolves to.
+ *
+ * Never blocks while the user is (re)typing a dial code: an insert containing
+ * "+", a text whose "+…" prefix is not this country's calling code, or an
+ * empty national part all pass through.
+ */
+export function phoneInsertOverflows(nextText: string, inserted: string, iso: string | undefined): boolean {
+  if (inserted.includes("+") || !iso || !meta.hasCountry(iso)) return false;
+  const digits = nextText.replace(/\D/g, "");
+  if (!digits) return false;
+
+  let national = digits;
+  if (nextText.trimStart().startsWith("+")) {
+    const callingCode = getCountryCallingCode(iso as CountryCode);
+    if (!digits.startsWith(callingCode)) return false;
+    national = digits.slice(callingCode.length);
+  }
+
+  if (!national) return false;
+  return exceedsMaxNationalDigits(national, iso);
+}
+
+/**
+ * Submit-time check: the number must be a real, correctly sized number for
+ * the selected country. `value` may be E.164 ("+33612345678") or national
+ * ("06 12 34 56 78") when `iso` is given.
+ */
+export function isValidPhoneForCountry(value: string | undefined, iso: string | undefined): boolean {
+  if (!value) return false;
+  const v = value.trim();
+  try {
+    return v.startsWith("+")
+      ? isValidPhoneNumber(v)
+      : !!iso && isValidPhoneNumber(v, iso as CountryCode);
+  } catch {
+    return false;
+  }
 }
